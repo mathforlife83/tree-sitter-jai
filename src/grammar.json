@@ -771,7 +771,7 @@
     },
     "struct_declaration": {
       "type": "PREC_RIGHT",
-      "value": 2,
+      "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1531,10 +1531,6 @@
           {
             "type": "SYMBOL",
             "name": "index_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "if_expression"
           },
           {
             "type": "SYMBOL",
@@ -3932,7 +3928,7 @@
     },
     "anonymous_struct_type": {
       "type": "PREC",
-      "value": -1,
+      "value": 2,
       "content": {
         "type": "SEQ",
         "members": [
@@ -3973,7 +3969,7 @@
                 "members": [
                   {
                     "type": "PREC",
-                    "value": -1,
+                    "value": 2,
                     "content": {
                       "type": "REPEAT",
                       "content": {

@@ -1,7 +1,3 @@
-// Personal notes:
-// - TODO: using statements
-// - for some reason, if expressions make the tree-sitter generate times skyrocket...
-
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-nocheck
 
@@ -196,7 +192,7 @@ module.exports = grammar({
             )
         ),
 
-        struct_declaration: $ => prec.right(2, seq(
+        struct_declaration: $ => prec.right(1, seq(
             field('name', $.identifier),
             ':',
             ':',
@@ -293,7 +289,7 @@ module.exports = grammar({
             $.call_expression,
             $.member_expression,
             $.index_expression,
-            $.if_expression,
+            // $.if_expression,
             $.parenthesized_expression,
             $.identifier,
             $.address,
@@ -596,7 +592,7 @@ module.exports = grammar({
         )),
 
         // We don't want this to conflict with struct_declaration
-        anonymous_struct_type: $ => prec(-1, seq(
+        anonymous_struct_type: $ => prec(2, seq(
             // Valid anonymous struct syntax:
             //  variable := struct {};
             //  variable : struct {} = .{};
@@ -611,7 +607,7 @@ module.exports = grammar({
 
             '{',
             optional(seq(
-                prec(-1, repeat(
+                prec(2, repeat(
                     seq(choice(
                         $.struct_declaration_field,
                         $.const_declaration
