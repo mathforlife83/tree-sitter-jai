@@ -289,7 +289,7 @@ module.exports = grammar({
             $.call_expression,
             $.member_expression,
             $.index_expression,
-            // $.if_expression,
+            $.if_expression,
             $.parenthesized_expression,
             $.identifier,
             $.address,
@@ -397,12 +397,28 @@ module.exports = grammar({
             ']',
         )),
 
+        // If expressions are limited until I figure out how to make it not lag the
+        // shit out of the parser...
         if_expression: $ => prec.right(seq(
             choice('ifx', '#ifx'),
             field('condition', $.expression),
             optional('then'),
-            field('consequence', $.statement),
-            optional(field('alternative', $.else_clause)),
+            optional(field('consequence',
+                choice($.expression, $.if_expression_block)
+            )),
+            optional(field('alternative',
+                seq('else', choice($.expression, $.if_expression_block))
+            )),
+        )),
+
+        if_expression_block: $ => prec.right(seq(
+            '{',
+            optional(seq(
+                prec.right(repeat(
+                    seq(optional($.expression), ';')
+                ))
+            )),
+            '}'
         )),
 
         statement: $ => prec.left(choice(
@@ -464,10 +480,8 @@ module.exports = grammar({
                 seq($.statement, ';'),
                 $.comma_independent_statement
             )),
-            optional(field('alternative', $.else_clause)),
+            optional(field('alternative', seq('else', $.statement))),
         )),
-
-        else_clause: $ => seq('else', $.statement),
 
         if_case_statement: $ => seq(
             choice('if', '#if'),
