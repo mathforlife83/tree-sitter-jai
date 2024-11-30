@@ -771,7 +771,7 @@
     },
     "struct_declaration": {
       "type": "PREC_RIGHT",
-      "value": 1,
+      "value": 2,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1503,7 +1503,7 @@
       }
     },
     "expression": {
-      "type": "PREC_LEFT",
+      "type": "PREC_RIGHT",
       "value": 0,
       "content": {
         "type": "CHOICE",
@@ -2399,7 +2399,7 @@
       }
     },
     "call_expression": {
-      "type": "PREC_LEFT",
+      "type": "PREC_RIGHT",
       "value": 17,
       "content": {
         "type": "SEQ",
@@ -2472,8 +2472,12 @@
                                   "type": "CHOICE",
                                   "members": [
                                     {
-                                      "type": "SYMBOL",
-                                      "name": "expression"
+                                      "type": "PREC",
+                                      "value": 1,
+                                      "content": {
+                                        "type": "SYMBOL",
+                                        "name": "expression"
+                                      }
                                     },
                                     {
                                       "type": "SYMBOL",
@@ -2540,8 +2544,12 @@
                                         "type": "CHOICE",
                                         "members": [
                                           {
-                                            "type": "SYMBOL",
-                                            "name": "expression"
+                                            "type": "PREC",
+                                            "value": 1,
+                                            "content": {
+                                              "type": "SYMBOL",
+                                              "name": "expression"
+                                            }
                                           },
                                           {
                                             "type": "SYMBOL",
@@ -4021,7 +4029,7 @@
     },
     "anonymous_struct_type": {
       "type": "PREC",
-      "value": 2,
+      "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -4371,7 +4379,7 @@
     },
     "type": {
       "type": "PREC_RIGHT",
-      "value": 0,
+      "value": -1,
       "content": {
         "type": "CHOICE",
         "members": [
@@ -5229,10 +5237,6 @@
   ],
   "conflicts": [
     [
-      "type",
-      "expression"
-    ],
-    [
       "struct_literal"
     ],
     [
@@ -5258,10 +5262,6 @@
     ],
     [
       "call_expression",
-      "polymorphic_struct_type",
-      "type"
-    ],
-    [
       "polymorphic_struct_type",
       "type"
     ],

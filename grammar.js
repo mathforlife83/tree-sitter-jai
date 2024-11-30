@@ -29,7 +29,6 @@ module.exports = grammar({
     name: "jai",
 
     conflicts: $ => [
-        [$.type, $.expression],
         [$.struct_literal],
         [$.member_expression],
         [$.procedure, $.procedure_type],
@@ -38,7 +37,6 @@ module.exports = grammar({
         [$.polymorphic_struct_type],
         [$.call_expression, $.polymorphic_struct_type],
         [$.call_expression, $.polymorphic_struct_type, $.type],
-        [$.polymorphic_struct_type, $.type],
         [$.binary_expression, $.pointer_expression],
         [
             $.variable_declaration,
@@ -192,7 +190,7 @@ module.exports = grammar({
             )
         ),
 
-        struct_declaration: $ => prec.right(1, seq(
+        struct_declaration: $ => prec.right(2, seq(
             field('name', $.identifier),
             ':',
             ':',
@@ -265,24 +263,30 @@ module.exports = grammar({
                 seq(
                     optional($.type),
                     '=',
-                    commaSep1(choice($.expression, $.type)),
+                    commaSep1(choice(
+                        $.expression,
+                        $.type
+                    )),
                     optional(','),
                 ),
                 $.type
             )
         )),
 
-        const_declaration: $ => prec.right(seq(
+        const_declaration: $ => prec.right(0, seq(
             field('name', commaSep1($.identifier)),
             ':',
             optional($.type),
             ':',
             commaSep1(
-                choice($.expression, $.type)
+                choice(
+                    $.expression,
+                    $.type
+                )
             ),
         )),
 
-        expression: $ => prec.left(choice(
+        expression: $ => prec.right(0, choice(
             $.cast_expression,
             $.unary_expression,
             $.binary_expression,
@@ -357,7 +361,7 @@ module.exports = grammar({
             seq('(', $.expression, ')')
         ),
 
-        call_expression: $ => prec.left(PREC.CALL, seq(
+        call_expression: $ => prec.right(PREC.CALL, seq(
             field('function', choice(
                 $.identifier,
                 $.parenthesized_expression
@@ -373,7 +377,7 @@ module.exports = grammar({
                     //  procedure(arg2 = 2);
                     field('named_argument', optional(seq($.identifier, '='))),
                     field('argument', choice(
-                        $.expression,
+                        prec(1, $.expression),
                         $.array_type,
                         $.procedure,
                     )),
@@ -584,7 +588,6 @@ module.exports = grammar({
             '}',
         ),
 
-
         polymorphic_struct_type: $ => prec.right(seq(
             field('name', $.identifier),
             '(',
@@ -606,7 +609,7 @@ module.exports = grammar({
         )),
 
         // We don't want this to conflict with struct_declaration
-        anonymous_struct_type: $ => prec(2, seq(
+        anonymous_struct_type: $ => prec(1, seq(
             // Valid anonymous struct syntax:
             //  variable := struct {};
             //  variable : struct {} = .{};
@@ -691,7 +694,7 @@ module.exports = grammar({
         // TODO : Differentiate between taking the address of a variable and pointer types
         address: $ => seq('*', $.expression),
 
-        type: $ => prec.right(choice(
+        type: $ => prec.right(-1, choice(
             "bool",
             "string",
             "int",

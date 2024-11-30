@@ -7,4 +7,4 @@ fine for what I need it to do. It is also not fully tested.
 # TODO
 - [ ] using statements
 - [ ] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
-
+- [ ] fix conflicts which I lazily ignored before
