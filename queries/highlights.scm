@@ -10,7 +10,7 @@
   "struct"
   "enum"
   "if"
-  "ifx"
+  ; "ifx"
   "else"
   "case"
   "for"
@@ -33,13 +33,13 @@
   "break"
 ] @conditional
 
-((if_expression
-  [
-    "then"
-    "ifx"
-    "else"
-  ] @conditional.ternary)
-  (#set! "priority" 105))
+; ((if_expression
+;   [
+;     "then"
+;     "ifx"
+;     "else"
+;   ] @conditional.ternary)
+;   (#set! "priority" 105))
 
 ; Repeats
 
