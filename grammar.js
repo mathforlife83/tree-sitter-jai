@@ -53,6 +53,7 @@ module.exports = grammar({
         $.comment,
         $.block_comment,
         /\s/,
+        $.extra_compiler_declarations
     ],
 
     supertypes: $ => [
@@ -88,6 +89,10 @@ module.exports = grammar({
             seq('#', $.identifier)
         ),
 
+        extra_compiler_declarations: $ => choice(
+            seq('#deprecated', $.string),
+        ),
+
         import: $ => seq(
             optional(seq($.identifier, ':', ':')),
             "#import",
@@ -120,6 +125,7 @@ module.exports = grammar({
                 )
             )),
             ':', ':',
+            optional(field('modifier', 'inline')),
             $.procedure,
         ),
 
@@ -286,7 +292,7 @@ module.exports = grammar({
             ),
         )),
 
-        expression: $ => prec.right(0, choice(
+        expression: $ => prec.left(0, choice(
             $.cast_expression,
             $.unary_expression,
             $.binary_expression,
@@ -319,7 +325,7 @@ module.exports = grammar({
             $.expression
         )),
 
-        unary_expression: $ => prec.right(PREC.UNARY, seq(
+        unary_expression: $ => prec.left(PREC.UNARY, seq(
             field('operator', choice('+', '-', '~', '!', '&')),
             field('argument', $.expression),
         )),
@@ -362,6 +368,7 @@ module.exports = grammar({
         ),
 
         call_expression: $ => prec.right(PREC.CALL, seq(
+            optional(field('modifier', 'inline')),
             field('function', choice(
                 $.identifier,
                 $.parenthesized_expression

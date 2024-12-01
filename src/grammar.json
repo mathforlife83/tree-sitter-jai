@@ -95,6 +95,24 @@
         }
       ]
     },
+    "extra_compiler_declarations": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "#deprecated"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "string"
+            }
+          ]
+        }
+      ]
+    },
     "import": {
       "type": "SEQ",
       "members": [
@@ -344,6 +362,22 @@
         {
           "type": "STRING",
           "value": ":"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "modifier",
+              "content": {
+                "type": "STRING",
+                "value": "inline"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -1503,7 +1537,7 @@
       }
     },
     "expression": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 0,
       "content": {
         "type": "CHOICE",
@@ -1700,7 +1734,7 @@
       }
     },
     "unary_expression": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 16,
       "content": {
         "type": "SEQ",
@@ -2404,6 +2438,22 @@
       "content": {
         "type": "SEQ",
         "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "modifier",
+                "content": {
+                  "type": "STRING",
+                  "value": "inline"
+                }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
           {
             "type": "FIELD",
             "name": "function",
@@ -5233,6 +5283,10 @@
     {
       "type": "PATTERN",
       "value": "\\s"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "extra_compiler_declarations"
     }
   ],
   "conflicts": [
