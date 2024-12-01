@@ -10,13 +10,13 @@
   "struct"
   "enum"
   "if"
-  ; "ifx"
+  "ifx"
   "else"
   "case"
   "for"
   "while"
   "break"
-  ; "continue"
+  "continue"
   "defer"
   "cast"
   "xx"
@@ -33,20 +33,20 @@
   "break"
 ] @conditional
 
-; ((if_expression
-;   [
-;     "then"
-;     "ifx"
-;     "else"
-;   ] @conditional.ternary)
-;   (#set! "priority" 105))
+((if_expression
+  [
+    "then"
+    "ifx"
+    "else"
+  ] @conditional.ternary)
+  (#set! "priority" 105))
 
 ; Repeats
 
 [
   "for"
   "while"
-  ; "continue"
+  "continue"
 ] @repeat
 
 ; Variables
@@ -65,17 +65,15 @@
 
 ; Functions
 
-(procedure_declaration (identifier) @type)
-
 (procedure_declaration (identifier) @function (procedure (block)))
 
 (call_expression function: (identifier) @function.call)
 
 ; Types
 
-(type (identifier) @type)
+; (types (identifier) @type)
 
-((type (identifier) @type.builtin)
+((types (identifier) @type.builtin)
   (#any-of? @type.builtin
     "bool" "int" "string"
     "s8" "s16" "s32" "s64"
@@ -90,6 +88,7 @@
 (const_declaration (identifier) @type ":" ":" [(array_type) (pointer_type)])
 
 (struct_literal . (identifier) @type)
+; (array_literal . (identifier) @type)
 
 ((identifier) @type
   (#lua-match? @type "^[A-Z][a-zA-Z0-9]*$")
@@ -99,9 +98,9 @@
 
 (member_expression "." (identifier) @field)
 
-; (struct_type "{" (identifier) @field)
+; (anonymous_struct_type "{" (identifier) @field)
 
-(struct_field (identifier) @field "="?)
+(assignment_statement (identifier) @field "="?)
 
 (struct_declaration_field (identifier) @field)
 

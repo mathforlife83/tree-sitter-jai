@@ -1,10 +1,13 @@
 # tree-sitter-jai
 Tree-sitter grammar for the language. I needed it because I rely on tree-sitter for
-auto indents. It is incomplete in terms of language features and it probably will produce
-some misses because I didn't spend enough time fine-tuning and testing it, but it's
-fine for what I need it to do. It is also not fully tested.
+auto indents. It is incomplete, but I intend to make it better as I'm learning the
+language.
 
 # TODO
-- [ ] using statements
+- [x] run statements
+- [-] organize code and label things
 - [ ] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
 - [ ] fix conflicts which I lazily ignored before
+- [ ] organize syntax boundries
+- [ ] using statements
+- [ ] parameterized imports

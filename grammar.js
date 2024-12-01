@@ -32,11 +32,11 @@ module.exports = grammar({
         [$.struct_literal],
         [$.member_expression],
         [$.procedure, $.procedure_type],
-        [$.procedure_type, $.polymorphic_struct_type],
+        [$.procedure_type, $.parameterized_struct_type],
         [$.procedure_type],
-        [$.polymorphic_struct_type],
-        [$.call_expression, $.polymorphic_struct_type],
-        [$.call_expression, $.polymorphic_struct_type, $.type],
+        [$.parameterized_struct_type],
+        [$.call_expression, $.parameterized_struct_type],
+        [$.call_expression, $.parameterized_struct_type, $.types],
         [$.binary_expression, $.pointer_expression],
         [
             $.variable_declaration,
@@ -53,14 +53,16 @@ module.exports = grammar({
         $.comment,
         $.block_comment,
         /\s/,
-        $.extra_compiler_declarations
+        $.deprecated_directive
     ],
 
     supertypes: $ => [
-        $.declaration,
-        $.expression,
+        $.declarations,
+        $.expressions,
         $.literal,
-        $.statement,
+        $.all_statements,
+        $.no_comma_statements,
+        $.types
     ],
 
     word: $ => $.identifier,
@@ -68,29 +70,107 @@ module.exports = grammar({
     rules: {
         source_file: $ => seq(
             repeat(
-                seq($.declaration, ';')
+                seq($.declarations, ';')
             ),
-            optional($.declaration)
+            optional($.declarations)
         ),
 
-        declaration: $ => choice(
+
+        // Procedure and Global scope
+        declarations: $ => choice(
             $.compiler_declaration,
+            $.run_statement,
+
             $.procedure_declaration,
             $.struct_declaration,
             $.enum_declaration,
             $.variable_declaration,
             $.const_declaration,
-            $.expression
+            // $.expressions,
         ),
+
+        // In procedure scopes
+        statement: $ => choice( // TODO: prec ?
+            seq($.all_statements, ';'),
+            $.no_comma_statements,
+        ),
+
+        all_statements: $ => prec.left(choice(
+            $.block,
+            $.compiler_declaration,
+            $.run_statement,
+
+            $.procedure_declaration,
+            $.struct_declaration,
+            $.enum_declaration,
+
+            $.const_declaration,
+            $.variable_declaration,
+
+            $.assignment_statement,
+            $.update_statement,
+
+            $.if_statement,
+            $.if_case_statement,
+            $.while_statement,
+            $.for_statement,
+
+            $.defer_statement,
+            $.return_statement,
+            $.break_statement,
+            $.continue_statement,
+
+            $.expressions,
+        )),
+
+        no_comma_statements: $ => prec.left(1, choice(
+            $.block,
+            $.run_statement, // TODO:
+
+            $.procedure_declaration,
+            $.struct_declaration,
+            $.enum_declaration,
+
+            $.if_statement,
+            $.while_statement,
+            $.for_statement,
+            $.if_case_statement,
+        )),
+
+        // Inside statements or as arguments
+        expressions: $ => prec.left(0, choice(
+            $.parenthesized_expression,
+
+            $.cast_expression,
+            $.unary_expression,
+            $.binary_expression,
+
+            $.call_expression,
+            $.member_expression,
+            $.index_expression,
+
+            $.if_expression,
+
+            $.identifier,
+            $.address,
+            $.literal,
+            $.pointer_expression,
+        )),
+
+        //
+        // declarations
+        //
+
+        block: $ => prec(2, seq(
+            '{',
+            repeat($.statement),
+            '}',
+        )),
 
         compiler_declaration: $ => choice(
             $.import,
             $.load,
             seq('#', $.identifier)
-        ),
-
-        extra_compiler_declarations: $ => choice(
-            seq('#deprecated', $.string),
         ),
 
         import: $ => seq(
@@ -108,6 +188,7 @@ module.exports = grammar({
             "#load",
             field('path', $.string),
         ),
+
 
         procedure_declaration: $ => seq(
             field('name', choice(
@@ -129,79 +210,12 @@ module.exports = grammar({
             $.procedure,
         ),
 
-        procedure: $ => prec.right(PREC.ASSIGNMENT, seq(
-            '(',
-            field('parameters', optional(seq(
-                commaSep1($.parameter),
-                optional(','),
-            ))),
-            ')',
-            optional(seq(
-                '->',
-                // This is a procedure that returns nothing: () -> ()
-                // This is a procedure that returns a procedure; () -> (())
-                field('result', choice(
-                    prec.left(2, seq(
-                        '(',
-                        optional(commaSep1(
-                            choice(
-                                $.type,
-                                $.named_return)
-                        )),
-                        ')'
-                    )),
-                    commaSep1(choice($.type, $.named_return)),
-                ))
-            )),
-            optional($.block),
-        )),
-
-        block: $ => prec(2, seq(
-            '{',
-            repeat(choice(
-                seq($.statement, ';'),
-                $.comma_independent_statement,
-            )),
-            '}',
-        )),
-
-        parameter: $ => prec.right(
-            seq(
-                field('name', seq(
-                    optional('$'),
-                    $.identifier
-                )),
-                ':',
-                choice(
-                    field('type', seq(
-                        optional('..'),
-                        optional('$'),
-                        $.type
-                    )),
-                    seq(
-                        field('type', optional(seq(
-                            optional('..'),
-                            optional('$'),
-                            $.type
-                        ))),
-                        seq(
-                            '=',
-                            field('default_value', choice(
-                                $.expression,
-                                $.type
-                            ))
-                        )
-                    ),
-                ),
-            )
-        ),
-
         struct_declaration: $ => prec.right(2, seq(
             field('name', $.identifier),
             ':',
             ':',
             'struct',
-            // Polymorphic structs
+            // Parameterized structs
             field('modifier', optional(seq(
                 '(',
                 commaSep1($.parameter),
@@ -221,113 +235,148 @@ module.exports = grammar({
             '}',
         )),
 
-        struct_declaration_field: $ => prec(2, prec.right(choice(
-            // `identifier : type [:/=] expression;`
-            seq(
-                field('name', commaSep1($.identifier)),
-                ':',
-                choice(
-                    seq(
-                        $.type,
-                        optional(seq(
-                            choice(':', '='),
-                            commaSep1(choice($.expression, $.type)),
-                            optional(','))
-                        )
-                    ),
-                    seq(
-                        choice(':', '='),
-                        commaSep1(choice($.expression, $.type)),
-                        optional(',')
-                    )
-                )
-            )
-        ))),
-
         enum_declaration: $ => seq(
             field('name', $.identifier),
             ':', ':',
             'enum',
-            $.type,
+            $.types,
             optional($.specified_directive),
             '{',
             sep(
                 seq(
                     $.identifier,
-                    optional(seq(':', ':', $.expression))
+                    optional(seq(':', ':', $.expressions))
                 ),
                 ';'
             ),
             '}',
         ),
-        specified_directive: $ => '#specified',
 
         variable_declaration: $ => prec.left(seq(
             field('name', commaSep1($.identifier)),
             ':',
             choice(
                 seq(
-                    optional($.type),
+                    optional($.types),
                     '=',
                     commaSep1(choice(
-                        $.expression,
-                        $.type
+                        $.expressions,
+                        $.types
                     )),
                     optional(','),
                 ),
-                $.type
+                $.types
             )
         )),
 
         const_declaration: $ => prec.right(0, seq(
             field('name', commaSep1($.identifier)),
             ':',
-            optional($.type),
+            optional($.types),
             ':',
             commaSep1(
                 choice(
-                    $.expression,
-                    $.type
+                    $.expressions,
+                    $.types
                 )
             ),
         )),
 
-        expression: $ => prec.left(0, choice(
-            $.cast_expression,
-            $.unary_expression,
-            $.binary_expression,
-            $.call_expression,
-            $.member_expression,
-            $.index_expression,
-            $.if_expression,
-            $.parenthesized_expression,
-            $.identifier,
-            $.address,
-            $.literal,
-            $.pointer_expression,
+
+        //
+        // statements
+        //
+
+        run_statement: $ => seq(
+            '#run',
+            $.statement,
+        ),
+
+        assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
+            commaSep1(choice($.pointer_expression, $.identifier)),
+            '=',
+            commaSep1(choice($.expressions, $.procedure, $.types)),
         )),
 
-        cast_expression: $ => prec.left(PREC.CAST, seq(
-            // cast,force () / xx,force
+        update_statement: $ => prec.left(seq(
+            commaSep1($.identifier),
             choice(
-                seq(
-                    'cast',
-                    field('modifier', optional(seq(',', commaSep1($.identifier)))),
-                    '(',
-                    $.type,
-                    ')'
-                ),
-                seq(
-                    'xx',
-                    field('modifier', optional(seq(',', commaSep1($.identifier)))),
-                )
+                '+=', '-=', '*=', '/=', '%=', '&=', '|=',
+                '^=', '<<=', '>>=', '||=', '&&=',
             ),
-            $.expression
+            commaSep1($.expressions),
         )),
+
+        if_statement: $ => prec.right(1, seq(
+            choice('if', '#if'),
+            field('condition', $.expressions),
+            optional('then'),
+            field('consequence', $.statement),
+            optional(field('alternative', seq('else', $.statement))),
+        )),
+
+        if_case_statement: $ => seq(
+            choice('if', '#if'),
+            field('condition', $.expressions),
+            '==',
+            '{',
+            repeat($.switch_case),
+            '}',
+        ),
+
+        while_statement: $ => seq(
+            'while',
+            optional(
+                field('name',
+                    seq(
+                        $.identifier,
+                        ':',
+                        optional($.types),
+                        '='
+                    )
+                )),
+            field('condition', $.expressions),
+            field('body', $.statement),
+        ),
+
+        for_statement: $ => seq(
+            'for',
+            optional('<'),
+            optional('*'),
+            optional(seq(
+                field('value', commaSep1($.identifier)),
+                ':'
+            )),
+            choice(
+                $.range,
+                $.identifier,
+            ),
+            field('body', $.statement),
+        ),
+
+        break_statement: $ => prec.right(seq('break', optional($.identifier))),
+
+        continue_statement: $ => seq('continue', optional($.identifier)),
+
+        defer_statement: $ => seq('defer', $.statement), // TODO:
+
+        return_statement: $ => prec.right(1, seq(
+            'return',
+            optional(commaSep1($.expressions)),
+        )),
+
+
+        //
+        // expressions
+        //
+
+        parenthesized_expression: $ => prec.right(PREC.PARENTHESES,
+            seq('(', $.expressions, ')')
+        ),
 
         unary_expression: $ => prec.left(PREC.UNARY, seq(
             field('operator', choice('+', '-', '~', '!', '&')),
-            field('argument', $.expression),
+            field('argument', $.expressions),
         )),
 
         binary_expression: $ => {
@@ -355,17 +404,18 @@ module.exports = grammar({
 
             return choice(...table.map(([operator, precedence]) => {
                 return prec.left(precedence, seq(
-                    field('left', $.expression),
+                    field('left', $.expressions),
                     // @ts-ignore
                     field('operator', operator),
-                    field('right', $.expression),
+                    field('right', $.expressions),
                 ));
             }));
         },
 
-        parenthesized_expression: $ => prec.right(PREC.PARENTHESES,
-            seq('(', $.expression, ')')
-        ),
+        pointer_expression: $ => prec.right(PREC.SHIFT, seq(
+            field('operator', '<<'),
+            field('argument', $.expressions)
+        )),
 
         call_expression: $ => prec.right(PREC.CALL, seq(
             optional(field('modifier', 'inline')),
@@ -384,7 +434,7 @@ module.exports = grammar({
                     //  procedure(arg2 = 2);
                     field('named_argument', optional(seq($.identifier, '='))),
                     field('argument', choice(
-                        prec(1, $.expression),
+                        prec(1, $.expressions),
                         $.array_type,
                         $.procedure,
                     )),
@@ -401,24 +451,31 @@ module.exports = grammar({
         )),
 
         index_expression: $ => prec.left(PREC.MEMBER, seq(
-            $.expression,
+            $.expressions,
             '[',
-            $.expression,
-            // optional(seq(',', $.expression)), // not sure if jai has this
+            $.expressions,
+            optional(seq(',', $.expressions)),
             ']',
+        )),
+
+        type_of_expression: $ => prec.left(seq(
+            'type_of',
+            '(',
+            $.identifier,
+            ')'
         )),
 
         // If expressions are limited until I figure out how to make it not lag the
         // shit out of the parser...
         if_expression: $ => prec.right(seq(
             choice('ifx', '#ifx'),
-            field('condition', $.expression),
+            field('condition', $.expressions),
             optional('then'),
             optional(field('consequence',
-                choice($.expression, $.if_expression_block)
+                choice($.expressions, $.if_expression_block)
             )),
             optional(field('alternative',
-                seq('else', choice($.expression, $.if_expression_block))
+                seq('else', choice($.expressions, $.if_expression_block))
             )),
         )),
 
@@ -426,176 +483,173 @@ module.exports = grammar({
             '{',
             optional(seq(
                 prec.right(repeat(
-                    seq(optional($.expression), ';')
+                    seq(optional($.expressions), ';')
                 ))
             )),
             '}'
         )),
 
-        statement: $ => prec.left(choice(
-            $.procedure_declaration,
-            $.struct_declaration,
-            $.enum_declaration,
-            $.if_statement,
-            $.while_statement,
-            $.for_statement,
-            $.if_case_statement,
-            $.expression,
-            $.block,
-            $.const_declaration,
-            $.import,
-            $.assignment_statement,
-            $.update_statement,
-            $.defer_statement,
-            $.break_statement,
-            $.return_statement,
-            $.variable_declaration,
-        )),
-
-        comma_independent_statement: $ => prec.left(1, choice(
-            $.procedure_declaration,
-            $.struct_declaration,
-            $.enum_declaration,
-            $.if_statement,
-            $.while_statement,
-            $.for_statement,
-            $.if_case_statement,
-            $.block,
-        )),
-
-        assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
-            commaSep1(choice($.pointer_expression, $.identifier)),
-            '=',
-            commaSep1(choice($.expression, $.procedure, $.type)),
-        )),
-
-        update_statement: $ => prec.left(seq(
-            commaSep1($.identifier),
+        cast_expression: $ => prec.left(PREC.CAST, seq(
+            // cast,force () / xx,force
             choice(
-                '+=', '-=', '*=', '/=', '%=', '&=', '|=',
-                '^=', '<<=', '>>=', '||=', '&&=',
+                seq(
+                    'cast',
+                    field('modifier', optional(seq(',', commaSep1($.identifier)))),
+                    '(',
+                    $.types,
+                    ')'
+                ),
+                seq(
+                    'xx',
+                    field('modifier', optional(seq(',', commaSep1($.identifier)))),
+                )
             ),
-            commaSep1($.expression),
+            $.expressions
         )),
 
-        pointer_expression: $ => prec.right(PREC.SHIFT, seq(
-            field('operator', '<<'),
-            field('argument', $.expression)
-        )),
+        //
+        // 
+        //
 
-        if_statement: $ => prec.right(1, seq(
-            choice('if', '#if'),
-            field('condition', $.expression),
-            optional('then'),
-            field('consequence', choice(
-                seq($.statement, ';'),
-                $.comma_independent_statement
-            )),
-            optional(field('alternative', seq('else', $.statement))),
-        )),
-
-        if_case_statement: $ => seq(
-            choice('if', '#if'),
-            field('condition', $.expression),
-            '==',
-            '{',
-            repeat($.switch_case),
-            '}',
-        ),
-
-        switch_case: $ => seq(
-            'case',
-            optional(field('value', $.expression)),
-            ';',
-            repeat(choice(
-                seq($.statement, ';'),
-                $.comma_independent_statement
-            )),
-            optional(seq($.through_statement, ';')),
-        ),
-
-        while_statement: $ => seq(
-            'while',
-            optional(
-                field('name',
-                    seq(
-                        $.identifier,
-                        ':',
-                        optional($.type),
-                        '='
-                    )
-                )),
-            field('condition', $.expression),
-            field('body', $.statement),
-        ),
-
-        for_statement: $ => seq(
-            'for',
-            optional('<'),
-            optional('*'),
+        // Procedure
+        procedure: $ => prec.right(PREC.ASSIGNMENT, seq(
+            '(',
+            field('parameters', optional(seq(
+                commaSep1($.parameter),
+                optional(','),
+            ))),
+            ')',
             optional(seq(
-                field('value', commaSep1($.identifier)),
-                ':'
+                '->',
+                // This is a procedure that returns nothing: () -> ()
+                // This is a procedure that returns a procedure; () -> (())
+                field('result', choice(
+                    prec.left(2, seq(
+                        '(',
+                        optional(commaSep1(
+                            choice(
+                                $.types,
+                                $.named_return)
+                        )),
+                        ')'
+                    )),
+                    commaSep1(choice($.types, $.named_return)),
+                ))
             )),
-            choice(
-                $.range,
-                $.identifier,
-            ),
-            field('body', $.statement),
-        ),
-
-        range: $ => prec.left(PREC.MEMBER, seq(
-            field('range_from', $.expression),
-            '..',
-            field('range_to', $.expression),
+            optional($.block),
+        )),
+        named_return: $ => prec.right(2, seq(
+            $.identifier,
+            ':',
+            $.types,
+            optional(seq('=', $.literal))
         )),
 
-        break_statement: $ => prec.right(seq('break', optional($.identifier))),
-
-        continue_statement: $ => seq('continue', optional($.identifier)),
-
-        defer_statement: $ => seq('defer', $.statement),
-
-        through_statement: $ => '#through',
-
-        return_statement: $ => prec.right(1, seq(
-            'return',
-            optional(commaSep1($.expression)),
-        )),
-
-        literal: $ => prec.right(choice(
-            $.number,
-            $.string,
-            $.struct_literal,
-            $.array_litteral,
-            $.boolean,
-            $.null,
-            $.uninitialized,
-        )),
-
-        struct_literal: $ => seq(
-            optional(
+        // Struct
+        struct_declaration_field: $ => prec(2, prec.right(choice(
+            // `identifier : type [:/=] expression;`
+            seq(
+                field('name', commaSep1($.identifier)),
+                ':',
                 choice(
                     seq(
-                        '(',
-                        $.type,
-                        ')'
+                        $.types,
+                        optional(seq(
+                            choice(':', '='),
+                            commaSep1(choice($.expressions, $.types)),
+                            optional(','))
+                        )
                     ),
-                    $.identifier,
-                    $.anonymous_struct_type,
+                    seq(
+                        choice(':', '='),
+                        commaSep1(choice($.expressions, $.types)),
+                        optional(',')
+                    )
+                )
+            )
+        ))),
+
+        // Procedure and Struct
+        parameter: $ => prec.right(
+            seq(
+                field('name', seq(
+                    optional('$'),
+                    $.identifier
+                )),
+                ':',
+                choice(
+                    field('type', seq(
+                        optional('..'),
+                        optional('$'),
+                        $.types
+                    )),
+                    seq(
+                        field('type', optional(seq(
+                            optional('..'),
+                            optional('$'),
+                            $.types
+                        ))),
+                        seq(
+                            '=',
+                            field('default_value', choice(
+                                $.expressions,
+                                $.types
+                            ))
+                        )
+                    ),
                 ),
-            ),
-            '.',
-            '{',
-            optional(seq(
-                // TODO: this should be expression
-                commaSep1($.struct_field),
-                optional(','),
-            )),
-            '}',
+            )
         ),
 
-        polymorphic_struct_type: $ => prec.right(seq(
+        // Enum declaration
+        specified_directive: $ => '#specified',
+
+        // If case
+        switch_case: $ => seq(
+            'case',
+            optional(field('value', $.expressions)),
+            ';',
+            repeat($.statement),
+            optional(seq($.through_statement, ';')),
+        ),
+        through_statement: $ => '#through',
+
+        // For loop
+        range: $ => prec.left(PREC.MEMBER, seq(
+            field('range_from', $.expressions),
+            '..',
+            field('range_to', $.expressions),
+        )),
+
+        //
+        // Types
+        //
+
+        types: $ => prec.right(-1, choice(
+            "bool",
+            "string",
+            "int",
+            "float",
+            "float64",
+            "float32",
+            "s64",
+            "s32",
+            "s16",
+            "s8",
+            "u64",
+            "u32",
+            "u16",
+            "u8",
+            $.identifier,
+            $.pointer_type,
+            $.parameterized_struct_type,
+            $.anonymous_struct_type,
+            $.array_type,
+            $.type_of_expression,
+            $.procedure_type,
+        )),
+
+        parameterized_struct_type: $ => prec.right(seq(
             field('name', $.identifier),
             '(',
             optional(seq(
@@ -604,10 +658,10 @@ module.exports = grammar({
                 commaSep1(optional(seq(
                     field('named_argument', optional(seq($.identifier, '='))),
                     field('argument', choice(
-                        $.expression,
+                        $.expressions,
                         $.array_type,
                         $.procedure,
-                        $.type
+                        $.types
                     )),
                 ))),
                 optional(','),
@@ -642,34 +696,103 @@ module.exports = grammar({
             '}',
         )),
 
-        struct_field: $ => prec.right(choice(
-            $.expression,
-            seq(
-                $.identifier,
-                '=',
-                $.expression
-            )
+        // TODO : Differentiate between taking the address of a variable and pointer types
+        pointer_type: $ => prec.left(seq('*', $.types)),
+
+        procedure_type: $ => prec.left(seq(
+            '(',
+            optional(seq(
+                commaSep1(choice(
+                    $.parameter,
+                    $.types
+                )),
+                optional(','),
+            )),
+            ')',
+            optional(seq(
+                '->',
+                choice(
+                    seq(
+                        '(',
+                        optional(commaSep1(choice($.types, $.named_return))),
+                        ')'
+                    ),
+                    commaSep1(choice($.types, $.named_return)),
+                )
+            )),
         )),
 
-        array_litteral: $ => prec.right(2, seq(
+        // TODO: some array type stuff that I forgor
+        array_type: $ => prec.right(1, seq(
+            '[',
+            optional(seq(choice('..', $.expressions))),
+            ']',
+            optional($.types),
+        )),
+
+        //
+        // literals
+        //
+
+        literal: $ => prec.right(choice(
+            $.number,
+            $.string,
+            $.struct_literal,
+            $.array_literal,
+            $.boolean,
+            $.null,
+            $.uninitialized,
+        )),
+
+        struct_literal: $ => seq(
             optional(
                 choice(
-                    seq('(', $.type, ')'),
-                    $.type,
+                    seq(
+                        '(',
+                        $.types,
+                        ')'
+                    ),
+                    $.identifier,
+                    $.anonymous_struct_type,
+                ),
+            ),
+            '.',
+            '{',
+            optional(seq(
+                commaSep1(choice(
+                    $.expressions,
+                    $.assignment_statement, // named assignment
+                )),
+                optional(','),
+            )),
+            '}',
+        ),
+
+        array_literal: $ => prec.right(2, seq(
+            optional(
+                choice(
+                    seq('(', $.types, ')'),
+                    $.types,
                 ),
             ),
             '.',
             '[',
             optional(seq(
-                commaSep1($.expression),
+                commaSep1($.expressions),
                 optional(','),
             )),
             ']',
         )),
 
-        string: $ => $._string_literal,
 
-        _string_literal: $ => seq(
+        boolean: _ => choice('true', 'false'),
+        null: _ => 'null',
+        uninitialized: _ => '---',
+
+        address: $ => seq('*', $.expressions),
+
+        string: $ => seq(
+            field('modifier', optional('#char')),
             '"',
             repeat(choice(
                 $.string_content,
@@ -677,9 +800,7 @@ module.exports = grammar({
             )),
             '"',
         ),
-
         string_content: _ => token.immediate(prec(1, /[^"\\]+/)),
-
         escape_sequence: _ => token.immediate(seq(
             '\\',
             choice(
@@ -692,86 +813,8 @@ module.exports = grammar({
             ),
         )),
 
-        boolean: _ => choice('true', 'false'),
-
-        null: _ => 'null',
-
-        uninitialized: _ => '---',
-
-        // TODO : Differentiate between taking the address of a variable and pointer types
-        address: $ => seq('*', $.expression),
-
-        type: $ => prec.right(-1, choice(
-            "bool",
-            "string",
-            "int",
-            "float",
-            "float64",
-            "float32",
-            "s64",
-            "s32",
-            "s16",
-            "s8",
-            "u64",
-            "u32",
-            "u16",
-            "u8",
-            $.identifier,
-            $.pointer_type,
-            $.polymorphic_struct_type,
-            $.anonymous_struct_type,
-            $.array_type,
-            $.type_of_statement,
-            $.procedure_type,
-        )),
-
-        procedure_type: $ => prec.left(seq(
-            '(',
-            optional(seq(
-                commaSep1(choice(
-                    $.parameter,
-                    $.type
-                )),
-                optional(','),
-            )),
-            ')',
-            optional(seq(
-                '->',
-                choice(
-                    seq(
-                        '(',
-                        optional(commaSep1(choice($.type, $.named_return))),
-                        ')'
-                    ),
-                    commaSep1(choice($.type, $.named_return)),
-                )
-            )),
-        )),
-
-        pointer_type: $ => prec.left(seq('*', $.type)),
-
-        array_type: $ => prec.right(1, seq(
-            '[',
-            optional(seq(choice('..', $.expression))),
-            ']',
-            optional($.type),
-        )),
-
-        type_of_statement: $ => prec.left(seq(
-            'type_of',
-            '(',
-            $.identifier,
-            ')'
-        )),
-
-        named_return: $ => prec.right(2, seq(
-            $.identifier,
-            ':',
-            $.type,
-            optional(seq('=', $.literal))
-        )),
-
         identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
+
         number: _ => {
             const decimal = /[0-9][0-9_]?/;
             const hex = /0[xh][0-9a-fA-F_]?/;
@@ -812,6 +855,8 @@ module.exports = grammar({
             ));
         },
 
+        // extras
+
         comment: _ => token(seq('//', /[^\r\n]*/)),
 
         // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
@@ -823,6 +868,10 @@ module.exports = grammar({
                 '/',
             ),
         )),
+
+        deprecated_directive: $ => choice(
+            seq('#deprecated', $.string),
+        ),
 }
 });
 
