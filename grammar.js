@@ -47,7 +47,7 @@ module.exports = grammar({
         [$.all_statements, $.no_comma_statements],
         [$.procedure_type],
         [$.procedure, $.procedure_type],
-        // [$.member_expression],
+        [$.member_expression],
         // [$.procedure_type, $.parameterized_struct_type],
         // [$.procedure_type],
         // [$.parameterized_struct_type],
@@ -465,9 +465,9 @@ module.exports = grammar({
         )),
 
         member_expression: $ => prec.left(PREC.MEMBER, seq(
-            $.identifier,
+            optional($.expressions),
             '.',
-            $.identifier,
+            choice($.identifier, $.call_expression),
         )),
 
         index_expression: $ => prec(PREC.MEMBER, seq(
@@ -643,7 +643,13 @@ module.exports = grammar({
             $.array_type,
             $.type_of_expression,
             $.procedure_type,
+            $.type_literal,
         )),
+
+        type_literal: $ => seq(
+            '#type',
+            $.types,
+        ),
 
         parameterized_struct_type: $ => prec(17, seq(
             field('name', $.identifier),

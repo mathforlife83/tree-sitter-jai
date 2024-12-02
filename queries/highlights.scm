@@ -71,10 +71,6 @@
 
 ; Types
 
-; (types (identifier) @type)
-
-; (type: (identifier) @field)
-
 type: (types) @type
 
 modifier: (identifier) @keyword

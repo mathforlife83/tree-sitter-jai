@@ -2889,16 +2889,33 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "expressions"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           },
           {
             "type": "STRING",
             "value": "."
           },
           {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "call_expression"
+              }
+            ]
           }
         ]
       }
@@ -3882,9 +3899,26 @@
           {
             "type": "SYMBOL",
             "name": "procedure_type"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_literal"
           }
         ]
       }
+    },
+    "type_literal": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "types"
+        }
+      ]
     },
     "parameterized_struct_type": {
       "type": "PREC",
@@ -5678,6 +5712,9 @@
     [
       "procedure",
       "procedure_type"
+    ],
+    [
+      "member_expression"
     ]
   ],
   "precedences": [],

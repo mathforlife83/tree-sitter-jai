@@ -1064,7 +1064,7 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "expressions",
           "named": true
         }
       ]
@@ -1787,6 +1787,21 @@
     }
   },
   {
+    "type": "type_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "types",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type_of_expression",
     "named": true,
     "fields": {},
@@ -1831,6 +1846,10 @@
         },
         {
           "type": "procedure_type",
+          "named": true
+        },
+        {
+          "type": "type_literal",
           "named": true
         },
         {
@@ -2076,6 +2095,10 @@
   },
   {
     "type": "#run",
+    "named": false
+  },
+  {
+    "type": "#type",
     "named": false
   },
   {
