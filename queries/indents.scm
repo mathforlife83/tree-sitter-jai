@@ -2,16 +2,16 @@
 
 [
   (block "{")
-  (procedure "(")
-
-  (parameterized_struct_type "(")
   (enum_declaration "{")
-  (struct_declaration "(" "{")
+  (struct_declaration "{")
   (struct_literal "{")
-  (array_literal "[")
   (anonymous_struct_type "{")
-  (call_expression "(")
   (if_expression_block "{")
+  (array_literal "[")
+  (procedure "(")
+  (call_expression "(")
+  (struct_declaration "(") ; parameterized
+  (parameterized_struct_type "(")
   ; (literal)
 
 ] @indent.begin

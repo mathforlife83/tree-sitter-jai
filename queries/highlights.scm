@@ -71,7 +71,7 @@
 
 ; Types
 
-; (types (identifier) @type)
+(types (identifier) @type)
 
 ((types (identifier) @type.builtin)
   (#any-of? @type.builtin
@@ -80,7 +80,6 @@
     "u8" "u16" "u32" "u64"
     "Type" "Any"))
 
-
 (struct_declaration (identifier) @type ":" ":")
 
 (enum_declaration (identifier) @type ":" ":")
@@ -88,7 +87,7 @@
 (const_declaration (identifier) @type ":" ":" [(array_type) (pointer_type)])
 
 (struct_literal . (identifier) @type)
-; (array_literal . (identifier) @type)
+(array_literal . (identifier) @type)
 
 ((identifier) @type
   (#lua-match? @type "^[A-Z][a-zA-Z0-9]*$")
@@ -102,8 +101,6 @@
 
 (assignment_statement (identifier) @field "="?)
 
-(struct_declaration_field (identifier) @field)
-
 ; Constants
 
 ((identifier) @constant
@@ -116,7 +113,8 @@
 
 ; Literals
 
-(number) @number
+(integer) @number
+(float) @number
 
 (string) @string
 
@@ -201,5 +199,4 @@
 
 (ERROR) @error
 
-(number) @number
 (block_comment) @comment

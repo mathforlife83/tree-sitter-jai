@@ -5,9 +5,14 @@ language.
 
 # TODO
 - [x] run statements
-- [-] organize code and label things
+- [x] organize code and label things
+- [x] using statements
+- [x] fix floats...
 - [ ] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
 - [ ] fix conflicts which I lazily ignored before
-- [ ] organize syntax boundries
-- [ ] using statements
-- [ ] parameterized imports
+- [ ] custom iterators such as "for :utf8_iter"
+- [ ] macros
+- [ ] #string
+- [ ] break label
+- [ ] parameterized module imports
+- [ ] comma sepparated variable declarations doesn't seem to work for some bizzare reason and I can't seem to be able to get it to work
