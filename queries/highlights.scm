@@ -71,7 +71,14 @@
 
 ; Types
 
-(types (identifier) @type)
+; (types (identifier) @type)
+
+; (type: (identifier) @field)
+
+type: (types) @type
+
+modifier: (identifier) @keyword
+keyword: (identifier) @keyword
 
 ((types (identifier) @type.builtin)
   (#any-of? @type.builtin

@@ -141,7 +141,7 @@ module.exports = grammar({
         ),
 
         // Inside statements or as arguments
-        expressions: $ => prec(20, choice(
+        expressions: $ => prec.left(20, choice(
             $.parenthesized_expression,
 
             $.cast_expression,
@@ -204,11 +204,12 @@ module.exports = grammar({
                     'operator',
                     // I forgor which operators can be overloaded, lol
                     choice(
-                        '+=', '-=', '*=', '/=', '%=', '&=', '|=',
-                        '^=', '<<=', '>>=', '||=', '&&=',
-                        '||', '&&', '>', '>=', '<=', '<',
-                        '==', '!=', '|', '~', '&', '&~',
-                        '<<', '>>', '+', '-', '*', '/', '%',
+                        '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', 
+                        '+',  '-',  '*',  '/',  '%',  '&',  '|',  '^',
+                        '<<', '>>', '||', '&&', '<<<', '>>>',
+                        '<<=', '>>=', '||=', '&&=', '<<<=', '>>>=',
+                        '==', '!=', '~', '&~', '>', '>=', '<=', '<',
+                        '[]', '[]=', '*[]'
                     )
                 )
             )),
@@ -313,8 +314,8 @@ module.exports = grammar({
             field('name', comma_sep1($.expressions)),
             optional(','),
             choice(
-                '+=', '-=', '*=', '/=', '%=', '&=', '|=',
-                '^=', '<<=', '>>=', '||=', '&&=',
+                '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=',
+                '<<=', '>>=', '<<<=', '>>>=', '||=', '&&=',
             ),
             comma_sep1($.expressions, $.procedure),
         ),
@@ -387,32 +388,34 @@ module.exports = grammar({
             seq('(', $.expressions, ')')
         ),
 
-        unary_expression: $ => prec(PREC.UNARY, seq(
+        unary_expression: $ => prec.left(PREC.UNARY, seq(
             field('operator', choice('+', '-', '~', '!', '&')),
             field('argument', $.expressions),
         )),
 
         binary_expression: $ => {
             const table = [
-                ['||', PREC.LOGICAL_OR],
-                ['&&', PREC.LOGICAL_AND],
-                ['>', PREC.COMPARE],
-                ['>=', PREC.COMPARE],
-                ['<=', PREC.COMPARE],
-                ['<', PREC.COMPARE],
-                ['==', PREC.EQUALITY],
-                ['!=', PREC.EQUALITY],
-                ['|', PREC.BITWISE_OR],
-                ['~', PREC.BITWISE_XOR],
-                ['&', PREC.BITWISE_AND],
-                ['&~', PREC.BITWISE_AND_NOT],
-                ['<<', PREC.SHIFT],
-                ['>>', PREC.SHIFT],
-                ['+', PREC.ADD],
-                ['-', PREC.ADD],
-                ['*', PREC.MULTIPLY],
-                ['/', PREC.MULTIPLY],
-                ['%', PREC.MULTIPLY],
+                ['||',  PREC.LOGICAL_OR],
+                ['&&',  PREC.LOGICAL_AND],
+                ['>',   PREC.COMPARE],
+                ['>=',  PREC.COMPARE],
+                ['<=',  PREC.COMPARE],
+                ['<',   PREC.COMPARE],
+                ['==',  PREC.EQUALITY],
+                ['!=',  PREC.EQUALITY],
+                ['|',   PREC.BITWISE_OR],
+                ['~',   PREC.BITWISE_XOR],
+                ['&',   PREC.BITWISE_AND],
+                ['&~',  PREC.BITWISE_AND_NOT],
+                ['<<',  PREC.SHIFT],
+                ['>>',  PREC.SHIFT],
+                ['<<<', PREC.SHIFT],
+                ['>>>', PREC.SHIFT],
+                ['+',   PREC.ADD],
+                ['-',   PREC.ADD],
+                ['*',   PREC.MULTIPLY],
+                ['/',   PREC.MULTIPLY],
+                ['%',   PREC.MULTIPLY],
             ];
 
             return choice(...table.map(([operator, precedence]) => {
@@ -430,7 +433,7 @@ module.exports = grammar({
             field('argument', $.expressions)
         )),
 
-        call_expression: $ => prec(PREC.CALL, seq(
+        call_expression: $ => prec.right(PREC.CALL, seq(
             optional(field('modifier', 'inline')),
             field('function', choice(
                 $.identifier,
@@ -553,6 +556,7 @@ module.exports = grammar({
                     comma_sep1(choice($.types, $.named_return)),
                 ))
             )),
+            optional($.compiler_declaration),
             optional($.block),
         )),
         named_return: $ => prec.right(1, seq(
@@ -561,30 +565,6 @@ module.exports = grammar({
             $.types,
             optional(seq('=', $.literal))
         )),
-
-        // Struct
-        /* struct_declaration_field: $ => choice(
-            // `identifier : type [:/=] expression;`
-            seq(
-                field('name', comma_sep1($.identifier)),
-                ':',
-                choice(
-                    seq(
-                        $.types,
-                        optional(seq(
-                            choice(':', '='),
-                            comma_sep1($.expressions, $.types),
-                            optional(',')
-                        ))
-                    ),
-                    seq(
-                        choice(':', '='),
-                        comma_sep1($.expressions, $.types),
-                        optional(',')
-                    )
-                )
-            )
-        ), */
 
         // Procedure and Struct
         parameter: $ => seq(

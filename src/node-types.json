@@ -404,6 +404,10 @@
             "named": false
           },
           {
+            "type": "<<<",
+            "named": false
+          },
+          {
             "type": "<=",
             "named": false
           },
@@ -421,6 +425,10 @@
           },
           {
             "type": ">>",
+            "named": false
+          },
+          {
+            "type": ">>>",
             "named": false
           },
           {
@@ -1311,11 +1319,15 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
         {
           "type": "block",
+          "named": true
+        },
+        {
+          "type": "compiler_declaration",
           "named": true
         }
       ]
@@ -1380,6 +1392,10 @@
             "named": false
           },
           {
+            "type": "*[]",
+            "named": false
+          },
+          {
             "type": "+",
             "named": false
           },
@@ -1412,6 +1428,14 @@
             "named": false
           },
           {
+            "type": "<<<",
+            "named": false
+          },
+          {
+            "type": "<<<=",
+            "named": false
+          },
+          {
             "type": "<<=",
             "named": false
           },
@@ -1437,6 +1461,26 @@
           },
           {
             "type": ">>=",
+            "named": false
+          },
+          {
+            "type": ">>>",
+            "named": false
+          },
+          {
+            "type": ">>>=",
+            "named": false
+          },
+          {
+            "type": "[]",
+            "named": false
+          },
+          {
+            "type": "[]=",
+            "named": false
+          },
+          {
+            "type": "^",
             "named": false
           },
           {
@@ -2087,6 +2131,10 @@
     "named": false
   },
   {
+    "type": "*[]",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
@@ -2155,6 +2203,14 @@
     "named": false
   },
   {
+    "type": "<<<",
+    "named": false
+  },
+  {
+    "type": "<<<=",
+    "named": false
+  },
+  {
     "type": "<<=",
     "named": false
   },
@@ -2187,11 +2243,31 @@
     "named": false
   },
   {
+    "type": ">>>",
+    "named": false
+  },
+  {
+    "type": ">>>=",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
   {
+    "type": "[]",
+    "named": false
+  },
+  {
+    "type": "[]=",
+    "named": false
+  },
+  {
     "type": "]",
+    "named": false
+  },
+  {
+    "type": "^",
     "named": false
   },
   {
