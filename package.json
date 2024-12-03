@@ -2,8 +2,8 @@
   "name": "tree-sitter-jai",
   "version": "0.1.0",
   "description": "tree-sitter grammar for the language",
-  "repository": "github:tree-sitter/tree-sitter-jai",
-  "license": "MIT",
+  "repository": "github:constantitus/tree-sitter-jai",
+  "license": "MIT-0",
   "author": {
     "name": "constantitus",
     "email": "constantitus@gmail.com"
