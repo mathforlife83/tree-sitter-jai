@@ -1,3 +1,8 @@
+// Credits to the following sources
+// - tree-sitter-odin and the other tree-sitter-jai implementations (general inspiration)
+// - tree-sitter-go (for the integer and floats matching)
+// - tree-sitter-tlaplus (for nested block comments)
+
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-nocheck
 
@@ -74,7 +79,7 @@ module.exports = grammar({
     word: $ => $.identifier,
 
     rules: {
-        source_file: $ => repeat($.declarations),
+        source_file: $ => repeat(seq($.declarations, optional(';'))),
 
         // Procedure and Global scope
         declarations: $ => choice(
@@ -852,27 +857,41 @@ module.exports = grammar({
 
         comment: _ => token(seq('//', /[^\r\n]*/)),
 
-        // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
-        block_comment: _ => token(prec.right(choice(
-            // This came from tree-sitter-c, but it doesn't stand true since in jai,
-            // using "\" before newline won't extend the comment to the next line.
-            // seq('//', /(\\+(.|\r?\n)|[^\\\n])*/),
-
-            seq('//', /(\\+(.|\r?\n))*/),
-
-            seq(
-                '/*',
-                /[^*]*\*+([^/*][^*]*\*+)*/,
-                '/',
+        // Credits and thanks to tree-sitter-tlaplus for this regex
+        block_comment: $ => seq(
+            token(prec(1, "/*")),
+            repeat(
+                $.block_comment_text,
             ),
+            token(prec(1, '*/'))
+        ),
+        block_comment_text: $ => prec.right(repeat1(choice(
+            token(prec(1, regexOr(
+                '[^*/]',    // any symbol except reserved
+                '[^*][/]',  // closing parenthesis, which is not a comment end
+                '[/][^/*]', // opening parenthesis, which is not a comment start
+                '[*][/][ \t]*(\r\n|\n)?[ \t]*[/][*]' // contiguous block comment border
+            ))),
+            token(prec(1, /\*/)),
+            token(prec(1, /\//)),
         ))),
 
         deprecated_directive: $ => choice(
             seq('#deprecated', $.string),
         ),
+
 }
 });
 
+function regexOr(regex) {
+    if (arguments.length > 1) {
+        regex = Array.from(arguments).join('|');
+    }
+    return {
+        type: 'PATTERN',
+        value: regex
+    };
+}
 
 // Creates a rule to match zero or more occurrences of `rule` separated by `sep`
 function sep(rule, s) {

@@ -473,6 +473,26 @@
     }
   },
   {
+    "type": "block_comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "block_comment_text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "block_comment_text",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "boolean",
     "named": true,
     "fields": {}
@@ -2150,6 +2170,10 @@
     "named": false
   },
   {
+    "type": "*/",
+    "named": false
+  },
+  {
     "type": "*=",
     "named": false
   },
@@ -2203,6 +2227,10 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": "/*",
     "named": false
   },
   {
@@ -2296,10 +2324,6 @@
   {
     "type": "^=",
     "named": false
-  },
-  {
-    "type": "block_comment",
-    "named": true
   },
   {
     "type": "bool",
