@@ -4,6 +4,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "asm_statement",
+        "named": true
+      },
+      {
         "type": "assignment_statement",
         "named": true
       },
@@ -190,6 +194,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "asm_statement",
+        "named": true
+      },
+      {
         "type": "block",
         "named": true
       },
@@ -332,6 +340,21 @@
         },
         {
           "type": "types",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "asm_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
           "named": true
         }
       ]
@@ -2148,6 +2171,10 @@
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "#asm",
     "named": false
   },
   {

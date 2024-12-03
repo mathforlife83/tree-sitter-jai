@@ -121,6 +121,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "asm_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "using_statement"
         },
         {
@@ -199,6 +203,10 @@
         {
           "type": "SYMBOL",
           "name": "run_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "asm_statement"
         },
         {
           "type": "SYMBOL",
@@ -1275,6 +1283,34 @@
           "name": "statement"
         }
       ]
+    },
+    "asm_statement": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "#asm"
+          },
+          {
+            "type": "STRING",
+            "value": "{"
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "}"
+          }
+        ]
+      }
     },
     "using_statement": {
       "type": "SEQ",
@@ -3556,16 +3592,11 @@
             ]
           },
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "compiler_declaration"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "compiler_declaration"
+            }
           },
           {
             "type": "CHOICE",

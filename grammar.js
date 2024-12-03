@@ -110,6 +110,7 @@ module.exports = grammar({
             $.block,
             $.compiler_declaration,
             $.run_statement,
+            $.asm_statement,
             $.using_statement,
 
             $.procedure_declaration,
@@ -138,6 +139,7 @@ module.exports = grammar({
         no_comma_statements: $ => choice(
             $.block,
             $.run_statement,
+            $.asm_statement,
 
             $.procedure_declaration,
             $.struct_declaration,
@@ -310,6 +312,13 @@ module.exports = grammar({
             '#run',
             $.statement,
         ),
+    
+        asm_statement: $ => prec.right(seq(
+            '#asm',
+            '{',
+            repeat($.identifier),
+            '}'
+        )),
 
         using_statement: $ => seq(
             field('keyword', 'using'),
@@ -571,7 +580,7 @@ module.exports = grammar({
                     comma_sep1(choice($.types, $.named_return)),
                 ))
             )),
-            optional($.compiler_declaration),
+            repeat($.compiler_declaration),
             optional($.block),
         )),
         named_return: $ => prec.right(1, seq(
