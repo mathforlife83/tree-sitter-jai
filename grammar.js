@@ -853,14 +853,19 @@ module.exports = grammar({
         comment: _ => token(seq('//', /[^\r\n]*/)),
 
         // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
-        block_comment: _ => token(choice(
-            seq('//', /(\\+(.|\r?\n)|[^\\\n])*/),
+        block_comment: _ => token(prec.right(choice(
+            // This came from tree-sitter-c, but it doesn't stand true since in jai,
+            // using "\" before newline won't extend the comment to the next line.
+            // seq('//', /(\\+(.|\r?\n)|[^\\\n])*/),
+
+            seq('//', /(\\+(.|\r?\n))*/),
+
             seq(
                 '/*',
                 /[^*]*\*+([^/*][^*]*\*+)*/,
                 '/',
             ),
-        )),
+        ))),
 
         deprecated_directive: $ => choice(
             seq('#deprecated', $.string),
