@@ -65,7 +65,7 @@ module.exports = grammar({
     extras: $ => [
         $.comment,
         $.block_comment,
-        /\s/,
+        /\s|\\\r?\n/,
         $.deprecated_directive
     ],
 
@@ -89,10 +89,14 @@ module.exports = grammar({
             $.struct_declaration,
             $.enum_declaration,
 
-            seq($.const_declaration, ';'),
-            seq($.variable_declaration, ';'),
-            seq($.compiler_declaration, ';'),
-            // $.expressions,
+            seq(
+                choice(
+                    $.const_declaration,
+                    $.variable_declaration,
+                    $.compiler_declaration,
+                ),
+                ';'
+            ),
         ),
 
         // In procedure scopes
@@ -167,7 +171,10 @@ module.exports = grammar({
             // I don't want all types to be expressions
             // $.types,
             $.type_of_expression,
+            $.run_expression
         )),
+
+        run_expression: $ => prec(20, seq('#run', $.expressions)),
 
         //
         // declarations
@@ -226,7 +233,7 @@ module.exports = grammar({
         struct_declaration: $ => seq(
             field('name', $.identifier),
             ':', ':',
-            'struct',
+            choice('struct', 'union'),
             // Parameterized structs
             field('modifier', optional(seq(
                 '(',
@@ -235,24 +242,27 @@ module.exports = grammar({
                 ')'
             ))),
             '{',
-            optional(repeat(
+            optional(repeat(choice(
+                $.procedure_declaration,
+                $.struct_declaration,
+                $.enum_declaration,
                 seq(
                     choice(
+                        $.const_declaration,   
                         $.variable_declaration,
-                        $.const_declaration,
                         $.assignment_statement,
                     ),
                     ';'
-                ),
-            )),
+                )
+            ))),
             '}',
         ),
 
-        enum_declaration: $ => seq(
+        enum_declaration: $ => prec(1, seq( // conflict with const_declaration
             field('name', $.identifier),
             ':', ':',
-            'enum',
-            field('type', $.types),
+            choice('enum', 'enum_flags'),
+            optional(field('type', $.types)),
             optional($.specified_directive),
             '{',
             sep(
@@ -263,7 +273,7 @@ module.exports = grammar({
                 ';'
             ),
             '}',
-        ),
+        )),
 
         variable_declaration: $ => seq(
             field('name', comma_sep1($.identifier)),
@@ -645,6 +655,7 @@ module.exports = grammar({
             $.pointer_type,
             $.parameterized_struct_type,
             $.anonymous_struct_type,
+            $.anonymous_enum_type,
             $.array_type,
             $.type_of_expression,
             $.procedure_type,
@@ -677,12 +688,11 @@ module.exports = grammar({
             ')'
         )),
 
-        // We don't want this to conflict with struct_declaration
-        anonymous_struct_type: $ => prec(-1, seq(
+        anonymous_struct_type: $ => prec(-1, seq( // conflict with struct_declaration
             // Valid anonymous struct syntax:
             //  variable := struct {};
             //  variable : struct {} = .{};
-            'struct',
+            choice('struct', 'union'),
 
             // Also valid in terms that the compiler will not complain, but
             // useless since you cannot put anything inside the parentheses:
@@ -692,10 +702,9 @@ module.exports = grammar({
 
             '{',
             optional(seq(
-                prec(2, repeat(
+                repeat(prec(-1,
                     seq(
                         choice(
-                            // $.struct_declaration_field,
                             $.variable_declaration,
                             $.const_declaration,
                             $.assignment_statement, // not sure about this one
@@ -705,6 +714,21 @@ module.exports = grammar({
                 )),
                 optional(';'),
             )),
+            '}',
+        )),
+
+        anonymous_enum_type: $ => prec(-1, seq(
+            choice('enum', 'enum_flags'),
+            optional(field('type', $.types)),
+            optional($.specified_directive),
+            '{',
+            sep(
+                seq(
+                    $.identifier,
+                    optional(seq(':', ':', $.expressions))
+                ),
+                ';'
+            ),
             '}',
         )),
 
@@ -764,7 +788,6 @@ module.exports = grammar({
                         $.types,
                         ')'
                     ),
-                    $.anonymous_struct_type,
                     $.types
                 ),
             ),
@@ -855,7 +878,8 @@ module.exports = grammar({
 
         // extras
 
-        comment: _ => token(seq('//', /[^\r\n]*/)),
+        // comment: _ => token(seq('//', /.*/)),
+        comment: _ => token(seq('//', /(\\+(.|\r?\n)|[^\\\n])*/)),
 
         // Credits and thanks to tree-sitter-tlaplus for this regex
         block_comment: $ => seq(

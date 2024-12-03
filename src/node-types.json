@@ -134,6 +134,10 @@
         "named": true
       },
       {
+        "type": "run_expression",
+        "named": true
+      },
+      {
         "type": "type_of_expression",
         "named": true
       },
@@ -233,6 +237,36 @@
       "types": [
         {
           "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "anonymous_enum_type",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expressions",
+          "named": true
+        },
+        {
+          "type": "specified_directive",
           "named": true
         }
       ]
@@ -779,7 +813,7 @@
       },
       "type": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "types",
@@ -1614,6 +1648,21 @@
     }
   },
   {
+    "type": "run_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "run_statement",
     "named": true,
     "fields": {},
@@ -1743,6 +1792,18 @@
           "named": true
         },
         {
+          "type": "enum_declaration",
+          "named": true
+        },
+        {
+          "type": "procedure_declaration",
+          "named": true
+        },
+        {
+          "type": "struct_declaration",
+          "named": true
+        },
+        {
           "type": "variable_declaration",
           "named": true
         }
@@ -1757,10 +1818,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "anonymous_struct_type",
-          "named": true
-        },
         {
           "type": "assignment_statement",
           "named": true
@@ -1844,6 +1901,10 @@
       "multiple": false,
       "required": false,
       "types": [
+        {
+          "type": "anonymous_enum_type",
+          "named": true
+        },
         {
           "type": "anonymous_struct_type",
           "named": true
@@ -2362,6 +2423,10 @@
     "named": false
   },
   {
+    "type": "enum_flags",
+    "named": false
+  },
+  {
     "type": "escape_sequence",
     "named": true
   },
@@ -2484,6 +2549,10 @@
   {
     "type": "uninitialized",
     "named": true
+  },
+  {
+    "type": "union",
+    "named": false
   },
   {
     "type": "using",
