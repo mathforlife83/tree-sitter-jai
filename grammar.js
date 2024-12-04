@@ -867,7 +867,7 @@ module.exports = grammar({
             )),
             '"',
         ),
-        string_content: _ => token.immediate(prec(1, /[^"\\]+/)),
+        string_content: _ => token.immediate(prec(1, /[^"\\\n]+/)),
         escape_sequence: _ => token.immediate(seq(
             '\\',
             choice(
