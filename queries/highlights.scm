@@ -9,6 +9,7 @@
 [
   "struct"
   "enum"
+  "enum_flags"
   "if"
   "ifx"
   "else"
@@ -51,7 +52,14 @@
 
 ; Variables
 
-(identifier) @variable
+; (identifier) @variable
+name: (identifier) @variable
+argument: (identifier) @variable
+named_argument: (identifier) @variable
+
+
+((identifier) @variable.builtin
+  (#any-of? @variable.builtin "context"))
 
 ; Namespaces
 
@@ -72,6 +80,8 @@
 ; Types
 
 type: (types) @type
+type: (identifier) @type
+((types) @type)
 
 modifier: (identifier) @keyword
 keyword: (identifier) @keyword
@@ -92,9 +102,10 @@ keyword: (identifier) @keyword
 (struct_literal . (identifier) @type)
 (array_literal . (identifier) @type)
 
-((identifier) @type
-  (#lua-match? @type "^[A-Z][a-zA-Z0-9]*$")
-  (#not-has-parent? @type parameter procedure_declaration call_expression))
+; ; I don't like this
+; ((identifier) @type
+;   (#lua-match? @type "^[A-Z][a-zA-Z0-9]*$")
+;   (#not-has-parent? @type parameter procedure_declaration call_expression))
 
 ; Fields
 
@@ -132,9 +143,6 @@ keyword: (identifier) @keyword
   (null)
 ] @constant.builtin
 
-((identifier) @variable.builtin
-  (#any-of? @variable.builtin "context"))
-
 ; Operators
 
 [
@@ -157,6 +165,8 @@ keyword: (identifier) @keyword
   "&~"
   "<<"
   ">>"
+  "<<<"
+  ">>>"
   "||"
   "&&"
   "!"
@@ -171,6 +181,8 @@ keyword: (identifier) @keyword
   "^="
   "<<="
   ">>="
+  "<<<="
+  ">>>="
   "||="
   "&&="
 ] @operator

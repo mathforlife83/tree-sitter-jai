@@ -1,3 +1,5 @@
+; NOTE: these don't work well with Allman style
+
 ; Incomplete
 
 [
@@ -7,11 +9,8 @@
   (struct_literal "{")
   (anonymous_struct_type "{")
   (if_expression_block "{")
+  (asm_statement "{")
   (array_literal "[")
-  ; (procedure "(")
-  ; (call_expression "(")
-  ; (struct_declaration "(") ; parameterized
-  ; (parameterized_struct_type "(")
   (literal)
 
 ] @indent.begin
@@ -21,12 +20,6 @@
 
 ((identifier) . (ERROR "(" @indent.begin))
 
-; [
-  ; "("
-  ; "["
-  ; "{"
-; ] @indent.branch
-
 [
   ")"
   "]"
@@ -35,17 +28,7 @@
 
 
 [
-  ; (block "}")
-  (enum_declaration "}")
-  (struct_declaration "}")
-  (struct_literal "}")
-  (anonymous_struct_type "}")
-  (if_expression_block "}")
   (literal "]")
-  ; (procedure ")")
-  ; (call_expression ")")
-  ; (struct_declaration ")")
-  ; (parameterized_struct_type ")")
 ] @indent.branch @indent.end
 
 [
