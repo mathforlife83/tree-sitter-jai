@@ -483,7 +483,7 @@ module.exports = grammar({
             field('argument', $.expressions)
         )),
 
-        call_expression: $ => prec.right(PREC.CALL, seq(
+        call_expression: $ => prec.left(PREC.CALL, seq(
             optional(field('modifier', 'inline')),
             field('function', choice(
                 $.identifier,
@@ -702,7 +702,7 @@ module.exports = grammar({
             $.types,
         )),
 
-        parameterized_struct_type: $ => prec(PREC.CALL, seq(
+        parameterized_struct_type: $ => prec.right(PREC.CALL, seq(
             field('type', $.identifier),
             '(',
             optional(seq(

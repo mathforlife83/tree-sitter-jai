@@ -2979,7 +2979,7 @@
       }
     },
     "call_expression": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 18,
       "content": {
         "type": "SEQ",
@@ -4278,7 +4278,7 @@
       }
     },
     "parameterized_struct_type": {
-      "type": "PREC",
+      "type": "PREC_RIGHT",
       "value": 18,
       "content": {
         "type": "SEQ",
