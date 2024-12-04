@@ -16,3 +16,4 @@ language.
 - [ ] macros
 - [ ] #string
 - [ ] parameterized module imports
+- [ ] cannot diferentiate between taking the address of a variable and a pointer type

@@ -704,7 +704,7 @@ module.exports = grammar({
         ),
 
         parameterized_struct_type: $ => prec(17, seq(
-            field('name', $.identifier),
+            field('type', $.identifier),
             '(',
             optional(seq(
                 //  variable : Struct(,,) = .{};

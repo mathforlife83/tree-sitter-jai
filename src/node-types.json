@@ -1261,16 +1261,6 @@
           }
         ]
       },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "named_argument": {
         "multiple": true,
         "required": false,
@@ -1279,6 +1269,16 @@
             "type": "=",
             "named": false
           },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
           {
             "type": "identifier",
             "named": true
