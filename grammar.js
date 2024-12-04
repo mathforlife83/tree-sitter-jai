@@ -165,7 +165,7 @@ module.exports = grammar({
 
             $.if_expression,
 
-            $.identifier,
+            prec(-1, field('name', $.identifier)),
             $.address,
             $.literal,
             $.pointer_expression,
@@ -195,7 +195,10 @@ module.exports = grammar({
         ),
 
         import: $ => seq(
-            optional(seq($.identifier, ':', ':')),
+            optional(seq(
+                field('name', $.identifier),
+                ':', ':'
+            )),
             "#import",
             optional(field('modifier', choice(
                 ",file",
@@ -328,14 +331,20 @@ module.exports = grammar({
         ),
 
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
-            field('name', comma_sep1($.expressions)),
+            comma_sep1(choice(
+                $.expressions,
+                prec(21, field('name', $.identifier)),
+            )),
             optional(','),
             '=',
             comma_sep1(choice($.expressions, $.procedure, $.types)),
         )),
 
         update_statement: $ => seq(
-            field('name', comma_sep1($.expressions)),
+            comma_sep1(choice(
+                $.expressions,
+                prec(21, field('name', $.identifier)),
+            )),
             optional(','),
             choice(
                 '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=',
@@ -376,18 +385,19 @@ module.exports = grammar({
             field('body', $.statement),
         ),
 
-        for_statement: $ => prec(3, seq(
+        for_statement: $ => prec.right(3, seq(
             'for',
             optional(field('modifier', '#v2')), // I guess this is temporary
             optional('<'),
-            optional('*'),
+            // optional('*'),
             optional(field('value', seq(
                 comma_sep1($.identifier),
                 ':',
             ))),
             prec.right(choice(
                 $.range,
-                $.identifier,
+                // $.identifier,
+                $.expressions // TODO: test
             )),
             field('body', $.statement),
         )),
@@ -660,7 +670,7 @@ module.exports = grammar({
             "u32",
             "u16",
             "u8",
-            $.identifier,
+            prec(-2, $.identifier),
             $.pointer_type,
             $.parameterized_struct_type,
             $.anonymous_struct_type,
