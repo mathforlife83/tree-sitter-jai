@@ -53,10 +53,7 @@ module.exports = grammar({
         [$.procedure_type],
         [$.procedure, $.procedure_type],
         [$.member_expression],
-        // [$.procedure_type, $.parameterized_struct_type],
-        // [$.procedure_type],
-        // [$.parameterized_struct_type],
-        // [$.binary_expression, $.pointer_expression],
+        [$.procedure_type, $.run_expression]
     ],
 
     // None. Try to do as much as possible in here
@@ -176,7 +173,26 @@ module.exports = grammar({
             $.run_expression
         )),
 
-        run_expression: $ => prec(20, seq('#run', $.expressions)),
+        run_expression: $ => prec(20, seq(
+            '#run',
+            choice(
+                seq( // return value
+                    '->',
+                    field('result', choice(
+                        seq(
+                            '(',
+                            optional(comma_sep1(
+                                choice($.types, $.named_return)
+                            )),
+                            ')'
+                        ),
+                        comma_sep1(choice($.types, $.named_return)),
+                    )),
+                    $.block,
+                ),
+                $.expressions
+            ),
+        )),
 
         //
         // declarations
@@ -484,6 +500,7 @@ module.exports = grammar({
                     //  procedure(arg2 = 2);
 
                     field('named_argument', optional(seq($.identifier, '='))),
+                    optional('..'),
                     // NOTE: this should be the same as in parameterized_struct_type.
                     // Could be merged somehow.
                     field('argument', choice(
@@ -802,12 +819,8 @@ module.exports = grammar({
         struct_literal: $ => seq(
             optional(
                 choice(
-                    seq(
-                        '(',
-                        $.types,
-                        ')'
-                    ),
-                    $.types
+                    seq('(', field('type', $.types), ')'),
+                    field('type', $.types),
                 ),
             ),
             '.',
@@ -825,8 +838,8 @@ module.exports = grammar({
         array_literal: $ => seq(
             optional(
                 choice(
-                    seq('(', $.types, ')'),
-                    $.array_type,
+                    seq('(', field('type', $.types), ')'),
+                    field('type', $.types),
                 ),
             ),
             '.',

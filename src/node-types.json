@@ -306,21 +306,24 @@
   {
     "type": "array_literal",
     "named": true,
-    "fields": {},
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
       "types": [
         {
-          "type": "array_type",
-          "named": true
-        },
-        {
           "type": "expressions",
-          "named": true
-        },
-        {
-          "type": "types",
           "named": true
         }
       ]
@@ -1663,11 +1666,42 @@
   {
     "type": "run_expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "result": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "named_return",
+            "named": true
+          },
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "block",
+          "named": true
+        },
         {
           "type": "expressions",
           "named": true
@@ -1826,7 +1860,18 @@
   {
     "type": "struct_literal",
     "named": true,
-    "fields": {},
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -1837,10 +1882,6 @@
         },
         {
           "type": "expressions",
-          "named": true
-        },
-        {
-          "type": "types",
           "named": true
         }
       ]
