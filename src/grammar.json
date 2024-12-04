@@ -75,123 +75,131 @@
       ]
     },
     "statement": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "all_statements"
-            },
-            {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "all_statements"
+              },
+              {
+                "type": "STRING",
+                "value": ";"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "no_comma_statements"
+          },
+          {
+            "type": "PREC",
+            "value": -2,
+            "content": {
               "type": "STRING",
               "value": ";"
             }
-          ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "no_comma_statements"
-        },
-        {
-          "type": "PREC",
-          "value": -2,
-          "content": {
-            "type": "STRING",
-            "value": ";"
           }
-        }
-      ]
+        ]
+      }
     },
     "all_statements": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "compiler_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "run_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "asm_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "using_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "procedure_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "struct_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "enum_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "const_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "variable_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "assignment_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "update_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "if_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "if_case_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "while_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "for_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "defer_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "return_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "break_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "continue_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expressions"
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "compiler_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "run_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "asm_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "using_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "procedure_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "struct_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "enum_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "const_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "variable_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "assignment_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "update_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "if_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "if_case_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "while_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "for_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "defer_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "return_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "break_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "continue_statement"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "expressions"
+          }
+        ]
+      }
     },
     "no_comma_statements": {
       "type": "CHOICE",
@@ -869,8 +877,12 @@
                     "type": "SEQ",
                     "members": [
                       {
-                        "type": "SYMBOL",
-                        "name": "parameter"
+                        "type": "PREC",
+                        "value": 1,
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "parameter"
+                        }
                       },
                       {
                         "type": "REPEAT",
@@ -882,8 +894,12 @@
                               "value": ","
                             },
                             {
-                              "type": "SYMBOL",
-                              "name": "parameter"
+                              "type": "PREC",
+                              "value": 1,
+                              "content": {
+                                "type": "SYMBOL",
+                                "name": "parameter"
+                              }
                             }
                           ]
                         }
@@ -3610,7 +3626,7 @@
     },
     "procedure": {
       "type": "PREC_RIGHT",
-      "value": 0,
+      "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -3631,8 +3647,12 @@
                       "type": "SEQ",
                       "members": [
                         {
-                          "type": "SYMBOL",
-                          "name": "parameter"
+                          "type": "PREC",
+                          "value": 1,
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "parameter"
+                          }
                         },
                         {
                           "type": "REPEAT",
@@ -3644,8 +3664,12 @@
                                 "value": ","
                               },
                               {
-                                "type": "SYMBOL",
-                                "name": "parameter"
+                                "type": "PREC",
+                                "value": 1,
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "parameter"
+                                }
                               }
                             ]
                           }
@@ -4194,14 +4218,6 @@
             "value": "u8"
           },
           {
-            "type": "PREC",
-            "value": -2,
-            "content": {
-              "type": "SYMBOL",
-              "name": "identifier"
-            }
-          },
-          {
             "type": "SYMBOL",
             "name": "pointer_type"
           },
@@ -4232,26 +4248,38 @@
           {
             "type": "SYMBOL",
             "name": "type_literal"
+          },
+          {
+            "type": "PREC",
+            "value": -2,
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
           }
         ]
       }
     },
     "type_literal": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "#type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "types"
-        }
-      ]
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "#type"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "types"
+          }
+        ]
+      }
     },
     "parameterized_struct_type": {
       "type": "PREC",
-      "value": 17,
+      "value": 18,
       "content": {
         "type": "SEQ",
         "members": [
@@ -4953,7 +4981,7 @@
       }
     },
     "array_type": {
-      "type": "PREC_LEFT",
+      "type": "PREC_RIGHT",
       "value": 0,
       "content": {
         "type": "SEQ",
@@ -4996,8 +5024,12 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "types"
+                "type": "FIELD",
+                "name": "type",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "types"
+                }
               },
               {
                 "type": "BLANK"
@@ -5115,6 +5147,10 @@
                         },
                         {
                           "type": "SYMBOL",
+                          "name": "identifier"
+                        },
+                        {
+                          "type": "SYMBOL",
                           "name": "assignment_statement"
                         }
                       ]
@@ -5134,6 +5170,10 @@
                               {
                                 "type": "SYMBOL",
                                 "name": "expressions"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "identifier"
                               },
                               {
                                 "type": "SYMBOL",
@@ -6260,15 +6300,15 @@
       "procedure_type"
     ],
     [
-      "procedure",
-      "procedure_type"
-    ],
-    [
       "member_expression"
     ],
     [
       "procedure_type",
       "run_expression"
+    ],
+    [
+      "call_expression",
+      "parameterized_struct_type"
     ]
   ],
   "precedences": [],

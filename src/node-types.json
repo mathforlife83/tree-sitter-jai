@@ -332,17 +332,24 @@
   {
     "type": "array_type",
     "named": true,
-    "fields": {},
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
         {
           "type": "expressions",
-          "named": true
-        },
-        {
-          "type": "types",
           "named": true
         }
       ]

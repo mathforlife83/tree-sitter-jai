@@ -51,9 +51,9 @@ module.exports = grammar({
     conflicts: $ => [
         [$.all_statements, $.no_comma_statements],
         [$.procedure_type],
-        [$.procedure, $.procedure_type],
         [$.member_expression],
-        [$.procedure_type, $.run_expression]
+        [$.procedure_type, $.run_expression],
+        [$.call_expression, $.parameterized_struct_type],
     ],
 
     // None. Try to do as much as possible in here
@@ -97,13 +97,13 @@ module.exports = grammar({
         ),
 
         // In procedure scopes
-        statement: $ => choice( // TODO: prec ?
+        statement: $ => prec.right(choice( // TODO: prec ?
             seq($.all_statements, ';'),
             $.no_comma_statements,
             prec(-2, ';'),
-        ),
+        )),
 
-        all_statements: $ => choice(
+        all_statements: $ => prec.right(choice(
             $.block,
             $.compiler_declaration,
             $.run_statement,
@@ -131,7 +131,7 @@ module.exports = grammar({
             $.continue_statement,
 
             $.expressions,
-        ),
+        )),
 
         no_comma_statements: $ => choice(
             $.block,
@@ -258,7 +258,7 @@ module.exports = grammar({
             // Parameterized structs
             field('modifier', optional(seq(
                 '(',
-                comma_sep1($.parameter),
+                comma_sep1(prec(1, $.parameter)),
                 optional(','),
                 ')'
             ))),
@@ -311,7 +311,7 @@ module.exports = grammar({
         ),
 
         const_declaration: $ => seq(
-            field('name', sep1($.identifier, ',')),
+            field('name', comma_sep1($.identifier)),
             optional(','),
             ':',
             optional(field('type', $.types)),
@@ -583,10 +583,10 @@ module.exports = grammar({
         //
 
         // Procedure
-        procedure: $ => prec.right(seq(
+        procedure: $ => prec.right(1, seq(
             '(',
             field('parameters', optional(seq(
-                comma_sep1($.parameter),
+                comma_sep1(prec(1, $.parameter)),
                 optional(','),
             ))),
             ')',
@@ -598,9 +598,7 @@ module.exports = grammar({
                     seq(
                         '(',
                         optional(comma_sep1(
-                            choice(
-                                $.types,
-                                $.named_return)
+                            choice($.types, $.named_return)
                         )),
                         ')'
                     ),
@@ -687,7 +685,6 @@ module.exports = grammar({
             "u32",
             "u16",
             "u8",
-            prec(-2, $.identifier),
             $.pointer_type,
             $.parameterized_struct_type,
             $.anonymous_struct_type,
@@ -696,14 +693,16 @@ module.exports = grammar({
             $.type_of_expression,
             $.procedure_type,
             $.type_literal,
+            prec(-2, $.identifier),
         )),
 
-        type_literal: $ => seq(
+
+        type_literal: $ => prec.right(seq(
             '#type',
             $.types,
-        ),
+        )),
 
-        parameterized_struct_type: $ => prec(17, seq(
+        parameterized_struct_type: $ => prec(PREC.CALL, seq(
             field('type', $.identifier),
             '(',
             optional(seq(
@@ -794,11 +793,13 @@ module.exports = grammar({
             )),
         )),
 
-        array_type: $ => prec.left(seq(
+        array_type: $ => prec.right(seq(
             '[',
             optional(seq(choice('..', $.expressions))),
             ']',
-            optional($.types),
+            optional(
+                field('type', $.types)
+            ),
         )),
 
         //
@@ -828,6 +829,7 @@ module.exports = grammar({
             optional(seq(
                 comma_sep1(choice(
                     $.expressions,
+                    $.identifier,
                     $.assignment_statement, // named assignment
                 )),
                 optional(','),
