@@ -190,7 +190,7 @@
     ]
   },
   {
-    "type": "no_comma_statements",
+    "type": "no_semicolon_statements",
     "named": true,
     "subtypes": [
       {
@@ -368,6 +368,44 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "assignment_parameters",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "expressions",
+            "named": true
+          },
+          {
+            "type": "procedure",
+            "named": true
+          },
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      },
+      "named_argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -579,28 +617,6 @@
     "type": "call_expression",
     "named": true,
     "fields": {
-      "argument": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "array_type",
-            "named": true
-          },
-          {
-            "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "procedure",
-            "named": true
-          },
-          {
-            "type": "types",
-            "named": true
-          }
-        ]
-      },
       "function": {
         "multiple": false,
         "required": true,
@@ -624,21 +640,17 @@
             "named": false
           }
         ]
-      },
-      "named_argument": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "=",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment_parameters",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -964,15 +976,15 @@
         "required": false,
         "types": [
           {
+            "type": "block",
+            "named": true
+          },
+          {
             "type": "else",
             "named": false
           },
           {
             "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "if_expression_block",
             "named": true
           }
         ]
@@ -992,30 +1004,15 @@
         "required": false,
         "types": [
           {
-            "type": "expressions",
+            "type": "block",
             "named": true
           },
           {
-            "type": "if_expression_block",
+            "type": "expressions",
             "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "if_expression_block",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expressions",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1148,6 +1145,30 @@
     }
   },
   {
+    "type": "named_parameters",
+    "named": true,
+    "fields": {
+      "parameters": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "parameter",
+            "named": true
+          },
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "named_return",
     "named": true,
     "fields": {},
@@ -1236,52 +1257,6 @@
     "type": "parameterized_struct_type",
     "named": true,
     "fields": {
-      "argument": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "array_type",
-            "named": true
-          },
-          {
-            "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "procedure",
-            "named": true
-          },
-          {
-            "type": "types",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "using",
-            "named": false
-          }
-        ]
-      },
-      "named_argument": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "=",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "type": {
         "multiple": false,
         "required": true,
@@ -1292,6 +1267,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment_parameters",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1354,20 +1339,6 @@
     "type": "procedure",
     "named": true,
     "fields": {
-      "parameters": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "parameter",
-            "named": true
-          }
-        ]
-      },
       "result": {
         "multiple": true,
         "required": false,
@@ -1397,7 +1368,7 @@
     },
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "block",
@@ -1405,6 +1376,10 @@
         },
         {
           "type": "compiler_declaration",
+          "named": true
+        },
+        {
+          "type": "named_parameters",
           "named": true
         }
       ]
@@ -1612,14 +1587,14 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "named_return",
+          "type": "assignment_parameters",
           "named": true
         },
         {
-          "type": "parameter",
+          "type": "named_return",
           "named": true
         },
         {
@@ -1760,7 +1735,7 @@
           "named": true
         },
         {
-          "type": "no_comma_statements",
+          "type": "no_semicolon_statements",
           "named": true
         }
       ]
@@ -1801,23 +1776,11 @@
     "named": true,
     "fields": {
       "modifier": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "parameter",
+            "type": "named_parameters",
             "named": true
           }
         ]
@@ -1868,10 +1831,24 @@
     "type": "struct_literal",
     "named": true,
     "fields": {
+      "parameters": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameters",
+            "named": true
+          }
+        ]
+      },
       "type": {
         "multiple": false,
         "required": false,
         "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
           {
             "type": "types",
             "named": true

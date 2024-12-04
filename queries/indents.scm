@@ -8,7 +8,6 @@
   (struct_declaration "{")
   (struct_literal "{")
   (anonymous_struct_type "{")
-  (if_expression_block "{")
   (asm_statement "{")
   (array_literal "[")
   (literal)

@@ -10,7 +10,7 @@ language.
 - [x] fix floats...
 - [x] nested block comments (without external scanner)
 - [x] comma sepparated variable declarations doesn't seem to work for some bizzare reason and I can't seem to be able to get it to work
-- [ ] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
+- [x] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
 - [ ] fix conflicts which I lazily ignored before
 - [ ] custom iterators such as "for :utf8_iter"
 - [ ] macros
