@@ -82,6 +82,22 @@ test_proc1 :: () {
     else                  
         print("alternative\n");
 
+    #if thing != null {
+        print("");
+    } else #if thing == .{} {
+        print("");
+    } else {
+        print("");
+    }
+
+    if thing
+        print("");
+    else if thing
+        print("");
+    else
+        print("");
+
+
     // This seems to work too
     if 0 << << pointer_type  print();
 
@@ -96,7 +112,7 @@ test_proc1 :: () {
         print("This is the true block.\n");
         factorial(5);
         thing.name;
-    } else {
+    } else  {
         print("We are about to get the default name.\n");
         x := 3;
         print("Really, it is going to happen.\n");

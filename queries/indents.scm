@@ -15,6 +15,8 @@
 ] @indent.begin
 
 ((if_statement) @indent.begin)
+
+((if_case_statement) @indent.auto)
 ((switch_case ";") @indent.begin)
 
 ((identifier) . (ERROR "(" @indent.begin))
