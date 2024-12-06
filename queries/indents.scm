@@ -14,19 +14,37 @@
 
 ] @indent.begin
 
-((if_statement) @indent.begin)
+((if_statement)
+  .
+  (ERROR
+    "else" @indent.begin))
+
+(if_statement
+  condition: (_) @indent.begin)
+
+(if_statement
+  consequence: (_
+    ";" @indent.end) @_consequence
+  (#not-match? @_consequence "{")) @indent.begin
+
+(else_clause
+  (_
+    .
+    "{" @indent.branch @indent.dedent))
 
 ((if_case_statement) @indent.auto)
 ((switch_case ";") @indent.begin)
 
 ((identifier) . (ERROR "(" @indent.begin))
 
+(block
+  "}" @indent.end)
+
 [
   ")"
   "]"
   "}"
 ] @indent.branch @indent.end
-
 
 [
   (literal "]")

@@ -1780,17 +1780,8 @@
                 "type": "FIELD",
                 "name": "alternative",
                 "content": {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "else"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "statement"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "else_clause"
                 }
               },
               {
@@ -1800,6 +1791,19 @@
           }
         ]
       }
+    },
+    "else_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "else"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement"
+        }
+      ]
     },
     "if_case_statement": {
       "type": "SEQ",

@@ -69,6 +69,8 @@ named_argument: (identifier) @variable
 
 (parameter (identifier) @parameter ":" "="? (identifier)? @constant)
 
+; (call_expression argument: (identifier) @parameter "=")
+
 ; Functions
 
 (procedure_declaration (identifier) @function (procedure (block)))
@@ -108,6 +110,8 @@ keyword: (identifier) @keyword
 ; Fields
 
 (member_expression "." (identifier) @field)
+
+; (anonymous_struct_type "{" (identifier) @field)
 
 (assignment_statement (identifier) @field "="?)
 
@@ -211,4 +215,3 @@ keyword: (identifier) @keyword
 (ERROR) @error
 
 (block_comment) @comment
-

@@ -372,8 +372,10 @@ module.exports = grammar({
             field('condition', $.expressions),
             optional('then'),
             field('consequence', $.statement),
-            optional(field('alternative', seq('else', $.statement))),
+            optional(field('alternative', $.else_clause)),
         )),
+
+        else_clause: $ => seq("else", $.statement),
 
         if_case_statement: $ => seq(
             choice('if', '#if'),
