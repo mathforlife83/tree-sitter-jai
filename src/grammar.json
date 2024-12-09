@@ -4281,10 +4281,6 @@
                               {
                                 "type": "SYMBOL",
                                 "name": "const_declaration"
-                              },
-                              {
-                                "type": "SYMBOL",
-                                "name": "assignment_statement"
                               }
                             ]
                           },
@@ -5042,15 +5038,32 @@
                     "type": "FIELD",
                     "name": "parameter",
                     "content": {
-                      "type": "CHOICE",
+                      "type": "SEQ",
                       "members": [
                         {
-                          "type": "SYMBOL",
-                          "name": "expressions"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SEQ",
+                              "members": [
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "identifier"
+                                },
+                                {
+                                  "type": "STRING",
+                                  "value": "="
+                                }
+                              ]
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
                         },
                         {
                           "type": "SYMBOL",
-                          "name": "assignment_statement"
+                          "name": "expressions"
                         }
                       ]
                     }
@@ -5068,15 +5081,32 @@
                           "type": "FIELD",
                           "name": "parameter",
                           "content": {
-                            "type": "CHOICE",
+                            "type": "SEQ",
                             "members": [
                               {
-                                "type": "SYMBOL",
-                                "name": "expressions"
+                                "type": "CHOICE",
+                                "members": [
+                                  {
+                                    "type": "SEQ",
+                                    "members": [
+                                      {
+                                        "type": "SYMBOL",
+                                        "name": "identifier"
+                                      },
+                                      {
+                                        "type": "STRING",
+                                        "value": "="
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "BLANK"
+                                  }
+                                ]
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "assignment_statement"
+                                "name": "expressions"
                               }
                             ]
                           }

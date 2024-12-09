@@ -289,10 +289,6 @@
       "required": false,
       "types": [
         {
-          "type": "assignment_statement",
-          "named": true
-        },
-        {
           "type": "const_declaration",
           "named": true
         },
@@ -1852,8 +1848,8 @@
         "required": false,
         "types": [
           {
-            "type": "assignment_statement",
-            "named": true
+            "type": "=",
+            "named": false
           },
           {
             "type": "expressions",

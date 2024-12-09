@@ -736,7 +736,7 @@ module.exports = grammar({
                         choice(
                             $.variable_declaration,
                             $.const_declaration,
-                            $.assignment_statement, // not sure about this one
+                            // $.assignment_statement, // not sure about this one
                         ),
                         ';'
                     )
@@ -838,12 +838,11 @@ module.exports = grammar({
             '.',
             '{',
             optional(
-                comma_sep1(field('parameter',
-                    choice(
-                        $.expressions,
-                        $.assignment_statement, // named assignment
-                    )
-                )),
+                comma_sep1(field('parameter', seq(
+                    // $.assignment_statement, // This breaks
+                    optional(seq($.identifier, '=')), // named
+                    $.expressions,
+                )))
             ),
             '}',
         )),

@@ -45,7 +45,7 @@ test_proc1 :: () {
     struct_literal2 := TestStruct2(69).{ };
     
     //        Parameterized struct type
-    struct1 : TestStruct2(420);
+    struct1 : TestStruct2(420, 540, 999, "perhaps") = .{420, 540, 999, "perhaps"};
 
     //              Parameterized struct literal with named values
     call_expression(TestStruct2(s32).{var1=69,var2=420});
