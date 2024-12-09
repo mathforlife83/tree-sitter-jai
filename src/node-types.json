@@ -1833,6 +1833,10 @@
           "named": true
         },
         {
+          "type": "using_statement",
+          "named": true
+        },
+        {
           "type": "variable_declaration",
           "named": true
         }
@@ -2183,6 +2187,10 @@
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "#as",
     "named": false
   },
   {

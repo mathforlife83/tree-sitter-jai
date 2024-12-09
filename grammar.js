@@ -266,6 +266,7 @@ module.exports = grammar({
             field('modifier', optional($.named_parameters)),
             '{',
             optional(repeat(choice(
+                seq('#as', $.using_statement),
                 $.procedure_declaration,
                 $.struct_declaration,
                 $.enum_declaration,
