@@ -114,6 +114,7 @@ keyword: (identifier) @keyword
 ; (anonymous_struct_type "{" (identifier) @field)
 
 (assignment_statement (identifier) @field "="?)
+(update_statement (identifier) @field)
 
 ; Constants
 

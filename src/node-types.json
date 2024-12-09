@@ -411,18 +411,7 @@
   {
     "type": "assignment_statement",
     "named": true,
-    "fields": {
-      "name": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": true,
@@ -692,7 +681,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -774,7 +763,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -790,11 +779,19 @@
           "named": true
         },
         {
+          "type": "if_statement",
+          "named": true
+        },
+        {
           "type": "procedure_declaration",
           "named": true
         },
         {
           "type": "run_statement",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         },
         {
@@ -1390,6 +1387,10 @@
           "named": true
         },
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "named_parameters",
           "named": true
         }
@@ -1602,6 +1603,10 @@
       "types": [
         {
           "type": "assignment_parameters",
+          "named": true
+        },
+        {
+          "type": "compiler_declaration",
           "named": true
         },
         {
@@ -1842,6 +1847,20 @@
     "type": "struct_literal",
     "named": true,
     "fields": {
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "assignment_statement",
+            "named": true
+          },
+          {
+            "type": "expressions",
+            "named": true
+          }
+        ]
+      },
       "parameters": {
         "multiple": false,
         "required": false,
@@ -1866,20 +1885,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "assignment_statement",
-          "named": true
-        },
-        {
-          "type": "expressions",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -2034,18 +2039,7 @@
   {
     "type": "update_statement",
     "named": true,
-    "fields": {
-      "name": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": true,

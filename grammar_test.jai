@@ -71,9 +71,12 @@ test_proc1 :: () {
     var5, var6  = procedure_call("assignment");
     const3, const4 :: procedure_call("constant");
 
-    // @TODO: These broke, for some reaason.
-    // lets, try, even, more, variables := 1, 2, 3, 4, 5;
-    // lets, try, even, more, constants :: 1, 2, 3, 4, 5;
+    // many more
+    lets, try, even, more, variables := 1, 2, 3, 4, 5;
+    lets, try, even, more, constants :: 1, 2, 3, 4, 5;
+    // and assign/update
+    lets, try, even, more, constants = 1, 2, 3, 4, 5;
+    lets, try, even, more, constants += 1, 2, 3, 4, 5;
 
     pointer_type := *var1;
     

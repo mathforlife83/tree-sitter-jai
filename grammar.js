@@ -55,6 +55,8 @@ module.exports = grammar({
         [$.call_expression, $.parameterized_struct_type],
         [$.named_parameters, $.assignment_parameters],
         [$.procedure_type, $.assignment_parameters],
+        [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement, $.update_statement],
+        [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement],
     ],
 
     // None. Try to do as much as possible in here
@@ -63,7 +65,8 @@ module.exports = grammar({
     extras: $ => [
         $.comment,
         $.block_comment,
-        /\s|\\\r?\n/,
+        // /\s|\\\r?\n/,
+        /\s/,
         $.deprecated_directive
     ],
 
@@ -87,11 +90,14 @@ module.exports = grammar({
             $.struct_declaration,
             $.enum_declaration,
 
+            seq('#', $.if_statement),
+            seq($.compiler_declaration, $.string),
+            $.compiler_declaration,
+
             seq(
                 choice(
                     $.const_declaration,
                     $.variable_declaration,
-                    $.compiler_declaration,
                 ),
                 ';'
             ),
@@ -205,11 +211,11 @@ module.exports = grammar({
             '}',
         )),
 
-        compiler_declaration: $ => choice(
+        compiler_declaration: $ => prec.right(choice(
             $.import,
             $.load,
-            seq('#', $.identifier)
-        ),
+            seq('#', comma_sep1($.identifier))
+        )),
 
         import: $ => seq(
             optional(seq(
@@ -293,29 +299,29 @@ module.exports = grammar({
         )),
 
         variable_declaration: $ => seq(
-            field('name', comma_sep1($.identifier)),
-            optional(','),
+            prec.right(field('name', comma_sep1($.identifier))),
+            // optional(','),
             ':',
             choice(
                 seq(
                     optional(field('type', $.types)),
                     '=',
-                    comma_sep1(choice($.expressions, $.procedure, $.types)),
+                    prec.right(comma_sep1(choice($.expressions, $.procedure, $.types))),
                 ),
                 field('type', $.types),
             )
         ),
 
         const_declaration: $ => seq(
-            field('name', comma_sep1($.identifier)),
-            optional(','),
+            prec.right(field('name', comma_sep1($.identifier))),
+            // optional(','),
             ':',
             optional(field('type', $.types)),
             ':',
-            comma_sep1(
+            prec.right(comma_sep1(
                 choice($.expressions, $.types),
-            ),
-            optional(','),
+            )),
+            // optional(','),
         ),
 
 
@@ -343,9 +349,8 @@ module.exports = grammar({
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
             comma_sep1(choice(
                 $.expressions,
-                prec(21, field('name', $.identifier)),
+                $.identifier,
             )),
-            optional(','),
             '=',
             comma_sep1(choice(
                 $.expressions,
@@ -357,9 +362,8 @@ module.exports = grammar({
         update_statement: $ => seq(
             comma_sep1(choice(
                 $.expressions,
-                prec(21, field('name', $.identifier)),
+                $.identifier,
             )),
-            optional(','),
             choice(
                 '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=',
                 '<<=', '>>=', '<<<=', '>>>=', '||=', '&&=',
@@ -572,6 +576,7 @@ module.exports = grammar({
                 ))
             )),
             repeat($.compiler_declaration),
+            optional(seq($.compiler_declaration, $.identifier)),
             optional($.block),
         )),
         named_return: $ => prec.right(1, seq(
@@ -586,7 +591,7 @@ module.exports = grammar({
             '(',
             field('parameters', optional(seq(
                 comma_sep1(prec(1, choice($.parameter, $.types))),
-                optional(','),
+                // optional(','),
             ))),
             ')'
         ),
@@ -595,6 +600,7 @@ module.exports = grammar({
             field('keyword', optional('using')),
             field('name', seq(
                 optional('$'),
+                optional('$'),
                 $.identifier
             )),
             ':',
@@ -602,11 +608,13 @@ module.exports = grammar({
                 field('type', seq(
                     optional('..'),
                     optional('$'),
+                    optional('$'),
                     $.types
                 )),
                 seq(
                     field('type', optional(seq(
                         optional('..'),
+                        optional('$'),
                         optional('$'),
                         $.types
                     ))),
@@ -643,7 +651,7 @@ module.exports = grammar({
                         $.types
                     )),
                 )), ','),
-                optional(','),
+                // optional(','),
             )),
             ')',
         ),
@@ -769,6 +777,7 @@ module.exports = grammar({
                     comma_sep1(choice($.types, $.named_return)),
                 )
             )),
+            repeat($.compiler_declaration),
         )),
 
         array_type: $ => prec.right(seq(
@@ -810,13 +819,13 @@ module.exports = grammar({
                             $.types,
                         )),
                     )), ','),
-                    optional(','),
+                    // optional(','),
                 )),
                 ')'
             )
         ),
 
-        struct_literal: $ => prec.right(PREC.CALL, seq(
+        struct_literal: $ => prec(PREC.CALL, seq(
             optional(
                 choice(
                     seq('(', field('type', $.types), ')'),
@@ -824,19 +833,18 @@ module.exports = grammar({
                     field('type', $.identifier),
                 ),
             ),
-            // optional(field('parameters', $.struct_parameters)),
             optional(field('parameters', $.named_parameters)),
 
             '.',
             '{',
-            optional(seq(
-                prec.left(comma_sep1(choice(
-                    $.expressions,
-                    $.identifier,
-                    $.assignment_statement, // named assignment
-                ))),
-                optional(','),
-            )),
+            optional(
+                comma_sep1(field('parameter',
+                    choice(
+                        $.expressions,
+                        $.assignment_statement, // named assignment
+                    )
+                )),
+            ),
             '}',
         )),
 
@@ -849,10 +857,9 @@ module.exports = grammar({
             ),
             '.',
             '[',
-            optional(seq(
+            optional(
                 comma_sep1($.expressions),
-                optional(','),
-            )),
+            ),
             ']',
         )),
 
@@ -914,8 +921,8 @@ module.exports = grammar({
 
         // extras
 
-        // comment: _ => token(seq('//', /.*/)),
-        comment: _ => token(seq('//', /(\\+(.|\r?\n)|[^\\\n])*/)),
+        comment: _ => token(seq('//', /.*/)),
+        // comment: _ => token(seq('//', /(\\+(.|\r?\n)|[^\\\n])*/)),
 
         // Credits and thanks to tree-sitter-tlaplus for this regex
         block_comment: $ => seq(
@@ -966,6 +973,11 @@ function sep1(rule, s) {
 // Same as sep1, but allows passing right precedence
 function sep1_prec_right(p, rule, s) {
     return seq(rule, repeat(prec.right(p, seq(s, rule))));
+}
+
+// Same as sep1, but allows passing precedence
+function sep1_prec(p, rule, s) {
+    return seq(rule, repeat(prec(p, seq(s, rule))));
 }
 
 // Creates a rule to match one or more of the rules separated by a comma

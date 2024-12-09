@@ -14,6 +14,7 @@ language.
 - [ ] fix conflicts which I lazily ignored before
 - [ ] custom iterators such as "for :utf8_iter"
 - [ ] macros
+- [ ] #modify block
 - [ ] #string
 - [ ] parameterized module imports
 - [ ] cannot diferentiate between taking the address of a variable and a pointer type
