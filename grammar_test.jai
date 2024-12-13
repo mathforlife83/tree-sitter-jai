@@ -129,7 +129,7 @@ test_proc1 :: () {
         no();
         // what in the fuck
     }
-}
+} @notes_are_ignored @yes
 
 call_expression :: (polymorphic_args: $T) -> () {
     print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);

@@ -69,7 +69,8 @@ module.exports = grammar({
         $.block_comment,
         // /\s|\\\r?\n/,
         /\s/,
-        $.deprecated_directive
+        $.deprecated_directive,
+        $.note,
     ],
 
     supertypes: $ => [
@@ -850,7 +851,7 @@ module.exports = grammar({
             $.uninitialized,
         ),
 
-        // I hate this
+        /* // Not used anymore
         struct_parameters: $ => prec.dynamic(PREC.CALL,
             seq(
                 '(',
@@ -869,7 +870,7 @@ module.exports = grammar({
                 )),
                 ')'
             )
-        ),
+        ), */
 
         struct_literal: $ => prec(PREC.CALL, seq(
             optional(
@@ -965,6 +966,8 @@ module.exports = grammar({
             ),
 
         // extras
+
+        note: $ => seq('@', $.identifier),
 
         comment: _ => token(seq('//', /.*/)),
         // comment: _ => token(seq('//', /(\\+(.|\r?\n)|[^\\\n])*/)),
