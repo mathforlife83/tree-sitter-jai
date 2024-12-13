@@ -3207,7 +3207,7 @@
       }
     },
     "member_expression": {
-      "type": "PREC_LEFT",
+      "type": "PREC",
       "value": 20,
       "content": {
         "type": "SEQ",
@@ -3245,8 +3245,12 @@
                 "name": "identifier"
               },
               {
-                "type": "SYMBOL",
-                "name": "call_expression"
+                "type": "PREC",
+                "value": -1,
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "call_expression"
+                }
               }
             ]
           }
@@ -4459,12 +4463,8 @@
             "name": "polymorphic_type"
           },
           {
-            "type": "PREC",
-            "value": -1,
-            "content": {
-              "type": "SYMBOL",
-              "name": "member_type"
-            }
+            "type": "SYMBOL",
+            "name": "member_type"
           },
           {
             "type": "PREC",
@@ -4478,21 +4478,25 @@
       }
     },
     "member_type": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "STRING",
-          "value": "."
-        },
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        }
-      ]
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          {
+            "type": "STRING",
+            "value": "."
+          },
+          {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        ]
+      }
     },
     "polymorphic_type": {
       "type": "SEQ",
@@ -5615,21 +5619,17 @@
       "value": "---"
     },
     "address": {
-      "type": "PREC_LEFT",
-      "value": 15,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "*"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "expressions"
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "*"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expressions"
+        }
+      ]
     },
     "string": {
       "type": "SEQ",
@@ -6599,10 +6599,6 @@
     ],
     [
       "polymorphic_type"
-    ],
-    [
-      "member_type",
-      "call_expression"
     ]
   ],
   "precedences": [],

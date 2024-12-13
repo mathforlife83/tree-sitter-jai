@@ -58,7 +58,7 @@ module.exports = grammar({
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement, $.update_statement],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement],
         [$.polymorphic_type],
-        [$.member_type, $.call_expression],
+        // [$.member_type, $.call_expression], // not sure
     ],
 
     // None. Try to do as much as possible in here
@@ -528,7 +528,7 @@ module.exports = grammar({
             $.assignment_parameters,
         )),
 
-        member_expression: $ => prec.left(PREC.MEMBER, seq(
+        member_expression: $ => prec(PREC.MEMBER, seq(
             optional(choice(
                 $.expressions,
                 $.identifier
@@ -536,7 +536,7 @@ module.exports = grammar({
             '.',
             choice(
                 $.identifier,
-                $.call_expression
+                prec(-1, $.call_expression)
             ),
         )),
 
@@ -741,11 +741,11 @@ module.exports = grammar({
             $.procedure_type,
             $.parameterized_struct_type,
             $.polymorphic_type,
-            prec(-1, $.member_type),
+            $.member_type,
             prec(-2, $.identifier),
         )),
 
-        member_type: $ => seq($.identifier, '.', $.identifier),
+        member_type: $ => prec(-1, seq($.identifier, '.', $.identifier)),
 
         polymorphic_type: $ => seq(
             optional('$'),
@@ -912,7 +912,7 @@ module.exports = grammar({
         null: _ => 'null',
         uninitialized: _ => '---',
 
-        address: $ => prec.left(PREC.CAST, seq('*', $.expressions)),
+        address: $ => seq('*', $.expressions),
 
         string: $ => seq(
             field('modifier', optional('#char')),
