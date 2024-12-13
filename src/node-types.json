@@ -138,6 +138,10 @@
         "named": true
       },
       {
+        "type": "quick_procedure",
+        "named": true
+      },
+      {
         "type": "run_expression",
         "named": true
       },
@@ -352,6 +356,70 @@
     }
   },
   {
+    "type": "asm_line",
+    "named": true,
+    "fields": {
+      "mnemoric": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "asm_register",
+          "named": true
+        },
+        {
+          "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "asm_register",
+    "named": true,
+    "fields": {
+      "register": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "asm_statement",
     "named": true,
     "fields": {},
@@ -360,7 +428,7 @@
       "required": false,
       "types": [
         {
-          "type": "identifier",
+          "type": "asm_line",
           "named": true
         }
       ]
@@ -374,6 +442,14 @@
         "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": "#code",
+            "named": false
+          },
+          {
+            "type": "block",
+            "named": true
+          },
           {
             "type": "expressions",
             "named": true
@@ -1149,6 +1225,21 @@
     }
   },
   {
+    "type": "member_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "named_parameters",
     "named": true,
     "fields": {
@@ -1242,10 +1333,6 @@
         "required": false,
         "types": [
           {
-            "type": "$",
-            "named": false
-          },
-          {
             "type": "..",
             "named": false
           },
@@ -1332,6 +1419,25 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "types",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "polymorphic_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
         {
           "type": "types",
           "named": true
@@ -1617,6 +1723,21 @@
     }
   },
   {
+    "type": "quick_procedure",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "range",
     "named": true,
     "fields": {
@@ -1817,11 +1938,23 @@
           "named": true
         },
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "const_declaration",
           "named": true
         },
         {
           "type": "enum_declaration",
+          "named": true
+        },
+        {
+          "type": "expressions",
+          "named": true
+        },
+        {
+          "type": "if_statement",
           "named": true
         },
         {
@@ -1920,7 +2053,18 @@
   {
     "type": "type_literal",
     "named": true,
-    "fields": {},
+    "fields": {
+      "modifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
@@ -1972,11 +2116,19 @@
           "named": true
         },
         {
+          "type": "member_type",
+          "named": true
+        },
+        {
           "type": "parameterized_struct_type",
           "named": true
         },
         {
           "type": "pointer_type",
+          "named": true
+        },
+        {
+          "type": "polymorphic_type",
           "named": true
         },
         {
@@ -2202,6 +2354,14 @@
     "named": false
   },
   {
+    "type": "#code",
+    "named": false
+  },
+  {
+    "type": "#complete",
+    "named": false
+  },
+  {
     "type": "#deprecated",
     "named": false
   },
@@ -2219,6 +2379,14 @@
   },
   {
     "type": "#load",
+    "named": false
+  },
+  {
+    "type": "#modify",
+    "named": false
+  },
+  {
+    "type": "#place",
     "named": false
   },
   {
@@ -2383,6 +2551,14 @@
   },
   {
     "type": "==",
+    "named": false
+  },
+  {
+    "type": "===",
+    "named": false
+  },
+  {
+    "type": "=>",
     "named": false
   },
   {

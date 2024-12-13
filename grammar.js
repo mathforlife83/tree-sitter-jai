@@ -57,6 +57,8 @@ module.exports = grammar({
         [$.procedure_type, $.assignment_parameters],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement, $.update_statement],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement],
+        [$.polymorphic_type],
+        [$.member_type, $.call_expression],
     ],
 
     // None. Try to do as much as possible in here
@@ -173,6 +175,7 @@ module.exports = grammar({
             $.address,
             $.literal,
             $.pointer_expression,
+            $.quick_procedure,
 
             // I don't want all types to be expressions
             // $.types,
@@ -236,7 +239,6 @@ module.exports = grammar({
             field('path', $.string),
         ),
 
-
         procedure_declaration: $ => seq(
             field('name', choice(
                 $.identifier,
@@ -264,6 +266,7 @@ module.exports = grammar({
             choice('struct', 'union'),
             // Parameterized structs
             field('modifier', optional($.named_parameters)),
+            optional(seq('#modify', $.block)),
             '{',
             optional(repeat(choice(
                 seq('#as', $.using_statement),
@@ -275,6 +278,8 @@ module.exports = grammar({
                         $.const_declaration,   
                         $.variable_declaration,
                         $.assignment_statement,
+                        seq('#', $.if_statement),
+                        seq('#place', $.expressions), // #place statements
                     ),
                     ';'
                 )
@@ -325,6 +330,8 @@ module.exports = grammar({
             // optional(','),
         ),
 
+        quick_procedure: $ => seq($.identifier, '=>', $.expressions),
+
 
         //
         // statements
@@ -338,9 +345,34 @@ module.exports = grammar({
         asm_statement: $ => prec.right(seq(
             '#asm',
             '{',
-            repeat($.identifier),
+            repeat(seq($.asm_line, ';')),
             '}'
         )),
+
+        asm_line: $ => choice(
+            seq(
+                field('mnemoric', seq(
+                    $.identifier, optional(seq('.', $.identifier))
+                )),
+                choice($.identifier, $.asm_register),
+                optional(seq(
+                    ',',
+                    choice(
+                        seq('[', $.expressions, ']'),
+                        $.expressions
+                    ),
+                ))
+            ),
+            $.asm_register,
+        ),
+
+        asm_register: $ => seq(
+            field('register', $.identifier), ':',
+            optional(seq(
+                optional(seq($.identifier, '===',)),
+                choice($.identifier, $.integer)
+            ))
+        ),
 
         using_statement: $ => seq(
             field('keyword', 'using'),
@@ -384,6 +416,7 @@ module.exports = grammar({
 
         if_case_statement: $ => seq(
             choice('if', '#if'),
+            optional('#complete'),
             field('condition', $.expressions),
             '==',
             '{',
@@ -578,6 +611,7 @@ module.exports = grammar({
             )),
             repeat($.compiler_declaration),
             optional(seq($.compiler_declaration, $.identifier)),
+            optional(seq('#modify', $.block)),
             optional($.block),
         )),
         named_return: $ => prec.right(1, seq(
@@ -608,15 +642,11 @@ module.exports = grammar({
             choice(
                 field('type', seq(
                     optional('..'),
-                    optional('$'),
-                    optional('$'),
                     $.types
                 )),
                 seq(
                     field('type', optional(seq(
                         optional('..'),
-                        optional('$'),
-                        optional('$'),
                         $.types
                     ))),
                     seq(
@@ -641,7 +671,12 @@ module.exports = grammar({
                     // Named arguments
                     //  procedure(arg2 = 2);
 
-                    field('named_argument', optional(seq($.identifier, '='))),
+                    field('named_argument',
+                        optional( seq(
+                            $.identifier,
+                            '='
+                        ))
+                    ),
                     optional('..'),
                     // NOTE: this should be the same as in parameterized_struct_type.
                     // Could be merged somehow.
@@ -649,7 +684,8 @@ module.exports = grammar({
                         $.expressions,
                         $.identifier,
                         $.procedure,
-                        $.types
+                        $.types,
+                        seq('#code', $.block)
                     )),
                 )), ','),
                 // optional(','),
@@ -704,12 +740,21 @@ module.exports = grammar({
             $.type_literal,
             $.procedure_type,
             $.parameterized_struct_type,
+            $.polymorphic_type,
+            prec(-1, $.member_type),
             prec(-2, $.identifier),
         )),
 
+        member_type: $ => seq($.identifier, '.', $.identifier),
+
+        polymorphic_type: $ => seq(
+            optional('$'),
+            '$', $.types,
+            optional(seq('/', $.identifier))), // TODO: this also makes the parser bigger.
 
         type_literal: $ => prec.right(seq(
             '#type',
+            optional(seq(',', field('modifier', $.identifier))), // #type,isa
             $.types,
         )),
 

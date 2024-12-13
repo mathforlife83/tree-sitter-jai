@@ -122,6 +122,14 @@ test_proc1 :: () {
         get_default_name();
     }
 
+    // big expressions
+
+    // this errors and breaks the entire procedure block. TODO: fix
+    // if (member.expr * 2 + 1) * 100 < expr.again * another.expr {
+    //     // yes
+    // } else {
+    //     // no
+    // }
 
 }
 
