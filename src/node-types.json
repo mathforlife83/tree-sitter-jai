@@ -893,21 +893,6 @@
     }
   },
   {
-    "type": "deprecated_directive",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "string",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "else_clause",
     "named": true,
     "fields": {},
@@ -1465,27 +1450,11 @@
     "named": true,
     "fields": {
       "result": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "named_return",
-            "named": true
-          },
-          {
-            "type": "types",
+            "type": "procedure_returns",
             "named": true
           }
         ]
@@ -1496,10 +1465,6 @@
       "required": true,
       "types": [
         {
-          "type": "block",
-          "named": true
-        },
-        {
           "type": "compiler_declaration",
           "named": true
         },
@@ -1509,6 +1474,10 @@
         },
         {
           "type": "named_parameters",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1700,9 +1669,13 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "block",
+          "named": true
+        },
         {
           "type": "procedure",
           "named": true
@@ -1711,9 +1684,35 @@
     }
   },
   {
-    "type": "procedure_type",
+    "type": "procedure_returns",
     "named": true,
     "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "returns",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "procedure_type",
+    "named": true,
+    "fields": {
+      "result": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "procedure_returns",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
@@ -1727,11 +1726,15 @@
           "named": true
         },
         {
-          "type": "named_return",
+          "type": "identifier",
           "named": true
         },
         {
-          "type": "types",
+          "type": "named_parameters",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1788,6 +1791,36 @@
       "types": [
         {
           "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "returns",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "named_return",
+          "named": true
+        },
+        {
+          "type": "types",
           "named": true
         }
       ]
@@ -2377,10 +2410,6 @@
     "named": false
   },
   {
-    "type": "#deprecated",
-    "named": false
-  },
-  {
     "type": "#if",
     "named": false
   },
@@ -2398,6 +2427,10 @@
   },
   {
     "type": "#modify",
+    "named": false
+  },
+  {
+    "type": "#must",
     "named": false
   },
   {

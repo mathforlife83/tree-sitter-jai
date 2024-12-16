@@ -135,3 +135,17 @@ call_expression :: (polymorphic_args: $T) -> () {
     print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
     print("%\n", polymorphic_args);
 }
+
+some_complex_ass_procedure_declaration ::
+inline (a1: s32, a2: s64, a3: int, a4: float)
+-> no, yes, maybe, when, whomst:s32
+#external c_library #c_call #deprecated "deprecation message"
+#modify {
+    #if a then b(); else c();
+}
+{
+    // block
+}
+
+procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
+}

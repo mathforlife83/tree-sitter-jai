@@ -54,11 +54,15 @@ module.exports = grammar({
         [$.member_expression],
         [$.call_expression, $.parameterized_struct_type],
         [$.named_parameters, $.assignment_parameters],
-        [$.procedure_type, $.assignment_parameters],
+        [$.named_parameters, $.procedure_returns, $.assignment_parameters],
+        // [$.procedure_returns],
+        [$.named_return, $.parameter],
+        // [$.procedure, $.procedure_type],
+        [$.named_return],
+        // [$.procedure_type, $.assignment_parameters, $.named_parameters],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement, $.update_statement],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement],
         [$.polymorphic_type],
-        // [$.member_type, $.call_expression], // not sure
     ],
 
     // None. Try to do as much as possible in here
@@ -69,7 +73,6 @@ module.exports = grammar({
         $.block_comment,
         // /\s|\\\r?\n/,
         /\s/,
-        $.deprecated_directive,
         $.note,
     ],
 
@@ -240,7 +243,7 @@ module.exports = grammar({
             field('path', $.string),
         ),
 
-        procedure_declaration: $ => seq(
+        procedure_declaration: $ => prec(1, seq(
             field('name', choice(
                 $.identifier,
                 seq(
@@ -259,7 +262,9 @@ module.exports = grammar({
             ':', ':',
             optional(field('modifier', 'inline')),
             $.procedure,
-        ),
+            optional(seq('#modify', $.block)),
+            choice($.block, ';'),
+        )),
 
         struct_declaration: $ => seq(
             field('name', $.identifier),
@@ -593,34 +598,49 @@ module.exports = grammar({
         //
 
         // Procedure
-        procedure: $ => prec.right(1, seq(
+        procedure: $ => prec.right(2, seq(
             $.named_parameters,
             optional(seq(
                 '->',
                 // This is a procedure that returns nothing: () -> ()
                 // This is a procedure that returns a procedure; () -> (())
-                field('result', choice(
-                    seq(
-                        '(',
-                        optional(comma_sep1(
-                            choice($.types, $.named_return)
-                        )),
-                        ')'
-                    ),
-                    comma_sep1(choice($.types, $.named_return)),
-                ))
+                field('result', $.procedure_returns)
             )),
-            repeat($.compiler_declaration),
-            optional(seq($.compiler_declaration, $.identifier)),
-            optional(seq('#modify', $.block)),
-            optional($.block),
+            repeat(
+                seq(
+                    prec.left(2, $.compiler_declaration),
+                    optional(choice($.identifier, $.string))
+                )
+            ),
+            // optional($.block),
         )),
-        named_return: $ => prec.right(1, seq(
+
+        procedure_returns: $ => prec.left(choice(
+            seq(
+                '(',
+                sep(
+                    $.returns, ','
+                ),
+                ')'
+            ),
+            prec.right(sep1($.returns, ',')),
+        )),
+
+        returns: $ => prec.left(1, seq(
+            choice(
+                $.named_return,
+                $.types,
+                field('type', $.identifier)
+            ),
+            optional("#must")
+        )),
+
+        named_return: $ => seq(
             $.identifier,
             ':',
             $.types,
             optional(seq('=', $.literal))
-        )),
+        ),
 
         // Procedure and Struct
         named_parameters: $ => seq(
@@ -673,7 +693,7 @@ module.exports = grammar({
                     //  procedure(arg2 = 2);
 
                     field('named_argument',
-                        optional( seq(
+                        optional(seq(
                             $.identifier,
                             '='
                         ))
@@ -812,19 +832,18 @@ module.exports = grammar({
         pointer_type: $ => prec.left(PREC.CAST, seq('*', $.types)),
 
         procedure_type: $ => prec.left(seq(
-            $.assignment_parameters,
+            choice ($.assignment_parameters, $.named_parameters),
+            // $.assignment_parameters,
             optional(seq(
                 '->',
-                choice(
-                    seq(
-                        '(',
-                        optional(comma_sep1(choice($.types, $.named_return))),
-                        ')'
-                    ),
-                    comma_sep1(choice($.types, $.named_return)),
-                )
+                field('result', $.procedure_returns)
             )),
-            repeat($.compiler_declaration),
+            repeat(
+                seq(
+                    prec.left(2, $.compiler_declaration),
+                    optional(choice($.identifier, $.string))
+                )
+            ),
         )),
 
         array_type: $ => prec.right(seq(
@@ -990,11 +1009,6 @@ module.exports = grammar({
             token(prec(1, /\*/)),
             token(prec(1, /\//)),
         ))),
-
-        deprecated_directive: $ => choice(
-            seq('#deprecated', $.string),
-        ),
-
 }
 });
 
