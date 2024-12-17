@@ -450,7 +450,7 @@ module.exports = grammar({
             optional(field('modifier', '#v2')), // I guess this is temporary
             optional('<'),
             optional(field('value', seq(
-                comma_sep1($.identifier),
+                comma_sep1(seq(optional('*'), $.identifier)),
                 ':',
             ))),
             prec.right(choice(
