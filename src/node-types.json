@@ -871,6 +871,10 @@
           "named": true
         },
         {
+          "type": "using_statement",
+          "named": true
+        },
+        {
           "type": "variable_declaration",
           "named": true
         }

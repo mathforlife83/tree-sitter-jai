@@ -102,6 +102,7 @@ module.exports = grammar({
 
             seq(
                 choice(
+                    $.using_statement,
                     $.const_declaration,
                     $.variable_declaration,
                 ),
