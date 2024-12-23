@@ -941,6 +941,10 @@
       "required": false,
       "types": [
         {
+          "type": "compiler_declaration",
+          "named": true
+        },
+        {
           "type": "expressions",
           "named": true
         },
@@ -1205,10 +1209,21 @@
   {
     "type": "member_expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "dereference": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "*",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "expressions",
@@ -1995,6 +2010,10 @@
         },
         {
           "type": "block",
+          "named": true
+        },
+        {
+          "type": "compiler_declaration",
           "named": true
         },
         {

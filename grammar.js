@@ -220,6 +220,7 @@ module.exports = grammar({
         )),
 
         compiler_declaration: $ => prec.right(choice(
+            // TODO: might want import and load to be sepparated from compiler_declaration
             $.import,
             $.load,
             seq('#', comma_sep1($.identifier))
@@ -271,6 +272,7 @@ module.exports = grammar({
             field('name', $.identifier),
             ':', ':',
             choice('struct', 'union'),
+            optional($.compiler_declaration),
             // Parameterized structs
             field('modifier', optional($.named_parameters)),
             optional(seq('#modify', $.block)),
@@ -299,6 +301,7 @@ module.exports = grammar({
             ':', ':',
             choice('enum', 'enum_flags'),
             optional(field('type', $.types)),
+            optional($.compiler_declaration),
             optional($.specified_directive),
             '{',
             sep(
@@ -543,7 +546,8 @@ module.exports = grammar({
             '.',
             choice(
                 $.identifier,
-                prec(-1, $.call_expression)
+                prec(-1, $.call_expression),
+                field('dereference', '*')
             ),
         )),
 
@@ -976,7 +980,7 @@ module.exports = grammar({
                     optional(seq(/[pP][-+]?/, DEC_INT))
                 )),
                 token(seq(
-                    DEC_INT, ".", DEC_INT,
+                    optional(DEC_INT), ".", DEC_INT,
                     optional(seq(/[eE][-+]?/, DEC_INT))
                 )),
                 token(seq(
