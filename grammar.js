@@ -65,8 +65,7 @@ module.exports = grammar({
         [$.polymorphic_type],
     ],
 
-    // None. Try to do as much as possible in here
-    // externals: $ => [ ],
+    // externals: $ => [ $.error_sentinel ],
 
     extras: $ => [
         $.comment,
@@ -980,7 +979,10 @@ module.exports = grammar({
                     optional(seq(/[pP][-+]?/, DEC_INT))
                 )),
                 token(seq(
-                    optional(DEC_INT), ".", DEC_INT,
+                    choice(
+                        seq(optional(DEC_INT), ".", DEC_INT),
+                        seq(DEC_INT, ".", optional(DEC_INT)),
+                    ),
                     optional(seq(/[eE][-+]?/, DEC_INT))
                 )),
                 token(seq(
