@@ -11,11 +11,20 @@
      *
      */ (C/C++ would end the block here)
 
-   I will use this file to see if anyghing breaks as I add features or to fix bugs in
+   I will use this file to see if anything breaks as I add features or to fix bugs in
    the grammar. More cases will be added as it gets more complex.
 
  */
 
+
+#import "Compiler";
+#import "Basic";
+
+named_import :: #import "Named";
+
+#load "something.jai";
+
+#module_parameters (some_param : bool)(some_other_param := no, thing: string, );
 
 TestStruct1 :: struct {
     // Testing some literals
@@ -37,13 +46,14 @@ TestStruct2 :: struct (type: Type = s64) {
 
 
 test_proc1 :: () {
+
     procedure_call(arg1, arg2);
 
     // Structs and parameterized structs
 
     struct_literal1 := TestStruct1.{};
     struct_literal2 := TestStruct2(69).{ };
-    
+
     //        Parameterized struct type
     struct1 : TestStruct2(420, 540, 999, "perhaps") = .{420, 540, 999, "perhaps"};
 
@@ -79,27 +89,37 @@ test_proc1 :: () {
     lets, try, even, more, constants += 1, 2, 3, 4, 5;
 
     pointer_type := *var1;
-    
+
+    if condition
+        do_shit();
+    else
+        do_shit();
+
+    if condition
+        do_shit();
+    else
+        do_more_shit();
+
     if procedure_call("condition") == 1 // then
         print("consequence\n");
-    else                  
+    else if condition
+        print("consequence\n");
+    else
         print("alternative\n");
 
     #if thing != null {
         print("");
+        print("");
+        print("");
     } else #if thing == .{} {
+        print("");
+        print("");
         print("");
     } else {
         print("");
+        print("");
+        print("");
     }
-
-    if thing
-        print("");
-    else if thing
-        print("");
-    else
-        print("");
-
 
     // This seems to work too
     if 0 << << pointer_type  print();
@@ -115,7 +135,7 @@ test_proc1 :: () {
         print("This is the true block.\n");
         factorial(5);
         thing.name;
-    } else  {
+    } else {
         print("We are about to get the default name.\n");
         x := 3;
         print("Really, it is going to happen.\n");
@@ -129,6 +149,31 @@ test_proc1 :: () {
         no();
         // what in the fuck
     }
+
+    if condition
+        do_shit();
+    else if condition
+        do_shit();
+    else
+        do_shit();
+
+    if expr[index].member || expr[index].member {
+        yes();
+    } else {
+        yes();
+    }
+
+    for * member.member.member {
+        do_shit();
+    }
+
+    // TODO: this gets the parser confused because of floats
+    for 0..count-1 {
+    }
+    // this works
+    for 0 .. count-1 {
+    }
+
 } @notes_are_ignored @yes
 
 call_expression :: (polymorphic_args: $T) -> () {
@@ -149,3 +194,5 @@ inline (a1: s32, a2: s64, a3: int, a4: float)
 
 procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
 }
+
+some_proc : (a: int) -> string #foreign library;
