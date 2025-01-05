@@ -3,20 +3,16 @@ Tree-sitter grammar for the language. I needed it because I rely on tree-sitter 
 auto indents. It is incomplete, but I intend to make it better as I'm learning the
 language.
 
+This syntax now uses an external scanner. If you're using neovim, you should add "scanner.c"
+into parser_config.jai.install_info.files in your lua config.
+
 # TODO
 *I prioritize fixing issues based on how badly they break the parsing*
-- [x] run statements
-- [x] organize code and label things
-- [x] using statements
-- [x] fix floats...
 - [x] nested block comments (without external scanner)
-- [x] comma sepparated variable declarations doesn't seem to work for some bizzare reason and I can't seem to be able to get it to work
-- [x] if expressions are somewhat limited due to them increasing the complexity (and slowness) of the parser
 - [x] inline assembly
 - [x] #modify block
-- [ ] parameterized module imports
-- [ ] #string (this might require an external scanner)
-- [ ] fix conflicts which I lazily ignored before
-- [ ] custom iterators such as "for :utf8_iter"
-- [ ] macros
-- [ ] cannot diferentiate between taking the address of a variable and a pointer type
+- [x] #string (it did require external scanner)
+- [x] parameterized module imports
+- [ ] fix for loop range getting confused with floats. e.g. "0..1" = ("0.", ".1") and "0..count" = (float "0.") + (member_expression ".count")
+- [ ] macros, backticks, expand, insert
+- [ ] cannot diferentiate between taking the address of a variable and a pointer type (does not break the syntax highlighting, so I don't care)
