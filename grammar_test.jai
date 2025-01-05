@@ -183,12 +183,12 @@ test_proc1 :: () {
         do_shit();
     }
 
-    // TODO: this gets the parser confused because of floats
-    for 0..count-1 {
-    }
-    // this works
-    for 0 .. count-1 {
-    }
+    // TODO: these get the parser confused because of floats
+    for 0..1 {}
+    for 0..count-1 {}
+    // these work
+    for 0 .. 1 {}
+    for 0 .. count-1 { }
 
 } @notes_are_ignored @yes
 
