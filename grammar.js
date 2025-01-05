@@ -62,12 +62,15 @@ module.exports = grammar({
         [$.polymorphic_type],
     ],
 
-    // externals: $ => [ $.error_sentinel ],
+    externals: $ => [
+        $.heredoc_start,
+        $.heredoc_end,
+        $.error_sentinel,
+    ],
 
     extras: $ => [
         $.comment,
         $.block_comment,
-        // /\s|\\\r?\n/,
         /\s/,
         $.note,
     ],
@@ -231,7 +234,7 @@ module.exports = grammar({
         )),
 
         compiler_directive: $ => prec.right(choice(
-            seq('#', comma_sep1($.identifier))
+            field('directive', seq('#', comma_sep1($.identifier)))
         )),
 
         import: $ => prec.right(seq(
@@ -239,7 +242,7 @@ module.exports = grammar({
                 field('name', $.identifier),
                 ':', ':'
             )),
-            '#import',
+            field('directive', '#import'),
             optional(field('modifier', choice(
                 ',file',
                 ',dir',
@@ -250,12 +253,12 @@ module.exports = grammar({
         )),
 
         load: $ => seq(
-            '#load',
+            field('directive', '#load'),
             field('path', $.string),
         ),
 
         module_parameters: $ => prec.right(seq(
-            '#module_parameters',
+            field('directive', '#module_parameters'),
             $.named_parameters,
             optional($.named_parameters),
         )),
@@ -290,7 +293,7 @@ module.exports = grammar({
             optional($.compiler_directive),
             // Parameterized structs
             field('modifier', optional($.named_parameters)),
-            optional(seq('#modify', $.block)),
+            optional(seq(field('directive', '#modify'), $.block)),
             '{',
             optional(repeat(choice(
                 seq('#as', $.using_statement),
@@ -364,23 +367,23 @@ module.exports = grammar({
         //
 
         run_statement: $ => seq(
-            '#run',
+            field('directive', '#run'),
             field('modifier', optional(seq(',', comma_sep1($.identifier)))),
             $.statement,
         ),
 
         insert_statement: $ => seq(
-            '#insert',
+            field('directive', '#insert'),
             $.statement,
         ),
 
         code_expression: $ => prec.left(seq(
-            '#code',
+            field('directive', '#code'),
             choice($.expressions, $.block),
         )),
     
         asm_statement: $ => prec.right(seq(
-            '#asm',
+            field('directive', '#asm'),
             '{',
             repeat(seq($.asm_line, ';')),
             '}'
@@ -923,6 +926,7 @@ module.exports = grammar({
             $.integer,
             $.float,
             $.string,
+            $.string_directive,
             $.struct_literal,
             $.array_literal,
             $.boolean,
@@ -985,6 +989,17 @@ module.exports = grammar({
             )),
             '"',
         ),
+
+        string_directive: $ => seq(
+            field('directive', '#string'),
+            $.heredoc_start,
+            repeat($.heredoc_body),
+            $.heredoc_end,
+        ),
+
+        // anything that is not whitespace
+        heredoc_body: $ => /[^\s]+/,
+
         string_content: _ => token.immediate(prec(1, /[^"\\\n]+/)),
         escape_sequence: _ => token.immediate(seq(
             '\\',

@@ -683,38 +683,42 @@
         "type": "CHOICE",
         "members": [
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#"
-              },
-              {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  },
-                  {
-                    "type": "REPEAT",
-                    "content": {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "STRING",
-                          "value": ","
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "identifier"
-                        }
-                      ]
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "#"
+                },
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "identifier"
+                          }
+                        ]
+                      }
                     }
-                  }
-                ]
-              }
-            ]
+                  ]
+                }
+              ]
+            }
           }
         ]
       }
@@ -755,8 +759,12 @@
             ]
           },
           {
-            "type": "STRING",
-            "value": "#import"
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#import"
+            }
           },
           {
             "type": "CHOICE",
@@ -818,8 +826,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#load"
+          "type": "FIELD",
+          "name": "directive",
+          "content": {
+            "type": "STRING",
+            "value": "#load"
+          }
         },
         {
           "type": "FIELD",
@@ -838,8 +850,12 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "#module_parameters"
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#module_parameters"
+            }
           },
           {
             "type": "SYMBOL",
@@ -1181,8 +1197,12 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "#modify"
+                  "type": "FIELD",
+                  "name": "directive",
+                  "content": {
+                    "type": "STRING",
+                    "value": "#modify"
+                  }
                 },
                 {
                   "type": "SYMBOL",
@@ -1754,8 +1774,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#run"
+          "type": "FIELD",
+          "name": "directive",
+          "content": {
+            "type": "STRING",
+            "value": "#run"
+          }
         },
         {
           "type": "FIELD",
@@ -1813,8 +1837,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#insert"
+          "type": "FIELD",
+          "name": "directive",
+          "content": {
+            "type": "STRING",
+            "value": "#insert"
+          }
         },
         {
           "type": "SYMBOL",
@@ -1829,8 +1857,12 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "#code"
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#code"
+            }
           },
           {
             "type": "CHOICE",
@@ -1855,8 +1887,12 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "#asm"
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#asm"
+            }
           },
           {
             "type": "STRING",
@@ -5510,6 +5546,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "string_directive"
+        },
+        {
+          "type": "SYMBOL",
           "name": "struct_literal"
         },
         {
@@ -5926,6 +5966,38 @@
           "value": "\""
         }
       ]
+    },
+    "string_directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "directive",
+          "content": {
+            "type": "STRING",
+            "value": "#string"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "heredoc_start"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "heredoc_body"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "heredoc_end"
+        }
+      ]
+    },
+    "heredoc_body": {
+      "type": "PATTERN",
+      "value": "[^\\s]+"
     },
     "string_content": {
       "type": "IMMEDIATE_TOKEN",
@@ -6954,7 +7026,20 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "error_sentinel"
+    }
+  ],
   "inline": [],
   "supertypes": []
 }

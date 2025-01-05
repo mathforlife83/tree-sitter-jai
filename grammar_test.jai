@@ -16,9 +16,28 @@
 
  */
 
-
 #import "Compiler";
 #import "Basic";
+
+HEREDOC_STRING0 :: #string END
+this is a string
+
+\r \\
+ \n \/
+  \t
+   \0
+    %
+;;;,,,
+{{{
+[][
+()(
+.
+:: :
+-- -
+"
+END;
+
+HEREDOC_STRING1 :: #string DONE on the same line DONE;
 
 named_import :: #import "Named";
 
@@ -29,9 +48,6 @@ named_import :: #import "Named";
 TestStruct1 :: struct {
     // Testing some literals
     var1 : int;
-    var2 : string = "multi .   .   . \
- .   .   .   .   .   line   .   .   .\
-  .   .   .   .   .  string\r\n\t\0";
     var3 := 0xDEAD_BEEF;
     var4 : float32 = 0hAB_CD_12_34;
     CONST1: string : "as if the string is going to fluctuate";
