@@ -13,6 +13,6 @@ into parser_config.jai.install_info.files in your lua config.
 - [x] #modify block
 - [x] #string (it did require external scanner)
 - [x] parameterized module imports
-- [ ] fix for loop range getting confused with floats. e.g. "0..1" = ("0.", ".1") and "0..count" = (float "0.") + (member_expression ".count")
+- [ ] fix for loop range getting confused with floats. e.g. `0..1` is (float `0.`) (float `.1`) and `0..count` is (float `0.`) + (member_expression `.count`)
 - [ ] macros, backticks, expand, insert
 - [ ] cannot diferentiate between taking the address of a variable and a pointer type (does not break the syntax highlighting, so I don't care)
