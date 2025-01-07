@@ -151,6 +151,7 @@ module.exports = grammar({
             $.return_statement,
             $.break_statement,
             $.continue_statement,
+            $.remove_statement,
 
             $.expressions,
         ),
@@ -296,7 +297,7 @@ module.exports = grammar({
             optional(seq(field('directive', '#modify'), $.block)),
             '{',
             optional(repeat(choice(
-                seq('#as', $.using_statement),
+                seq(optional('#as'), $.using_statement),
                 $.procedure_declaration,
                 $.struct_declaration,
                 $.enum_declaration,
@@ -414,10 +415,16 @@ module.exports = grammar({
             ))
         ),
 
-        using_statement: $ => seq(
+        using_statement: $ => prec(PREC.CAST, seq(
             field('keyword', 'using'),
+            field('modifier', optional(seq(',', comma_sep1(
+                seq(
+                    $.identifier,
+                    optional($.assignment_parameters)
+                )
+            )))),
             $.statement,
-        ),
+        )),
 
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
             comma_sep1(choice(
@@ -508,6 +515,8 @@ module.exports = grammar({
         break_statement: $ => seq('break', optional($.identifier)),
 
         continue_statement: $ => seq('continue', optional($.identifier)),
+
+        remove_statement: $ => seq('remove', optional($.identifier)),
 
         defer_statement: $ => seq('defer', $.statement),
 
@@ -864,6 +873,7 @@ module.exports = grammar({
                 repeat(prec(-1,
                     seq(
                         choice(
+                            seq(optional('#as'), $.using_statement),
                             $.variable_declaration,
                             $.const_declaration,
                             // $.assignment_statement, // not sure about this one
