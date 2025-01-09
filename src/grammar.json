@@ -1084,8 +1084,17 @@
                 "type": "FIELD",
                 "name": "modifier",
                 "content": {
-                  "type": "STRING",
-                  "value": "inline"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "inline"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "no_inline"
+                    }
+                  ]
                 }
               },
               {
@@ -1904,6 +1913,43 @@
             "content": {
               "type": "STRING",
               "value": "#asm"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "modifier",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "identifier"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           },
           {
@@ -5810,8 +5856,12 @@
                                   "type": "SEQ",
                                   "members": [
                                     {
-                                      "type": "SYMBOL",
-                                      "name": "identifier"
+                                      "type": "FIELD",
+                                      "name": "name",
+                                      "content": {
+                                        "type": "SYMBOL",
+                                        "name": "identifier"
+                                      }
                                     },
                                     {
                                       "type": "STRING",
@@ -5853,8 +5903,12 @@
                                         "type": "SEQ",
                                         "members": [
                                           {
-                                            "type": "SYMBOL",
-                                            "name": "identifier"
+                                            "type": "FIELD",
+                                            "name": "name",
+                                            "content": {
+                                              "type": "SYMBOL",
+                                              "name": "identifier"
+                                            }
                                           },
                                           {
                                             "type": "STRING",

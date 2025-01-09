@@ -319,6 +319,20 @@
             "named": false
           }
         ]
+      },
+      "modifier": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
       }
     },
     "children": {
@@ -1840,6 +1854,10 @@
           {
             "type": "inline",
             "named": false
+          },
+          {
+            "type": "no_inline",
+            "named": false
           }
         ]
       },
@@ -2513,6 +2531,16 @@
     "type": "struct_literal",
     "named": true,
     "fields": {
+      "name": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "parameter": {
         "multiple": true,
         "required": false,
@@ -2523,10 +2551,6 @@
           },
           {
             "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "identifier",
             "named": true
           }
         ]
@@ -3266,6 +3290,10 @@
   },
   {
     "type": "inline",
+    "named": false
+  },
+  {
+    "type": "no_inline",
     "named": false
   },
   {

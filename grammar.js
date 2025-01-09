@@ -281,7 +281,7 @@ module.exports = grammar({
                 )
             )),
             ':', ':',
-            optional(field('modifier', 'inline')),
+            optional(field('modifier', choice('inline', 'no_inline'))),
             $.procedure,
             optional(seq('#modify', $.block)),
             choice($.block, ';'),
@@ -385,6 +385,7 @@ module.exports = grammar({
     
         asm_statement: $ => prec.right(seq(
             field('directive', '#asm'),
+            field('modifier', optional(comma_sep1($.identifier))),
             '{',
             repeat(seq($.asm_line, ';')),
             '}'
@@ -959,7 +960,7 @@ module.exports = grammar({
             optional(seq(
                 comma_sep1(field('parameter', seq(
                     // $.assignment_statement, // This breaks
-                    optional(seq($.identifier, '=')), // named
+                    optional(seq(field('name', $.identifier), '=')), // named
                     $.expressions,
                 ))),
                 optional(','),
