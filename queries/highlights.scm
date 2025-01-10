@@ -205,6 +205,7 @@ keyword: (identifier) @keyword
 [ "[" "]" ] @punctuation.bracket
 
 [
+  "`"
   "->"
   "."
   ","

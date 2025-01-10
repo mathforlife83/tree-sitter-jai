@@ -131,6 +131,7 @@ module.exports = grammar({
             $.run_statement,
             $.asm_statement,
             $.using_statement,
+            $.backtick_statement,
 
             $.procedure_declaration,
             $.struct_declaration,
@@ -177,6 +178,8 @@ module.exports = grammar({
             $.parenthesized_expression,
 
             $.cast_expression,
+            $.cast_v2_expression,
+            $.auto_cast_expression,
             $.unary_expression,
             $.binary_expression,
 
@@ -391,6 +394,8 @@ module.exports = grammar({
             '}'
         )),
 
+        backtick_statement: $ => seq('`', $.statement),
+
         asm_line: $ => choice(
             seq(
                 field('mnemoric', seq(
@@ -597,7 +602,8 @@ module.exports = grammar({
                 $.member_expression,
                 $.index_expression,
                 $.type_of_expression,
-                $.identifier
+                $.identifier,
+                $.cast_v2_expression,
             )),
             '.',
             choice(
@@ -646,14 +652,27 @@ module.exports = grammar({
                     '(',
                     $.types,
                     ')',
-                    optional('.*'), // cast dereference
                 ),
-                seq(
-                    'xx',
-                    field('modifier', optional(seq(',', comma_sep1($.identifier)))),
-                )
             ),
             $.expressions
+        )),
+
+        cast_v2_expression: $ => prec(PREC.CAST, seq(
+            seq(
+                'cast',
+                field('modifier', optional(seq(',', comma_sep1($.identifier)))),
+                '(',
+                $.types,
+                ',',
+                $.expressions,
+                ')',
+            ),
+        )),
+
+        auto_cast_expression: $ => prec(PREC.CAST, seq(
+            'xx',
+            field('modifier', optional(seq(',', comma_sep1($.identifier)))),
+            $.expressions,
         )),
 
         //
