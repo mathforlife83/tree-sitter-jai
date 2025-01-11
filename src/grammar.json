@@ -362,6 +362,10 @@
         {
           "type": "SYMBOL",
           "name": "using_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "no_semicolon_declaration"
         }
       ]
     },
@@ -1286,6 +1290,10 @@
                     "name": "enum_declaration"
                   },
                   {
+                    "type": "SYMBOL",
+                    "name": "no_semicolon_declaration"
+                  },
+                  {
                     "type": "SEQ",
                     "members": [
                       {
@@ -1783,6 +1791,40 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "no_semicolon_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PREC_RIGHT",
+          "value": 0,
+          "content": {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "anonymous_struct_type"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "anonymous_enum_type"
+            }
+          ]
         }
       ]
     },

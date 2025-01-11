@@ -1662,6 +1662,36 @@
     }
   },
   {
+    "type": "no_semicolon_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_enum_type",
+          "named": true
+        },
+        {
+          "type": "anonymous_struct_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "no_semicolon_statements",
     "named": true,
     "fields": {},
@@ -1691,6 +1721,10 @@
         },
         {
           "type": "if_statement",
+          "named": true
+        },
+        {
+          "type": "no_semicolon_declaration",
           "named": true
         },
         {
@@ -2601,6 +2635,10 @@
         },
         {
           "type": "insert_statement",
+          "named": true
+        },
+        {
+          "type": "no_semicolon_declaration",
           "named": true
         },
         {

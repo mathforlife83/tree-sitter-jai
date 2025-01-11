@@ -171,6 +171,7 @@ module.exports = grammar({
             $.for_statement,
             $.if_case_statement,
             $.using_statement,
+            $.no_semicolon_declaration,
         ),
 
         // Inside statements or as arguments
@@ -304,6 +305,7 @@ module.exports = grammar({
                 $.procedure_declaration,
                 $.struct_declaration,
                 $.enum_declaration,
+                $.no_semicolon_declaration,
                 seq(
                     choice(
                         $.insert_statement,
@@ -361,6 +363,15 @@ module.exports = grammar({
                 choice($.expressions, $.types),
             )),
             // optional(','),
+        ),
+
+        no_semicolon_declaration: $ => seq(
+            prec.right(field('name', $.identifier)),
+            ':',
+            choice(
+                $.anonymous_struct_type,
+                $.anonymous_enum_type,
+            )
         ),
 
         quick_procedure: $ => seq($.identifier, '=>', $.expressions),
