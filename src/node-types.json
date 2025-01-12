@@ -1068,6 +1068,10 @@
           "named": true
         },
         {
+          "type": "compiler_directive",
+          "named": true
+        },
+        {
           "type": "if_expression",
           "named": true
         },
@@ -1863,6 +1867,10 @@
       "types": [
         {
           "type": "expressions",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         }
       ]
@@ -2670,6 +2678,10 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "index_expression",
             "named": true
           }
         ]

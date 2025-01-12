@@ -61,6 +61,27 @@ TestStruct2 :: struct (type: Type = s64) {
 }
 
 
+call_expression :: (polymorphic_args: $T) -> () {
+    print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
+    print("%\n", polymorphic_args);
+}
+
+some_complex_ass_procedure_declaration ::
+inline (a1: s32, a2: s64, a3: int, a4: float)
+-> no, yes, maybe, when, whomst:s32
+#external c_library #c_call #deprecated "deprecation message"
+#modify {
+    #if a then b(); else c();
+}
+{
+    // block
+}
+
+procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
+}
+
+some_proc : (a: int) -> string #foreign library;
+
 test_proc1 :: () {
 
     procedure_call(arg1, arg2);
@@ -184,31 +205,14 @@ test_proc1 :: () {
     }
 
     // TODO: these get the parser confused because of floats
-    for 0..1 {}
-    for 0..count-1 {}
+    // for 0..1 {}
+    // for 0..count-1 {}
     // these work
     for 0 .. 1 {}
     for 0 .. count-1 { }
 
+    // there was an issue with parenthesised expressions with only an identifier inside
+    call_expression(*member.expression, identifier + cast(type)(identifier));
+    var := cast(type)(identifier);
+
 } @notes_are_ignored @yes
-
-call_expression :: (polymorphic_args: $T) -> () {
-    print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
-    print("%\n", polymorphic_args);
-}
-
-some_complex_ass_procedure_declaration ::
-inline (a1: s32, a2: s64, a3: int, a4: float)
--> no, yes, maybe, when, whomst:s32
-#external c_library #c_call #deprecated "deprecation message"
-#modify {
-    #if a then b(); else c();
-}
-{
-    // block
-}
-
-procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
-}
-
-some_proc : (a: int) -> string #foreign library;

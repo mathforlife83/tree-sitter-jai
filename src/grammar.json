@@ -458,6 +458,10 @@
           {
             "type": "SYMBOL",
             "name": "code_expression"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "compiler_directive"
           }
         ]
       }
@@ -3075,8 +3079,17 @@
             "value": "("
           },
           {
-            "type": "SYMBOL",
-            "name": "expressions"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "expressions"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
           },
           {
             "type": "STRING",
@@ -6010,8 +6023,17 @@
                                       "type": "FIELD",
                                       "name": "name",
                                       "content": {
-                                        "type": "SYMBOL",
-                                        "name": "identifier"
+                                        "type": "CHOICE",
+                                        "members": [
+                                          {
+                                            "type": "SYMBOL",
+                                            "name": "identifier"
+                                          },
+                                          {
+                                            "type": "SYMBOL",
+                                            "name": "index_expression"
+                                          }
+                                        ]
                                       }
                                     },
                                     {
@@ -6057,8 +6079,17 @@
                                             "type": "FIELD",
                                             "name": "name",
                                             "content": {
-                                              "type": "SYMBOL",
-                                              "name": "identifier"
+                                              "type": "CHOICE",
+                                              "members": [
+                                                {
+                                                  "type": "SYMBOL",
+                                                  "name": "identifier"
+                                                },
+                                                {
+                                                  "type": "SYMBOL",
+                                                  "name": "index_expression"
+                                                }
+                                              ]
                                             }
                                           },
                                           {

@@ -15,4 +15,6 @@ into parser_config.jai.install_info.files in your lua config.
 - [x] parameterized module imports
 - [ ] fix for loop range getting confused with floats. e.g. `0..1` is (float `0.`) (float `.1`) and `0..count` is (float `0.`) + (member_expression `.count`)
 - [ ] macros, backticks, expand, insert
-- [ ] cannot diferentiate between taking the address of a variable and a pointer type (does not break the syntax highlighting, so I don't care)
+- [ ] there's no way diferentiate between taking the address of a variable and a pointer type (does not break the syntax highlighting or indents, so I don't really care)
+- [ ] there are some situations inside else blocks where indenting is ignored and the user has to do it manually, I need to fix those
+- [ ] simplify the grammar so the parser generates faster and is more lightweight

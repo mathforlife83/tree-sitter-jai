@@ -202,6 +202,7 @@ module.exports = grammar({
             $.run_expression,
             $.insert_expression,
             $.code_expression,
+            $.compiler_directive,
         )),
 
         run_expression: $ => prec(PREC.RUN, seq(
@@ -548,7 +549,10 @@ module.exports = grammar({
         //
 
         parenthesized_expression: $ => prec(PREC.PARENTHESES,
-            seq('(', $.expressions, ')')
+            seq('(', choice(
+                $.expressions,
+                $.identifier
+            ), ')')
         ),
 
         unary_expression: $ => prec.left(PREC.UNARY, seq(
@@ -990,7 +994,12 @@ module.exports = grammar({
             optional(seq(
                 comma_sep1(field('parameter', seq(
                     // $.assignment_statement, // This breaks
-                    optional(seq(field('name', $.identifier), '=')), // named
+                    optional(seq(field('name',
+                        choice(
+                            $.identifier,
+                            $.index_expression // maybe there are more cases like this
+                        )
+                    ), '=')), // named
                     $.expressions,
                 ))),
                 optional(','),
