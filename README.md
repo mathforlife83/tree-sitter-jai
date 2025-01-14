@@ -1,9 +1,6 @@
 # tree-sitter-jai
 Tree-sitter grammar for the language. It is incomplete.
 
-This syntax now uses an external scanner. If you're using neovim, you should add "scanner.c"
-into parser_config.jai.install_info.files in your lua config.
-
 # TODO
 *I prioritize fixing issues based on how badly they break the parsing*
 - [x] here strings (external scanner)
