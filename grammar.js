@@ -96,6 +96,7 @@ module.exports = grammar({
             $.struct_declaration,
             $.enum_declaration,
 
+            seq($.assert_statement, ';'),
             seq('#', $.if_statement),
             seq($.compiler_directive, $.string),
             seq('#placeholder', field('name', $.identifier), ';'),
@@ -153,6 +154,8 @@ module.exports = grammar({
             $.break_statement,
             $.continue_statement,
             $.remove_statement,
+
+            $.assert_statement,
 
             $.expressions,
         ),
@@ -397,6 +400,10 @@ module.exports = grammar({
             field('directive', '#code'),
             choice($.expressions, $.block),
         )),
+
+        assert_statement: $ => seq(
+            '#assert', $.expressions, optional(field('message', $.string))
+        ),
     
         asm_statement: $ => prec.right(seq(
             field('directive', '#asm'),
@@ -517,18 +524,24 @@ module.exports = grammar({
                 ':',
             ))),
             choice(
-                field('range', $.range),
-                field('iterator', seq(
-                    optional('*'),
-                    $.for_iterator,
-                )),
+                field('range', $.for_range),
+                field('iterator', $.for_iterator),
             ),
             field('body', $.statement),
         )),
 
-        for_iterator: $ => prec.right(1, choice(
-            $.expressions,
+        for_iterator: $ => prec.right(-1, seq(
+            optional('*'), $.expressions,
         )),
+
+        // For loop
+        for_range: $ => prec.right(seq(
+            field('range_from', $.expressions),
+            $.range_operator,
+            field('range_to', $.expressions)
+        )),
+
+        range_operator: _ => prec.left(99, '..'),
 
         break_statement: $ => seq('break', optional($.identifier)),
 
@@ -825,22 +838,6 @@ module.exports = grammar({
         ),
         through_statement: $ => '#through',
 
-        // For loop
-        // TODO: fix range getting confused by floats.
-        range: $ => prec.right(32, seq(
-            field('range_from', choice(
-                prec(-1, $.expressions),
-                prec(1,  $.integer),
-            )),
-            $.range_operator,
-            field('range_to', choice(
-                prec(-1, $.expressions),
-                prec(1,  $.integer),
-            )),
-        )),
-
-        range_operator: _ => prec(99, token('..')),
-
         //
         // Types
         //
@@ -1082,12 +1079,12 @@ module.exports = grammar({
                     optional(seq(/[pP][-+]?/, DEC_INT))
                 )),
                 token(seq(
-                    choice(
-                        seq(optional(DEC_INT), ".", DEC_INT),
-                        seq(DEC_INT, ".", optional(DEC_INT)),
-                    ),
+                    seq(optional(DEC_INT), ".", DEC_INT),
                     optional(seq(/[eE][-+]?/, DEC_INT))
                 )),
+                // floats with no decimal break other parts of the syntax.
+                // TODO: find a way to add them without breaking shit
+                // seq(DEC_INT, ".", optional(DEC_INT)),
                 token(seq(
                     choice("0x", "0X"), HEX_INT, /[pP][-+]?/, DEC_INT
                 )),

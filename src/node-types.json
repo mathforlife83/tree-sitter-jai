@@ -27,6 +27,10 @@
           "named": true
         },
         {
+          "type": "assert_statement",
+          "named": true
+        },
+        {
           "type": "assignment_statement",
           "named": true
         },
@@ -345,6 +349,32 @@
       "types": [
         {
           "type": "asm_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "assert_statement",
+    "named": true,
+    "fields": {
+      "message": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expressions",
           "named": true
         }
       ]
@@ -884,6 +914,10 @@
       "required": false,
       "types": [
         {
+          "type": "assert_statement",
+          "named": true
+        },
+        {
           "type": "call_expression",
           "named": true
         },
@@ -1139,6 +1173,42 @@
     }
   },
   {
+    "type": "for_range",
+    "named": true,
+    "fields": {
+      "range_from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expressions",
+            "named": true
+          }
+        ]
+      },
+      "range_to": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expressions",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "range_operator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "for_statement",
     "named": true,
     "fields": {
@@ -1153,13 +1223,9 @@
         ]
       },
       "iterator": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
-          {
-            "type": "*",
-            "named": false
-          },
           {
             "type": "for_iterator",
             "named": true
@@ -1181,7 +1247,7 @@
         "required": false,
         "types": [
           {
-            "type": "range",
+            "type": "for_range",
             "named": true
           }
         ]
@@ -2267,50 +2333,6 @@
     }
   },
   {
-    "type": "range",
-    "named": true,
-    "fields": {
-      "range_from": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "integer",
-            "named": true
-          }
-        ]
-      },
-      "range_to": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expressions",
-            "named": true
-          },
-          {
-            "type": "integer",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "range_operator",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "range_operator",
     "named": true,
     "fields": {}
@@ -3075,6 +3097,10 @@
   },
   {
     "type": "#asm",
+    "named": false
+  },
+  {
+    "type": "#assert",
     "named": false
   },
   {
