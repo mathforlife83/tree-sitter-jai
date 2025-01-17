@@ -204,12 +204,14 @@ test_proc1 :: () {
         do_shit();
     }
 
-    // TODO: these get the parser confused because of floats
-    // for 0..1 {}
-    // for 0..count-1 {}
-    // these work
+    for 0..1 {}
+    for 0..count-1 {}
+
     for 0 .. 1 {}
     for 0 .. count-1 { }
+
+    for member.expression..member.expression {
+    }
 
     // there was an issue with parenthesised expressions with only an identifier inside
     call_expression(*member.expression, identifier + cast(type)(identifier));

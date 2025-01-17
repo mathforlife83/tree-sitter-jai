@@ -466,11 +466,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "run_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "insert_expression"
+            "name": "run_or_insert_expression"
           },
           {
             "type": "SYMBOL",
@@ -483,15 +479,24 @@
         ]
       }
     },
-    "run_expression": {
+    "run_or_insert_expression": {
       "type": "PREC",
       "value": 32,
       "content": {
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "#run"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "#run"
+              },
+              {
+                "type": "STRING",
+                "value": "#insert"
+              }
+            ]
           },
           {
             "type": "FIELD",
@@ -679,19 +684,6 @@
           }
         ]
       }
-    },
-    "insert_expression": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "#insert"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expressions"
-        }
-      ]
     },
     "block": {
       "type": "PREC",
@@ -6840,56 +6832,11 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "CHOICE",
+                "type": "SEQ",
                 "members": [
                   {
-                    "type": "SEQ",
+                    "type": "CHOICE",
                     "members": [
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "SEQ",
-                            "members": [
-                              {
-                                "type": "PATTERN",
-                                "value": "[0-9]"
-                              },
-                              {
-                                "type": "REPEAT",
-                                "content": {
-                                  "type": "SEQ",
-                                  "members": [
-                                    {
-                                      "type": "CHOICE",
-                                      "members": [
-                                        {
-                                          "type": "STRING",
-                                          "value": "_"
-                                        },
-                                        {
-                                          "type": "BLANK"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "PATTERN",
-                                      "value": "[0-9]"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "STRING",
-                        "value": "."
-                      },
                       {
                         "type": "SEQ",
                         "members": [
@@ -6922,6 +6869,46 @@
                             }
                           }
                         ]
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "."
+                  },
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "PATTERN",
+                        "value": "[0-9]"
+                      },
+                      {
+                        "type": "REPEAT",
+                        "content": {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "STRING",
+                                  "value": "_"
+                                },
+                                {
+                                  "type": "BLANK"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "PATTERN",
+                              "value": "[0-9]"
+                            }
+                          ]
+                        }
                       }
                     ]
                   }

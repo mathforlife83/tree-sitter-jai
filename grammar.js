@@ -90,7 +90,6 @@ module.exports = grammar({
         // Procedure and Global scope
         declarations: $ => choice(
             $.run_statement,
-            // $.insert_statement,
 
             $.procedure_declaration,
             $.struct_declaration,
@@ -202,14 +201,13 @@ module.exports = grammar({
             // I don't want all types to be expressions
             // $.types,
             $.type_of_expression,
-            $.run_expression,
-            $.insert_expression,
+            $.run_or_insert_expression,
             $.code_expression,
             $.compiler_directive,
         )),
 
-        run_expression: $ => prec(PREC.RUN, seq(
-            '#run',
+        run_or_insert_expression: $ => prec(PREC.RUN, seq(
+            choice('#run', '#insert'),
             field('modifier', optional(seq(',', comma_sep1($.identifier)))),
             choice(
                 seq( // return value
@@ -229,8 +227,6 @@ module.exports = grammar({
                 $.expressions
             ),
         )),
-
-        insert_expression: $ => seq('#insert', $.expressions),
 
         //
         // declarations

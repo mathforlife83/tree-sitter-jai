@@ -1114,10 +1114,6 @@
           "named": true
         },
         {
-          "type": "insert_expression",
-          "named": true
-        },
-        {
           "type": "literal",
           "named": true
         },
@@ -1138,7 +1134,7 @@
           "named": true
         },
         {
-          "type": "run_expression",
+          "type": "run_or_insert_expression",
           "named": true
         },
         {
@@ -1465,21 +1461,6 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expressions",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "insert_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
       "required": true,
       "types": [
         {
@@ -2398,7 +2379,7 @@
     }
   },
   {
-    "type": "run_expression",
+    "type": "run_or_insert_expression",
     "named": true,
     "fields": {
       "modifier": {
