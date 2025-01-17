@@ -229,6 +229,10 @@
         "required": false,
         "types": [
           {
+            "type": "identifier",
+            "named": true
+          },
+          {
             "type": "types",
             "named": true
           }

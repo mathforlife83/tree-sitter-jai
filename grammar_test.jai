@@ -217,4 +217,8 @@ test_proc1 :: () {
     call_expression(*member.expression, identifier + cast(type)(identifier));
     var := cast(type)(identifier);
 
+    struct_literal := []u8.{data=null, count=0};
+
+    array_literal := []u8.[10, 20, 30, 40];
+
 } @notes_are_ignored @yes

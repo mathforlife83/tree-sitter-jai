@@ -951,9 +951,10 @@ module.exports = grammar({
             '[',
             optional(seq(choice('..', $.expressions))),
             ']',
-            optional(
-                field('type', $.types)
-            ),
+            optional(choice(
+                field('type', $.types),
+                field('type', $.identifier)
+            )),
         )),
 
         //
@@ -986,7 +987,6 @@ module.exports = grammar({
             '{',
             optional(seq(
                 comma_sep1(field('parameter', seq(
-                    // $.assignment_statement, // This breaks
                     optional(seq(field('name',
                         choice(
                             $.identifier,
