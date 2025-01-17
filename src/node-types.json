@@ -1622,6 +1622,10 @@
           "named": true
         },
         {
+          "type": "string",
+          "named": true
+        },
+        {
           "type": "type_of_expression",
           "named": true
         }
@@ -3013,29 +3017,9 @@
     }
   },
   {
-    "type": "while_statement",
+    "type": "while_condition",
     "named": true,
     "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "statement",
-            "named": true
-          }
-        ]
-      },
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expressions",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": true,
         "required": false,
@@ -3054,6 +3038,42 @@
           },
           {
             "type": "types",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "while_statement",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "statement",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "while_condition",
             "named": true
           }
         ]

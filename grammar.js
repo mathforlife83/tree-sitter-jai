@@ -60,6 +60,8 @@ module.exports = grammar({
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement, $.update_statement],
         [$.expressions, $.variable_declaration, $.const_declaration, $.assignment_statement],
         [$.polymorphic_type],
+
+        [$.member_expression, $.types, $.member_type, $.struct_literal, $.array_literal],
     ],
 
     externals: $ => [
@@ -496,8 +498,13 @@ module.exports = grammar({
             '}',
         ),
 
-        while_statement: $ => seq(
+        while_statement: $ => prec.right(seq(
             'while',
+            field('condition', $.while_condition),
+            field('body', $.statement),
+        )),
+        
+        while_condition: $ => prec.right(seq(
             optional(
                 field('name',
                     seq(
@@ -507,9 +514,8 @@ module.exports = grammar({
                         '='
                     )
                 )),
-            field('condition', $.expressions),
-            field('body', $.statement),
-        ),
+            $.expressions,
+        )),
 
         for_statement: $ => prec.right(3, seq(
             'for',
@@ -621,21 +627,22 @@ module.exports = grammar({
 
         member_expression: $ => prec.right(PREC.MEMBER, seq(
             optional(choice(
-                $.parenthesized_expression,
                 $.call_expression,
+                $.parenthesized_expression,
                 $.member_expression,
                 $.index_expression,
                 $.type_of_expression,
                 $.identifier,
                 $.cast_v2_expression,
+                $.string,
             )),
             '.',
-            choice(
+            prec.right(choice(
                 $.member_expression,
                 $.identifier,
-                prec(-1, $.call_expression),
+                $.call_expression,
                 field('dereference', '*')
-            ),
+            )),
         )),
 
         index_expression: $ => prec(PREC.MEMBER, seq(

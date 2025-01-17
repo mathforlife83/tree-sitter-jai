@@ -89,7 +89,7 @@ test_proc1 :: () {
     // Structs and parameterized structs
 
     struct_literal1 := TestStruct1.{};
-    struct_literal2 := TestStruct2(69).{ };
+    struct_literal2 := TestStruct2(69).{};
 
     //        Parameterized struct type
     struct1 : TestStruct2(420, 540, 999, "perhaps") = .{420, 540, 999, "perhaps"};
@@ -220,5 +220,9 @@ test_proc1 :: () {
     struct_literal := []u8.{data=null, count=0};
 
     array_literal := []u8.[10, 20, 30, 40];
+
+    while member.call_expression(args) {}
+    for member.call_expression(args) {}
+    if member.call_expression(args) {}
 
 } @notes_are_ignored @yes
