@@ -15,6 +15,32 @@
     }
   },
   {
+    "type": "align_directive",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "#align",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "all_statements",
     "named": true,
     "fields": {},
@@ -24,10 +50,6 @@
       "types": [
         {
           "type": "asm_statement",
-          "named": true
-        },
-        {
-          "type": "assert_statement",
           "named": true
         },
         {
@@ -47,11 +69,11 @@
           "named": true
         },
         {
-          "type": "compiler_directive",
+          "type": "comma_declarations",
           "named": true
         },
         {
-          "type": "const_declaration",
+          "type": "compiler_directive",
           "named": true
         },
         {
@@ -75,23 +97,7 @@
           "named": true
         },
         {
-          "type": "if_case_statement",
-          "named": true
-        },
-        {
           "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "import",
-          "named": true
-        },
-        {
-          "type": "load",
-          "named": true
-        },
-        {
-          "type": "module_parameters",
           "named": true
         },
         {
@@ -111,19 +117,15 @@
           "named": true
         },
         {
+          "type": "static_if_statement",
+          "named": true
+        },
+        {
           "type": "struct_declaration",
           "named": true
         },
         {
           "type": "update_statement",
-          "named": true
-        },
-        {
-          "type": "using_statement",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
           "named": true
         },
         {
@@ -816,6 +818,49 @@
     }
   },
   {
+    "type": "comma_declarations",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assert_statement",
+          "named": true
+        },
+        {
+          "type": "call_expression",
+          "named": true
+        },
+        {
+          "type": "const_declaration",
+          "named": true
+        },
+        {
+          "type": "import",
+          "named": true
+        },
+        {
+          "type": "load",
+          "named": true
+        },
+        {
+          "type": "placeholder_declaration",
+          "named": true
+        },
+        {
+          "type": "using_statement",
+          "named": true
+        },
+        {
+          "type": "variable_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "compiler_directive",
     "named": true,
     "fields": {
@@ -899,88 +944,6 @@
     }
   },
   {
-    "type": "declarations",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "assert_statement",
-          "named": true
-        },
-        {
-          "type": "call_expression",
-          "named": true
-        },
-        {
-          "type": "compiler_directive",
-          "named": true
-        },
-        {
-          "type": "const_declaration",
-          "named": true
-        },
-        {
-          "type": "enum_declaration",
-          "named": true
-        },
-        {
-          "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "import",
-          "named": true
-        },
-        {
-          "type": "load",
-          "named": true
-        },
-        {
-          "type": "module_parameters",
-          "named": true
-        },
-        {
-          "type": "procedure_declaration",
-          "named": true
-        },
-        {
-          "type": "run_statement",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        },
-        {
-          "type": "struct_declaration",
-          "named": true
-        },
-        {
-          "type": "using_statement",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "defer_statement",
     "named": true,
     "fields": {},
@@ -998,16 +961,17 @@
   {
     "type": "else_clause",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "statement",
-          "named": true
-        }
-      ]
+    "fields": {
+      "consequence": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "statement",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1158,57 +1122,6 @@
     "fields": {}
   },
   {
-    "type": "for_iterator",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expressions",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "for_range",
-    "named": true,
-    "fields": {
-      "range_from": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expressions",
-            "named": true
-          }
-        ]
-      },
-      "range_to": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expressions",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "range_operator",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "for_statement",
     "named": true,
     "fields": {
@@ -1223,11 +1136,15 @@
         ]
       },
       "iterator": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "for_iterator",
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "expressions",
             "named": true
           }
         ]
@@ -1243,11 +1160,35 @@
         ]
       },
       "range": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "..",
+            "named": false
+          },
+          {
+            "type": "expressions",
+            "named": true
+          }
+        ]
+      },
+      "range_from": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "for_range",
+            "type": "expressions",
+            "named": true
+          }
+        ]
+      },
+      "range_to": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expressions",
             "named": true
           }
         ]
@@ -1367,6 +1308,25 @@
   },
   {
     "type": "if_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "if_case_statement",
+          "named": true
+        },
+        {
+          "type": "if_statement_condition_and_consequence",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_statement_condition_and_consequence",
     "named": true,
     "fields": {
       "alternative": {
@@ -1648,6 +1608,32 @@
     }
   },
   {
+    "type": "modify_block",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "#modify",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module_parameters",
     "named": true,
     "fields": {
@@ -1775,10 +1761,6 @@
           "named": true
         },
         {
-          "type": "if_case_statement",
-          "named": true
-        },
-        {
           "type": "if_statement",
           "named": true
         },
@@ -1795,11 +1777,11 @@
           "named": true
         },
         {
-          "type": "struct_declaration",
+          "type": "static_if_statement",
           "named": true
         },
         {
-          "type": "using_statement",
+          "type": "struct_declaration",
           "named": true
         },
         {
@@ -1929,6 +1911,58 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "place_directive",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "#place",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "placeholder_declaration",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "#placeholder",
+            "named": false
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2233,6 +2267,10 @@
           "named": true
         },
         {
+          "type": "modify_block",
+          "named": true
+        },
+        {
           "type": "procedure",
           "named": true
         }
@@ -2320,11 +2358,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "range_operator",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "remove_statement",
@@ -2496,7 +2529,7 @@
       "required": false,
       "types": [
         {
-          "type": "declarations",
+          "type": "top_level_declarations",
           "named": true
         }
       ]
@@ -2516,6 +2549,40 @@
         },
         {
           "type": "no_semicolon_statements",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "static_if_statement",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "#",
+            "named": false
+          },
+          {
+            "type": "if",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "if_case_statement",
+          "named": true
+        },
+        {
+          "type": "if_statement_condition_and_consequence",
           "named": true
         }
       ]
@@ -2589,26 +2656,6 @@
     "type": "struct_declaration",
     "named": true,
     "fields": {
-      "directive": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "#modify",
-            "named": false
-          }
-        ]
-      },
-      "modifier": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "named_parameters",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
@@ -2621,59 +2668,11 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": false,
+      "multiple": false,
+      "required": true,
       "types": [
         {
-          "type": "assignment_statement",
-          "named": true
-        },
-        {
-          "type": "block",
-          "named": true
-        },
-        {
-          "type": "compiler_directive",
-          "named": true
-        },
-        {
-          "type": "const_declaration",
-          "named": true
-        },
-        {
-          "type": "enum_declaration",
-          "named": true
-        },
-        {
-          "type": "expressions",
-          "named": true
-        },
-        {
-          "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "insert_statement",
-          "named": true
-        },
-        {
-          "type": "no_semicolon_declaration",
-          "named": true
-        },
-        {
-          "type": "procedure_declaration",
-          "named": true
-        },
-        {
-          "type": "struct_declaration",
-          "named": true
-        },
-        {
-          "type": "using_statement",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
+          "type": "struct_or_union",
           "named": true
         }
       ]
@@ -2738,6 +2737,103 @@
     }
   },
   {
+    "type": "struct_or_union",
+    "named": true,
+    "fields": {
+      "modifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameters",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "compiler_directive",
+          "named": true
+        },
+        {
+          "type": "modify_block",
+          "named": true
+        },
+        {
+          "type": "struct_or_union_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_or_union_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "align_directive",
+          "named": true
+        },
+        {
+          "type": "assignment_statement",
+          "named": true
+        },
+        {
+          "type": "const_declaration",
+          "named": true
+        },
+        {
+          "type": "enum_declaration",
+          "named": true
+        },
+        {
+          "type": "insert_statement",
+          "named": true
+        },
+        {
+          "type": "no_semicolon_declaration",
+          "named": true
+        },
+        {
+          "type": "place_directive",
+          "named": true
+        },
+        {
+          "type": "procedure_declaration",
+          "named": true
+        },
+        {
+          "type": "static_if_statement",
+          "named": true
+        },
+        {
+          "type": "struct_declaration",
+          "named": true
+        },
+        {
+          "type": "struct_or_union",
+          "named": true
+        },
+        {
+          "type": "using_statement",
+          "named": true
+        },
+        {
+          "type": "variable_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "switch_case",
     "named": true,
     "fields": {
@@ -2762,6 +2858,53 @@
         },
         {
           "type": "through_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "top_level_declarations",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comma_declarations",
+          "named": true
+        },
+        {
+          "type": "compiler_directive",
+          "named": true
+        },
+        {
+          "type": "enum_declaration",
+          "named": true
+        },
+        {
+          "type": "module_parameters",
+          "named": true
+        },
+        {
+          "type": "procedure_declaration",
+          "named": true
+        },
+        {
+          "type": "run_statement",
+          "named": true
+        },
+        {
+          "type": "static_if_statement",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "struct_declaration",
           "named": true
         }
       ]
@@ -2796,7 +2939,18 @@
   {
     "type": "type_of_expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_of",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
@@ -3017,9 +3171,45 @@
     }
   },
   {
-    "type": "while_condition",
+    "type": "while_statement",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "statement",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "expressions",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "types",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": true,
         "required": false,
@@ -3042,42 +3232,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expressions",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "while_statement",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "statement",
-            "named": true
-          }
-        ]
-      },
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "while_condition",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -3094,6 +3248,10 @@
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "#align",
     "named": false
   },
   {
@@ -3118,10 +3276,6 @@
   },
   {
     "type": "#complete",
-    "named": false
-  },
-  {
-    "type": "#if",
     "named": false
   },
   {

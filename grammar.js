@@ -87,34 +87,31 @@ module.exports = grammar({
     word: $ => $.identifier,
 
     rules: {
-        source_file: $ => repeat(seq($.declarations, optional(';'))),
+        source_file: $ => repeat(seq($.top_level_declarations, optional(';'))),
 
-        // Procedure and Global scope
-        declarations: $ => choice(
-            $.run_statement,
-
+        top_level_declarations: $ => choice(
             $.procedure_declaration,
             $.struct_declaration,
             $.enum_declaration,
+            $.static_if_statement,
 
-            seq($.assert_statement, ';'),
-            seq('#', $.if_statement),
-            seq($.compiler_directive, $.string),
-            seq('#placeholder', field('name', $.identifier), ';'),
+            $.run_statement,
             $.compiler_directive,
-            seq($.import, ';'),
-            seq($.load, ';'),
-            seq($.module_parameters, ';'),
-            seq($.call_expression, ';'), // this could be a macro call in global scope.
 
-            seq(
-                choice(
-                    $.using_statement,
-                    $.const_declaration,
-                    $.variable_declaration,
-                ),
-                ';'
-            ),
+            $.module_parameters,
+            seq($.compiler_directive, $.string),
+            seq($.comma_declarations, ';'),
+        ),
+
+        comma_declarations: $ => choice(
+            $.assert_statement,
+            $.placeholder_declaration,
+            $.using_statement,
+            $.const_declaration,
+            $.variable_declaration,
+            $.import,
+            $.load,
+            $.call_expression, // this could be a macro call in global scope.
         ),
 
         // In procedure scopes
@@ -127,26 +124,21 @@ module.exports = grammar({
         all_statements: $ => choice(
             $.block,
             $.compiler_directive,
-            $.import,
-            $.load,
-            $.module_parameters,
             $.run_statement,
             $.asm_statement,
-            $.using_statement,
+
+            // Only in procedures
             $.backtick_statement,
 
             $.procedure_declaration,
             $.struct_declaration,
             $.enum_declaration,
 
-            $.const_declaration,
-            $.variable_declaration,
-
             $.assignment_statement,
             $.update_statement,
 
             $.if_statement,
-            $.if_case_statement,
+            $.static_if_statement,
             $.while_statement,
             $.for_statement,
 
@@ -156,9 +148,9 @@ module.exports = grammar({
             $.continue_statement,
             $.remove_statement,
 
-            $.assert_statement,
-
             $.expressions,
+
+            $.comma_declarations,
         ),
 
         no_semicolon_statements: $ => choice(
@@ -171,10 +163,10 @@ module.exports = grammar({
             $.enum_declaration,
 
             $.if_statement,
+            $.static_if_statement,
             $.while_statement,
             $.for_statement,
-            $.if_case_statement,
-            $.using_statement,
+            // $.using_statement,
             $.no_semicolon_declaration,
         ),
 
@@ -289,18 +281,26 @@ module.exports = grammar({
             ':', ':',
             optional(field('modifier', choice('inline', 'no_inline'))),
             $.procedure,
-            optional(seq('#modify', $.block)),
+            optional($.modify_block),
             choice($.block, ';'),
         )),
 
         struct_declaration: $ => seq(
             field('name', $.identifier),
             ':', ':',
+            $.struct_or_union,
+        ),
+
+        struct_or_union: $ => seq(
             choice('struct', 'union'),
             optional($.compiler_directive),
             // Parameterized structs
             field('modifier', optional($.named_parameters)),
-            optional(seq(field('directive', '#modify'), $.block)),
+            optional($.modify_block),
+            $.struct_or_union_block,
+        ),
+
+        struct_or_union_block: $ => seq(
             '{',
             optional(repeat(choice(
                 seq(optional('#as'), $.using_statement),
@@ -308,20 +308,28 @@ module.exports = grammar({
                 $.struct_declaration,
                 $.enum_declaration,
                 $.no_semicolon_declaration,
+                $.struct_or_union,
                 seq(
                     choice(
                         $.insert_statement,
                         $.const_declaration,   
-                        $.variable_declaration,
                         $.assignment_statement,
-                        seq('#', $.if_statement),
-                        seq('#place', $.expressions), // #place statements
+                        $.variable_declaration,
+                        $.static_if_statement,
+                        $.place_directive,
                     ),
+                    optional($.align_directive),
                     ';'
                 )
             ))),
             '}',
         ),
+
+        modify_block: $ => seq(field('directive', '#modify'), $.block),
+
+        place_directive: $ => seq(field('directive', "#place"), $.identifier),
+
+        align_directive: $ => seq(field('directive', '#align'), $.expressions),
 
         enum_declaration: $ => prec(1, seq( // conflict with const_declaration
             field('name', $.identifier),
@@ -374,6 +382,11 @@ module.exports = grammar({
                 $.anonymous_struct_type,
                 $.anonymous_enum_type,
             )
+        ),
+
+        placeholder_declaration: $ => seq(
+            field('directive', '#placeholder'),
+            field('name', $.identifier),
         ),
 
         quick_procedure: $ => seq($.identifier, '=>', $.expressions),
@@ -475,21 +488,37 @@ module.exports = grammar({
         ),
 
         if_statement: $ => prec.right(seq(
-            choice('if', '#if'),
+            'if',
+            choice(
+                $.if_statement_condition_and_consequence,
+                $.if_case_statement,
+            ),
+        )),
+
+        static_if_statement: $ => prec.right(seq(
+            field('directive', seq('#', 'if')),
+            choice(
+                $.if_statement_condition_and_consequence,
+                $.if_case_statement,
+            ),
+        )),
+
+        if_statement_condition_and_consequence: $ => prec.right(seq(
             field('condition', $.if_condition),
             optional('then'),
             field('consequence', $.statement),
+            // Technically, in static_if, the else clause should not allow a regular if, but whatever...
             optional(field('alternative', $.else_clause)),
         )),
 
-        if_condition: $ => prec.right(
-            $.expressions,
+        if_condition: $ => prec.right($.expressions),
+
+        else_clause: $ => seq(
+            "else",
+            field('consequence', $.statement)
         ),
 
-        else_clause: $ => seq("else", $.statement),
-
         if_case_statement: $ => seq(
-            choice('if', '#if'),
             optional('#complete'),
             field('condition', $.expressions),
             '==',
@@ -500,11 +529,11 @@ module.exports = grammar({
 
         while_statement: $ => prec.right(seq(
             'while',
-            field('condition', $.while_condition),
+            field('condition', $._while_condition),
             field('body', $.statement),
         )),
         
-        while_condition: $ => prec.right(seq(
+        _while_condition: $ => prec.right(seq(
             optional(
                 field('name',
                     seq(
@@ -517,6 +546,7 @@ module.exports = grammar({
             $.expressions,
         )),
 
+        // For loop
         for_statement: $ => prec.right(3, seq(
             'for',
             optional(field('modifier', '#v2')), // I guess this is temporary
@@ -526,24 +556,24 @@ module.exports = grammar({
                 ':',
             ))),
             choice(
-                field('range', $.for_range),
-                field('iterator', $.for_iterator),
+                field('range',    $._for_range),
+                field('iterator', $._for_iterator),
             ),
             field('body', $.statement),
         )),
 
-        for_iterator: $ => prec.right(-1, seq(
+        _for_iterator: $ => prec.right(-1, seq(
             optional('*'), $.expressions,
         )),
 
-        // For loop
-        for_range: $ => prec.right(seq(
+        _for_range: $ => prec.right(seq(
             field('range_from', $.expressions),
-            $.range_operator,
+            $._range_operator,
             field('range_to', $.expressions)
         )),
 
-        range_operator: _ => prec.left(99, '..'),
+        _range_operator: _ => prec.left(99, '..'),
+
 
         break_statement: $ => seq('break', optional($.identifier)),
 
@@ -625,6 +655,9 @@ module.exports = grammar({
             $.assignment_parameters,
         )),
 
+        // TODO: fix member issues
+        //  member.*.other
+        //  member.(type)
         member_expression: $ => prec.right(PREC.MEMBER, seq(
             optional(choice(
                 $.call_expression,
@@ -637,11 +670,11 @@ module.exports = grammar({
                 $.string,
             )),
             '.',
-            prec.right(choice(
+            prec.left(choice(
                 $.member_expression,
                 $.identifier,
                 $.call_expression,
-                field('dereference', '*')
+                field('dereference', '*'),
             )),
         )),
 
@@ -654,7 +687,7 @@ module.exports = grammar({
         )),
 
         type_of_expression: $ => seq(
-            'type_of',
+            field('type', 'type_of'),
             '(',
             $.expressions,
             ')'

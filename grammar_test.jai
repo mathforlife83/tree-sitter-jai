@@ -57,9 +57,29 @@ TestStruct1 :: struct {
 }
 
 TestStruct2 :: struct (type: Type = s64) {
+    union {
+        a: int;
+        b: float;
+    }
     
+    c: enum {
+    }
+
+    padding:   [120] u8;
+    rectangle: Rectangle #align 16;
+    next: *Test_Struct2;
 }
 
+Rectangle :: struct
+#modify {
+
+}
+{
+    x, y: float;
+    w, h: float;
+#place w;
+    width, height: float;
+}
 
 call_expression :: (polymorphic_args: $T) -> () {
     print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
@@ -127,42 +147,64 @@ test_proc1 :: () {
 
     pointer_type := *var1;
 
-    if condition
-        do_shit();
-    else
-        do_shit();
+    {
+        if condition
+            do_stuff();
+        else
+            do_stuff();
 
-    if condition
-        do_shit();
-    else
-        do_more_shit();
+        if condition
+            do_stuff();
+        more_stuff()
 
-    if procedure_call("condition") == 1 // then
-        print("consequence\n");
-    else if condition
-        print("consequence\n");
-    else
-        print("alternative\n");
+        if condition
+            do_stuff();
+        else
+            do_more_stuff();
 
-    #if thing != null {
-        print("");
-        print("");
-        print("");
-    } else #if thing == .{} {
-        print("");
-        print("");
-        print("");
-    } else {
-        print("");
-        print("");
-        print("");
+        if procedure_call("condition") == 1 // then
+            print("consequence\n");
+        else if condition
+            print("consequence\n");
+        else
+            print("alternative\n");
+
+        if condition {
+            do_stuff();
+            do_stuff();
+        } else {
+            do_stuff();
+            do_stuff();
+        }
+
+        #if thing != null {
+            print("");
+            print("");
+            print("");
+        } else #if thing == .{} {
+            print("");
+            print("");
+            print("");
+        } else {
+            print("");
+            print("");
+            print("");
+        }
+
+
+        if case_statement == {
+        case 1; #through;
+        case "pizza";
+            do_stuff();
+            #through;
+        case 2;
+            do_stuff();
+        case;
+        }
     }
 
-    // This seems to work too
     if 0 << << pointer_type  print();
-
-    if x == 5 then print("x is 5.\n"); else print("x is not 5.\n");  // Here we will execute the 'then' code, because (x == 5) is true.
-
+    if x == 5 then print("x is 5.\n"); else print("x is not 5.\n");
 
     name := ifx thing then thing.name else "";
 
@@ -184,15 +226,14 @@ test_proc1 :: () {
         yes();
     } else {
         no();
-        // what in the fuck
     }
 
     if condition
-        do_shit();
+        do_stuff();
     else if condition
-        do_shit();
+        do_stuff();
     else
-        do_shit();
+        do_stuff();
 
     if expr[index].member || expr[index].member {
         yes();
@@ -201,7 +242,7 @@ test_proc1 :: () {
     }
 
     for * member.member.member {
-        do_shit();
+        do_stuff();
     }
 
     for 0..1 {}
