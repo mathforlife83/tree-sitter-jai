@@ -850,10 +850,6 @@
           "named": true
         },
         {
-          "type": "using_statement",
-          "named": true
-        },
-        {
           "type": "variable_declaration",
           "named": true
         }
@@ -1782,6 +1778,10 @@
         },
         {
           "type": "struct_declaration",
+          "named": true
+        },
+        {
+          "type": "using_statement",
           "named": true
         },
         {
@@ -2905,6 +2905,10 @@
         },
         {
           "type": "struct_declaration",
+          "named": true
+        },
+        {
+          "type": "using_statement",
           "named": true
         }
       ]

@@ -98,6 +98,7 @@ module.exports = grammar({
             $.run_statement,
             $.compiler_directive,
 
+            $.using_statement,
             $.module_parameters,
             seq($.compiler_directive, $.string),
             seq($.comma_declarations, ';'),
@@ -106,7 +107,6 @@ module.exports = grammar({
         comma_declarations: $ => choice(
             $.assert_statement,
             $.placeholder_declaration,
-            $.using_statement,
             $.const_declaration,
             $.variable_declaration,
             $.import,
@@ -166,7 +166,7 @@ module.exports = grammar({
             $.static_if_statement,
             $.while_statement,
             $.for_statement,
-            // $.using_statement,
+            $.using_statement,
             $.no_semicolon_declaration,
         ),
 

@@ -56,6 +56,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "using_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "module_parameters"
         },
         {
@@ -96,10 +100,6 @@
         {
           "type": "SYMBOL",
           "name": "placeholder_declaration"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "using_statement"
         },
         {
           "type": "SYMBOL",
@@ -284,6 +284,10 @@
         {
           "type": "SYMBOL",
           "name": "for_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "using_statement"
         },
         {
           "type": "SYMBOL",
