@@ -232,7 +232,7 @@ module.exports = grammar({
             '}',
         )),
 
-        compiler_directive: $ => prec.right(choice(
+        compiler_directive: $ => prec.left(choice(
             field('directive', seq('#', comma_sep1($.identifier)))
         )),
 
