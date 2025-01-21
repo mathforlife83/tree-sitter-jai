@@ -395,17 +395,22 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#run"
-              },
-              {
-                "type": "STRING",
-                "value": "#insert"
-              }
-            ]
+            "type": "ALIAS",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "#run"
+                },
+                {
+                  "type": "STRING",
+                  "value": "#insert"
+                }
+              ]
+            },
+            "named": true,
+            "value": "compiler_directive"
           },
           {
             "type": "FIELD",
@@ -701,12 +706,17 @@
             ]
           },
           {
-            "type": "FIELD",
-            "name": "directive",
+            "type": "ALIAS",
             "content": {
-              "type": "STRING",
-              "value": "#import"
-            }
+              "type": "FIELD",
+              "name": "directive",
+              "content": {
+                "type": "STRING",
+                "value": "#import"
+              }
+            },
+            "named": true,
+            "value": "compiler_directive"
           },
           {
             "type": "CHOICE",
@@ -768,12 +778,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "directive",
+          "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "#load"
-          }
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#load"
+            }
+          },
+          "named": true,
+          "value": "compiler_directive"
         },
         {
           "type": "FIELD",
@@ -792,12 +807,17 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "FIELD",
-            "name": "directive",
+            "type": "ALIAS",
             "content": {
-              "type": "STRING",
-              "value": "#module_parameters"
-            }
+              "type": "FIELD",
+              "name": "directive",
+              "content": {
+                "type": "STRING",
+                "value": "#module_parameters"
+              }
+            },
+            "named": true,
+            "value": "compiler_directive"
           },
           {
             "type": "SYMBOL",
@@ -1175,25 +1195,17 @@
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "STRING",
-                            "value": "#as"
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "using_statement"
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "FIELD",
+                      "name": "directive",
+                      "content": {
+                        "type": "STRING",
+                        "value": "#as"
                       }
-                    ]
+                    },
+                    "named": true,
+                    "value": "compiler_directive"
                   },
                   {
                     "type": "SYMBOL",
@@ -1216,11 +1228,19 @@
                     "name": "struct_or_union"
                   },
                   {
+                    "type": "SYMBOL",
+                    "name": "static_if_statement"
+                  },
+                  {
                     "type": "SEQ",
                     "members": [
                       {
                         "type": "CHOICE",
                         "members": [
+                          {
+                            "type": "SYMBOL",
+                            "name": "using_statement"
+                          },
                           {
                             "type": "SYMBOL",
                             "name": "insert_statement"
@@ -1236,10 +1256,6 @@
                           {
                             "type": "SYMBOL",
                             "name": "variable_declaration"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "static_if_statement"
                           },
                           {
                             "type": "SYMBOL",
@@ -1283,12 +1299,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "directive",
+          "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "#modify"
-          }
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#modify"
+            }
+          },
+          "named": true,
+          "value": "compiler_directive"
         },
         {
           "type": "SYMBOL",
@@ -1300,12 +1321,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "directive",
+          "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "#place"
-          }
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#place"
+            }
+          },
+          "named": true,
+          "value": "compiler_directive"
         },
         {
           "type": "SYMBOL",
@@ -1317,12 +1343,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "directive",
+          "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "#align"
-          }
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#align"
+            }
+          },
+          "named": true,
+          "value": "compiler_directive"
         },
         {
           "type": "SYMBOL",
@@ -1799,12 +1830,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "directive",
+          "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "#placeholder"
-          }
+            "type": "FIELD",
+            "name": "directive",
+            "content": {
+              "type": "STRING",
+              "value": "#placeholder"
+            }
+          },
+          "named": true,
+          "value": "compiler_directive"
         },
         {
           "type": "FIELD",
@@ -2262,21 +2298,22 @@
                       "type": "SEQ",
                       "members": [
                         {
-                          "type": "SEQ",
+                          "type": "CHOICE",
                           "members": [
                             {
                               "type": "SYMBOL",
                               "name": "identifier"
                             },
                             {
-                              "type": "CHOICE",
+                              "type": "SEQ",
                               "members": [
+                                {
+                                  "type": "STRING",
+                                  "value": "except"
+                                },
                                 {
                                   "type": "SYMBOL",
                                   "name": "assignment_parameters"
-                                },
-                                {
-                                  "type": "BLANK"
                                 }
                               ]
                             }
@@ -2292,21 +2329,22 @@
                                 "value": ","
                               },
                               {
-                                "type": "SEQ",
+                                "type": "CHOICE",
                                 "members": [
                                   {
                                     "type": "SYMBOL",
                                     "name": "identifier"
                                   },
                                   {
-                                    "type": "CHOICE",
+                                    "type": "SEQ",
                                     "members": [
+                                      {
+                                        "type": "STRING",
+                                        "value": "except"
+                                      },
                                       {
                                         "type": "SYMBOL",
                                         "name": "assignment_parameters"
-                                      },
-                                      {
-                                        "type": "BLANK"
                                       }
                                     ]
                                   }
@@ -2609,17 +2647,22 @@
             "type": "FIELD",
             "name": "directive",
             "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "#"
-                },
-                {
-                  "type": "STRING",
-                  "value": "if"
-                }
-              ]
+              "type": "ALIAS",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "#"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "if"
+                  }
+                ]
+              },
+              "named": true,
+              "value": "compiler_directive"
             }
           },
           {
@@ -3995,26 +4038,19 @@
             ]
           },
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          },
-          {
             "type": "FIELD",
             "name": "function",
             "content": {
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "identifier"
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  ]
                 },
                 {
                   "type": "SYMBOL",

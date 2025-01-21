@@ -201,7 +201,7 @@ module.exports = grammar({
         )),
 
         run_or_insert_expression: $ => prec(PREC.RUN, seq(
-            choice('#run', '#insert'),
+            alias(choice('#run', '#insert'), $.compiler_directive),
             field('modifier', optional(seq(',', comma_sep1($.identifier)))),
             choice(
                 seq( // return value
@@ -241,7 +241,7 @@ module.exports = grammar({
                 field('name', $.identifier),
                 ':', ':'
             )),
-            field('directive', '#import'),
+            alias(field('directive', '#import'), $.compiler_directive),
             optional(field('modifier', choice(
                 ',file',
                 ',dir',
@@ -252,12 +252,12 @@ module.exports = grammar({
         )),
 
         load: $ => seq(
-            field('directive', '#load'),
+            alias(field('directive', '#load'), $.compiler_directive),
             field('path', $.string),
         ),
 
         module_parameters: $ => prec.right(seq(
-            field('directive', '#module_parameters'),
+            alias(field('directive', '#module_parameters'), $.compiler_directive),
             $.named_parameters,
             optional($.named_parameters),
         )),
@@ -303,19 +303,20 @@ module.exports = grammar({
         struct_or_union_block: $ => seq(
             '{',
             optional(repeat(choice(
-                seq(optional('#as'), $.using_statement),
+                alias(field('directive', '#as'), $.compiler_directive),
                 $.procedure_declaration,
                 $.struct_declaration,
                 $.enum_declaration,
                 $.no_semicolon_declaration,
                 $.struct_or_union,
+                $.static_if_statement,
                 seq(
                     choice(
+                        $.using_statement,
                         $.insert_statement,
                         $.const_declaration,   
                         $.assignment_statement,
                         $.variable_declaration,
-                        $.static_if_statement,
                         $.place_directive,
                     ),
                     optional($.align_directive),
@@ -325,11 +326,11 @@ module.exports = grammar({
             '}',
         ),
 
-        modify_block: $ => seq(field('directive', '#modify'), $.block),
+        modify_block: $ => seq(alias(field('directive', '#modify'), $.compiler_directive), $.block),
 
-        place_directive: $ => seq(field('directive', "#place"), $.identifier),
+        place_directive: $ => seq(alias(field('directive', "#place"), $.compiler_directive), $.identifier),
 
-        align_directive: $ => seq(field('directive', '#align'), $.expressions),
+        align_directive: $ => seq(alias(field('directive', '#align'), $.compiler_directive), $.expressions),
 
         enum_declaration: $ => prec(1, seq( // conflict with const_declaration
             field('name', $.identifier),
@@ -385,7 +386,7 @@ module.exports = grammar({
         ),
 
         placeholder_declaration: $ => seq(
-            field('directive', '#placeholder'),
+            alias(field('directive', '#placeholder'), $.compiler_directive),
             field('name', $.identifier),
         ),
 
@@ -454,9 +455,9 @@ module.exports = grammar({
         using_statement: $ => prec(PREC.CAST, seq(
             field('keyword', 'using'),
             field('modifier', optional(seq(',', comma_sep1(
-                seq(
+                choice(
                     $.identifier,
-                    optional($.assignment_parameters)
+                    seq('except', $.assignment_parameters)
                 )
             )))),
             $.statement,
@@ -496,7 +497,7 @@ module.exports = grammar({
         )),
 
         static_if_statement: $ => prec.right(seq(
-            field('directive', seq('#', 'if')),
+            field('directive', alias(seq('#', 'if'), $.compiler_directive)),
             choice(
                 $.if_statement_condition_and_consequence,
                 $.if_case_statement,
@@ -647,9 +648,8 @@ module.exports = grammar({
 
         call_expression: $ => prec.dynamic(PREC.CALL, seq(
             optional(field('modifier', 'inline')),
-            optional('#'),
             field('function', choice(
-                $.identifier,
+                seq((optional('#'), $.identifier)),
                 $.parenthesized_expression
             )),
             $.assignment_parameters,

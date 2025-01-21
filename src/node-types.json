@@ -23,8 +23,8 @@
         "required": true,
         "types": [
           {
-            "type": "#align",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       }
@@ -862,7 +862,7 @@
     "fields": {
       "directive": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "#",
@@ -1366,8 +1366,8 @@
         "required": true,
         "types": [
           {
-            "type": "#import",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       },
@@ -1517,8 +1517,8 @@
         "required": true,
         "types": [
           {
-            "type": "#load",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       },
@@ -1612,8 +1612,8 @@
         "required": true,
         "types": [
           {
-            "type": "#modify",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       }
@@ -1638,8 +1638,8 @@
         "required": true,
         "types": [
           {
-            "type": "#module_parameters",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       }
@@ -1922,8 +1922,8 @@
         "required": true,
         "types": [
           {
-            "type": "#place",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       }
@@ -1948,8 +1948,8 @@
         "required": true,
         "types": [
           {
-            "type": "#placeholder",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       },
@@ -2465,11 +2465,15 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "block",
+          "named": true
+        },
+        {
+          "type": "compiler_directive",
           "named": true
         },
         {
@@ -2563,12 +2567,8 @@
         "required": true,
         "types": [
           {
-            "type": "#",
-            "named": false
-          },
-          {
-            "type": "if",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       }
@@ -2773,7 +2773,18 @@
   {
     "type": "struct_or_union_block",
     "named": true,
-    "fields": {},
+    "fields": {
+      "directive": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "compiler_directive",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -3109,6 +3120,10 @@
             "named": true
           },
           {
+            "type": "except",
+            "named": false
+          },
+          {
             "type": "identifier",
             "named": true
           }
@@ -3255,10 +3270,6 @@
     "named": false
   },
   {
-    "type": "#align",
-    "named": false
-  },
-  {
     "type": "#as",
     "named": false
   },
@@ -3287,35 +3298,11 @@
     "named": false
   },
   {
-    "type": "#import",
-    "named": false
-  },
-  {
     "type": "#insert",
     "named": false
   },
   {
-    "type": "#load",
-    "named": false
-  },
-  {
-    "type": "#modify",
-    "named": false
-  },
-  {
-    "type": "#module_parameters",
-    "named": false
-  },
-  {
     "type": "#must",
-    "named": false
-  },
-  {
-    "type": "#place",
-    "named": false
-  },
-  {
-    "type": "#placeholder",
     "named": false
   },
   {
@@ -3589,6 +3576,10 @@
   {
     "type": "escape_sequence",
     "named": true
+  },
+  {
+    "type": "except",
+    "named": false
   },
   {
     "type": "false",
