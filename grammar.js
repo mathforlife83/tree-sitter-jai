@@ -300,7 +300,7 @@ module.exports = grammar({
             $.struct_or_union_block,
         ),
 
-        struct_or_union_block: $ => seq(
+        struct_or_union_block: $ => prec.left(seq(
             '{',
             optional(repeat(choice(
                 alias(field('directive', '#as'), $.compiler_directive),
@@ -310,9 +310,9 @@ module.exports = grammar({
                 $.no_semicolon_declaration,
                 $.struct_or_union,
                 $.static_if_statement,
+                $.using_statement,
                 seq(
                     choice(
-                        $.using_statement,
                         $.insert_statement,
                         $.const_declaration,   
                         $.assignment_statement,
@@ -324,7 +324,7 @@ module.exports = grammar({
                 )
             ))),
             '}',
-        ),
+        )),
 
         modify_block: $ => seq(alias(field('directive', '#modify'), $.compiler_directive), $.block),
 
@@ -452,7 +452,7 @@ module.exports = grammar({
             ))
         ),
 
-        using_statement: $ => prec(PREC.CAST, seq(
+        using_statement: $ => prec.left(PREC.CAST, seq(
             field('keyword', 'using'),
             field('modifier', optional(seq(',', comma_sep1(
                 choice(

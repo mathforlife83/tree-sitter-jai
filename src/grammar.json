@@ -1180,120 +1180,124 @@
       ]
     },
     "struct_or_union_block": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "REPEAT",
-              "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "ALIAS",
-                    "content": {
-                      "type": "FIELD",
-                      "name": "directive",
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "{"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "REPEAT",
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "ALIAS",
                       "content": {
-                        "type": "STRING",
-                        "value": "#as"
-                      }
+                        "type": "FIELD",
+                        "name": "directive",
+                        "content": {
+                          "type": "STRING",
+                          "value": "#as"
+                        }
+                      },
+                      "named": true,
+                      "value": "compiler_directive"
                     },
-                    "named": true,
-                    "value": "compiler_directive"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "procedure_declaration"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "struct_declaration"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "enum_declaration"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "no_semicolon_declaration"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "struct_or_union"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "static_if_statement"
-                  },
-                  {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "SYMBOL",
-                            "name": "using_statement"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "insert_statement"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "const_declaration"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "assignment_statement"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "variable_declaration"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "place_directive"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "SYMBOL",
-                            "name": "align_directive"
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "STRING",
-                        "value": ";"
-                      }
-                    ]
-                  }
-                ]
+                    {
+                      "type": "SYMBOL",
+                      "name": "procedure_declaration"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "struct_declaration"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "enum_declaration"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "no_semicolon_declaration"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "struct_or_union"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "static_if_statement"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "using_statement"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "insert_statement"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "const_declaration"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "assignment_statement"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "variable_declaration"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "place_directive"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "align_directive"
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "STRING",
+                          "value": ";"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "BLANK"
               }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "}"
-        }
-      ]
+            ]
+          },
+          {
+            "type": "STRING",
+            "value": "}"
+          }
+        ]
+      }
     },
     "modify_block": {
       "type": "SEQ",
@@ -2268,7 +2272,7 @@
       ]
     },
     "using_statement": {
-      "type": "PREC",
+      "type": "PREC_LEFT",
       "value": 15,
       "content": {
         "type": "SEQ",
@@ -7355,6 +7359,10 @@
     {
       "type": "SYMBOL",
       "name": "note"
+    },
+    {
+      "type": "PATTERN",
+      "value": "\\\\ *"
     }
   ],
   "conflicts": [

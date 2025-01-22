@@ -45,8 +45,15 @@ named_import :: #import "Named";
 
 #module_parameters (some_param : bool)(some_other_param := no, thing: string, );
 
+// TODO: this...
+// time\        _report: Time_Report;
+// run_directive_report: Run_Directive_Report;
+// polymorph\   _report: Polymorph_Report;
+// bytecode\    _report: Bytecode_Report;
+
 TestStruct1 :: struct {
-    // Testing some literals
+    #as using a : b;
+
     var1 : int;
     var3 := 0xDEAD_BEEF;
     var4 : float32 = 0hAB_CD_12_34;
@@ -54,7 +61,7 @@ TestStruct1 :: struct {
     CONST2 :: -1_2_3_4_5_6_7_0;
     CONST3 : int : #char "β";
     // I'll add as I encounter more issues
-}
+};
 
 TestStruct2 :: struct (type: Type = s64) {
     union {
@@ -68,7 +75,7 @@ TestStruct2 :: struct (type: Type = s64) {
     padding:   [120] u8;
     rectangle: Rectangle #align 16;
     next: *Test_Struct2;
-}
+};
 
 Rectangle :: struct
 #modify {
@@ -79,12 +86,12 @@ Rectangle :: struct
     w, h: float;
 #place w;
     width, height: float;
-}
+};
 
 call_expression :: (polymorphic_args: $T) -> () {
     print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
     print("%\n", polymorphic_args);
-}
+};
 
 some_complex_ass_procedure_declaration ::
 inline (a1: s32, a2: s64, a3: int, a4: float)
@@ -95,10 +102,10 @@ inline (a1: s32, a2: s64, a3: int, a4: float)
 }
 {
     // block
-}
+};
 
 procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
-}
+};
 
 some_proc : (a: int) -> string #foreign library;
 
@@ -266,4 +273,4 @@ test_proc1 :: () {
     for member.call_expression(args) {}
     if member.call_expression(args) {}
 
-} @notes_are_ignored @yes
+} @notes_are_ignored @yes;
