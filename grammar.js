@@ -65,6 +65,7 @@ module.exports = grammar({
     ],
 
     externals: $ => [
+        // $.identifier,
         $.heredoc_start,
         $.heredoc_end,
         $.error_sentinel,
@@ -77,12 +78,12 @@ module.exports = grammar({
         $.note,
     ],
 
-    // supertypes: $ => [
-    //     $.all_statements,
-    //     $.no_semicolon_statements,
-    //     $.expressions,
-    //     $.literal,
-    // ],
+    supertypes: $ => [
+        $.all_statements,
+        $.no_semicolon_statements,
+        $.expressions,
+        $.literal,
+    ],
 
     word: $ => $.identifier,
 

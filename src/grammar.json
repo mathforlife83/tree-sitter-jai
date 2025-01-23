@@ -7359,10 +7359,6 @@
     {
       "type": "SYMBOL",
       "name": "note"
-    },
-    {
-      "type": "PATTERN",
-      "value": "\\\\ *"
     }
   ],
   "conflicts": [
@@ -7430,5 +7426,10 @@
     }
   ],
   "inline": [],
-  "supertypes": []
+  "supertypes": [
+    "all_statements",
+    "no_semicolon_statements",
+    "expressions",
+    "literal"
+  ]
 }

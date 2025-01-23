@@ -45,11 +45,13 @@ named_import :: #import "Named";
 
 #module_parameters (some_param : bool)(some_other_param := no, thing: string, );
 
-// TODO: this...
-// time\        _report: Time_Report;
-// run_directive_report: Run_Directive_Report;
-// polymorph\   _report: Polymorph_Report;
-// bytecode\    _report: Bytecode_Report;
+Calendar_Time :: struct {
+    // year:        s32;
+    // month\      _starting_at_0: s8;
+    // day_of_month_starting_at_0: s8;
+    // day_of_week\_starting_at_0: s8;
+    // ...
+}
 
 TestStruct1 :: struct {
     #as using a : b;
@@ -91,6 +93,10 @@ Rectangle :: struct
 call_expression :: (polymorphic_args: $T) -> () {
     print("%%%%%\n",1, s32, "some random args", .{10}, .[10]);
     print("%\n", polymorphic_args);
+
+    context.log_level = .NORMAL;
+    context.logger = logger_proc;
+
 };
 
 some_complex_ass_procedure_declaration ::
@@ -151,6 +157,8 @@ test_proc1 :: () {
     // and assign/update
     lets, try, even, more, constants = 1, 2, 3, 4, 5;
     lets, try, even, more, constants += 1, 2, 3, 4, 5;
+
+    some.big.member.expression = lol;
 
     pointer_type := *var1;
 
