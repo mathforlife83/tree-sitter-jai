@@ -50,7 +50,7 @@ module.exports = grammar({
     name: "jai",
 
     conflicts: $ => [
-        [$.all_statements, $.no_semicolon_statements],
+        [$.all_statements, $.statements_that_dont_require_a_semicolon],
         [$.call_expression, $.parameterized_struct_type],
         [$.named_parameters, $.assignment_parameters],
         [$.named_return, $.parameter],
@@ -80,7 +80,7 @@ module.exports = grammar({
 
     supertypes: $ => [
         $.all_statements,
-        $.no_semicolon_statements,
+        $.statements_that_dont_require_a_semicolon,
         $.expressions,
         $.literal,
     ],
@@ -102,10 +102,10 @@ module.exports = grammar({
             $.using_statement,
             $.module_parameters,
             seq($.compiler_directive, $.string),
-            seq($.comma_declarations, ';'),
+            seq($.declarations_that_require_a_semicolon, ';'),
         ),
 
-        comma_declarations: $ => choice(
+        declarations_that_require_a_semicolon: $ => choice(
             $.assert_statement,
             $.placeholder_declaration,
             $.const_declaration,
@@ -118,7 +118,7 @@ module.exports = grammar({
         // In procedure scopes
         statement: $ => choice(
             seq($.all_statements, ';'),
-            $.no_semicolon_statements,
+            $.statements_that_dont_require_a_semicolon,
             prec(-2, ';'),
         ),
 
@@ -148,13 +148,14 @@ module.exports = grammar({
             $.break_statement,
             $.continue_statement,
             $.remove_statement,
+            $.push_context_statement,
 
             $.expressions,
 
-            $.comma_declarations,
+            $.declarations_that_require_a_semicolon,
         ),
 
-        no_semicolon_statements: $ => choice(
+        statements_that_dont_require_a_semicolon: $ => choice(
             $.block,
             $.run_statement,
             $.asm_statement,
@@ -585,6 +586,13 @@ module.exports = grammar({
         remove_statement: $ => seq('remove', optional($.identifier)),
 
         defer_statement: $ => seq('defer', $.statement),
+
+        push_context_statement: $ => seq(
+            'push_context',
+            field('modifier', optional(seq(',', comma_sep1($.identifier)))),
+            $.expressions,
+            choice($.block, ';'),
+        ),
 
         return_statement: $ => seq(
             'return',
