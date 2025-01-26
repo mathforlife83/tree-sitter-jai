@@ -1239,6 +1239,10 @@
                       "name": "using_statement"
                     },
                     {
+                      "type": "STRING",
+                      "value": ";"
+                    },
+                    {
                       "type": "SEQ",
                       "members": [
                         {

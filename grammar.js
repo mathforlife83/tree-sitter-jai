@@ -312,6 +312,7 @@ module.exports = grammar({
                 $.struct_or_union,
                 $.static_if_statement,
                 $.using_statement,
+                ';',
                 seq(
                     choice(
                         $.insert_statement,
@@ -322,7 +323,7 @@ module.exports = grammar({
                     ),
                     optional($.align_directive),
                     ';'
-                )
+                ),
             ))),
             '}',
         )),
