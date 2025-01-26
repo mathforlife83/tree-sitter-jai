@@ -2,7 +2,7 @@
 // - tree-sitter-odin and the other tree-sitter-jai implementations (general inspiration)
 // - tree-sitter-go (for the integer and floats matching)
 // - tree-sitter-tlaplus (for nested block comments)
-// - tree-sitter- bash, ruby or whoever I copied the heredoc stuff from
+// - tree-sitter-php for the heredoc stuff
 
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-nocheck
