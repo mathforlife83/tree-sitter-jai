@@ -299,6 +299,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "push_context_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "no_semicolon_declaration"
         }
       ]

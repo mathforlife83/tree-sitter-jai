@@ -254,6 +254,10 @@
         "named": true
       },
       {
+        "type": "push_context_statement",
+        "named": true
+      },
+      {
         "type": "run_statement",
         "named": true
       },

@@ -172,6 +172,7 @@ module.exports = grammar({
             $.while_statement,
             $.for_statement,
             $.using_statement,
+            $.push_context_statement,
             $.no_semicolon_declaration,
         ),
 
