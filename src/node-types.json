@@ -142,6 +142,10 @@
         "named": true
       },
       {
+        "type": "library_expression",
+        "named": true
+      },
+      {
         "type": "literal",
         "named": true
       },
@@ -857,6 +861,10 @@
         "required": true,
         "types": [
           {
+            "type": "compiler_directive",
+            "named": true
+          },
+          {
             "type": "identifier",
             "named": true
           },
@@ -1527,6 +1535,46 @@
     "type": "integer",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "library_expression",
+    "named": true,
+    "fields": {
+      "directive": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "compiler_directive",
+            "named": true
+          }
+        ]
+      },
+      "modifier": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "load",

@@ -63,6 +63,8 @@ module.exports = grammar({
         [$.polymorphic_type],
 
         [$.member_expression, $.types, $.member_type, $.struct_literal, $.array_literal],
+
+        [$.top_level_declarations, $.call_expression]
     ],
 
     externals: $ => [
@@ -203,6 +205,7 @@ module.exports = grammar({
             $.type_of_expression,
             $.run_or_insert_expression,
             $.code_expression,
+            $.library_expression,
             $.compiler_directive,
         )),
 
@@ -419,6 +422,12 @@ module.exports = grammar({
         code_expression: $ => prec.left(seq(
             field('directive', '#code'),
             choice($.expressions, $.block),
+        )),
+
+        library_expression: $ => prec.right(seq(
+            alias(field('directive', choice('#library', '#system_library')), $.compiler_directive),
+            field('modifier', optional(seq(',', comma_sep1($.identifier)))),
+            optional($.string),
         )),
 
         assert_statement: $ => seq(
@@ -664,7 +673,10 @@ module.exports = grammar({
         call_expression: $ => prec.dynamic(PREC.CALL, seq(
             optional(field('modifier', 'inline')),
             field('function', choice(
-                seq((optional('#'), $.identifier)),
+                choice(
+                    $.identifier,
+                    $.compiler_directive
+                ),
                 $.parenthesized_expression
             )),
             $.assignment_parameters,

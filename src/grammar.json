@@ -395,6 +395,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "library_expression"
+          },
+          {
+            "type": "SYMBOL",
             "name": "compiler_directive"
           }
         ]
@@ -2005,6 +2009,95 @@
               {
                 "type": "SYMBOL",
                 "name": "block"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "library_expression": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "ALIAS",
+            "content": {
+              "type": "FIELD",
+              "name": "directive",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "#library"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "#system_library"
+                  }
+                ]
+              }
+            },
+            "named": true,
+            "value": "compiler_directive"
+          },
+          {
+            "type": "FIELD",
+            "name": "modifier",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "identifier"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "identifier"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string"
+              },
+              {
+                "type": "BLANK"
               }
             ]
           }
@@ -4148,11 +4241,15 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "SEQ",
+                  "type": "CHOICE",
                   "members": [
                     {
                       "type": "SYMBOL",
                       "name": "identifier"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "compiler_directive"
                     }
                   ]
                 },
@@ -7508,6 +7605,10 @@
       "member_type",
       "struct_literal",
       "array_literal"
+    ],
+    [
+      "top_level_declarations",
+      "call_expression"
     ]
   ],
   "precedences": [],
