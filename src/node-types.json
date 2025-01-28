@@ -226,6 +226,10 @@
         "named": true
       },
       {
+        "type": "backtick_statement",
+        "named": true
+      },
+      {
         "type": "block",
         "named": true
       },

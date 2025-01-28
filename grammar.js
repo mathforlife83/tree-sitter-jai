@@ -161,6 +161,8 @@ module.exports = grammar({
             $.run_statement,
             $.asm_statement,
 
+            $.backtick_statement,
+
             $.procedure_declaration,
             $.struct_declaration,
             $.enum_declaration,
