@@ -1669,6 +1669,10 @@
       "required": true,
       "types": [
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "named_parameters",
           "named": true
         }

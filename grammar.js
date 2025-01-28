@@ -266,6 +266,7 @@ module.exports = grammar({
             alias(field('directive', '#module_parameters'), $.compiler_directive),
             $.named_parameters,
             optional($.named_parameters),
+            optional($.block),
         )),
 
         procedure_declaration: $ => prec(1, seq(
