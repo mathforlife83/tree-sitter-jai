@@ -1875,6 +1875,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "compiler_directive",
+          "named": true
+        }
+      ]
     }
   },
   {

@@ -826,6 +826,7 @@ module.exports = grammar({
         ),
 
         parameter: $ => seq(
+            optional($.compiler_directive),
             field('keyword', optional('using')),
             field('name', seq(
                 optional('$'),
