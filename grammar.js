@@ -970,18 +970,19 @@ module.exports = grammar({
 
             '{',
             optional(seq(
-                repeat(prec(-1,
+                repeat(prec(-1, choice(
                     seq(
                         choice(
                             seq(optional('#as'), $.using_statement),
                             $.variable_declaration,
                             $.const_declaration,
-                            $.struct_or_union,
                             // $.assignment_statement, // not sure about this one
                         ),
                         ';'
-                    )
-                )),
+                    ),
+                    $.no_semicolon_declaration,
+                    $.struct_or_union
+                ))),
                 optional(';'),
             )),
             '}',

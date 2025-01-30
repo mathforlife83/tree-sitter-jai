@@ -5788,49 +5788,58 @@
                       "type": "PREC",
                       "value": -1,
                       "content": {
-                        "type": "SEQ",
+                        "type": "CHOICE",
                         "members": [
                           {
-                            "type": "CHOICE",
+                            "type": "SEQ",
                             "members": [
                               {
-                                "type": "SEQ",
+                                "type": "CHOICE",
                                 "members": [
                                   {
-                                    "type": "CHOICE",
+                                    "type": "SEQ",
                                     "members": [
                                       {
-                                        "type": "STRING",
-                                        "value": "#as"
+                                        "type": "CHOICE",
+                                        "members": [
+                                          {
+                                            "type": "STRING",
+                                            "value": "#as"
+                                          },
+                                          {
+                                            "type": "BLANK"
+                                          }
+                                        ]
                                       },
                                       {
-                                        "type": "BLANK"
+                                        "type": "SYMBOL",
+                                        "name": "using_statement"
                                       }
                                     ]
                                   },
                                   {
                                     "type": "SYMBOL",
-                                    "name": "using_statement"
+                                    "name": "variable_declaration"
+                                  },
+                                  {
+                                    "type": "SYMBOL",
+                                    "name": "const_declaration"
                                   }
                                 ]
                               },
                               {
-                                "type": "SYMBOL",
-                                "name": "variable_declaration"
-                              },
-                              {
-                                "type": "SYMBOL",
-                                "name": "const_declaration"
-                              },
-                              {
-                                "type": "SYMBOL",
-                                "name": "struct_or_union"
+                                "type": "STRING",
+                                "value": ";"
                               }
                             ]
                           },
                           {
-                            "type": "STRING",
-                            "value": ";"
+                            "type": "SYMBOL",
+                            "name": "no_semicolon_declaration"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "struct_or_union"
                           }
                         ]
                       }

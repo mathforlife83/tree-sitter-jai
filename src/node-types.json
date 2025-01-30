@@ -367,6 +367,10 @@
           "named": true
         },
         {
+          "type": "no_semicolon_declaration",
+          "named": true
+        },
+        {
           "type": "struct_or_union",
           "named": true
         },
