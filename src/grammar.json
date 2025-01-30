@@ -2891,8 +2891,13 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": "#complete"
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "#complete"
+              },
+              "named": true,
+              "value": "compiler_directive"
             },
             {
               "type": "BLANK"
@@ -4960,8 +4965,13 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "STRING",
-                "value": "#must"
+                "type": "ALIAS",
+                "content": {
+                  "type": "STRING",
+                  "value": "#must"
+                },
+                "named": true,
+                "value": "compiler_directive"
               },
               {
                 "type": "BLANK"
@@ -5486,8 +5496,13 @@
       ]
     },
     "specified_directive": {
-      "type": "STRING",
-      "value": "#specified"
+      "type": "ALIAS",
+      "content": {
+        "type": "STRING",
+        "value": "#specified"
+      },
+      "named": true,
+      "value": "compiler_directive"
     },
     "switch_case": {
       "type": "SEQ",
@@ -5547,8 +5562,13 @@
       ]
     },
     "through_statement": {
-      "type": "STRING",
-      "value": "#through"
+      "type": "ALIAS",
+      "content": {
+        "type": "STRING",
+        "value": "#through"
+      },
+      "named": true,
+      "value": "compiler_directive"
     },
     "types": {
       "type": "PREC",

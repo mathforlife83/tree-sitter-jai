@@ -1331,6 +1331,10 @@
       "required": false,
       "types": [
         {
+          "type": "compiler_directive",
+          "named": true
+        },
+        {
           "type": "switch_case",
           "named": true
         }
@@ -2500,9 +2504,13 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "compiler_directive",
+          "named": true
+        },
         {
           "type": "named_return",
           "named": true
@@ -2625,6 +2633,21 @@
       "types": [
         {
           "type": "top_level_declarations",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "specified_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "compiler_directive",
           "named": true
         }
       ]
@@ -2960,6 +2983,21 @@
         },
         {
           "type": "through_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "through_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "compiler_directive",
           "named": true
         }
       ]
@@ -3373,19 +3411,11 @@
     "named": false
   },
   {
-    "type": "#complete",
-    "named": false
-  },
-  {
     "type": "#ifx",
     "named": false
   },
   {
     "type": "#insert",
-    "named": false
-  },
-  {
-    "type": "#must",
     "named": false
   },
   {
@@ -3729,10 +3759,6 @@
     "named": false
   },
   {
-    "type": "specified_directive",
-    "named": true
-  },
-  {
     "type": "string_content",
     "named": true
   },
@@ -3743,10 +3769,6 @@
   {
     "type": "then",
     "named": false
-  },
-  {
-    "type": "through_statement",
-    "named": true
   },
   {
     "type": "true",

@@ -537,7 +537,7 @@ module.exports = grammar({
         ),
 
         if_case_statement: $ => seq(
-            optional('#complete'),
+            optional(alias('#complete', $.compiler_directive)),
             field('condition', $.expressions),
             '==',
             '{',
@@ -805,7 +805,7 @@ module.exports = grammar({
                 $.types,
                 field('type', $.identifier)
             ),
-            optional("#must")
+            optional(alias("#must", $.compiler_directive))
         )),
 
         named_return: $ => seq(
@@ -890,7 +890,7 @@ module.exports = grammar({
         ),
 
         // Enum declaration
-        specified_directive: $ => '#specified',
+        specified_directive: $ => alias('#specified', $.compiler_directive),
 
         // If case
         switch_case: $ => seq(
@@ -900,7 +900,7 @@ module.exports = grammar({
             repeat($.statement),
             optional(seq($.through_statement, ';')),
         ),
-        through_statement: $ => '#through',
+        through_statement: $ => alias('#through', $.compiler_directive),
 
         //
         // Types
