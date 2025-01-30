@@ -2936,6 +2936,14 @@
           "named": true
         },
         {
+          "type": "run_or_insert_expression",
+          "named": true
+        },
+        {
+          "type": "run_statement",
+          "named": true
+        },
+        {
           "type": "static_if_statement",
           "named": true
         },

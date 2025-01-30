@@ -314,6 +314,8 @@ module.exports = grammar({
             '{',
             optional(repeat(choice(
                 alias(field('directive', '#as'), $.compiler_directive),
+                $.run_or_insert_expression,
+                $.run_statement,
                 $.procedure_declaration,
                 $.struct_declaration,
                 $.enum_declaration,

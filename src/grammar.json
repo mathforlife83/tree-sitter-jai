@@ -1240,6 +1240,14 @@
                     },
                     {
                       "type": "SYMBOL",
+                      "name": "run_or_insert_expression"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "run_statement"
+                    },
+                    {
+                      "type": "SYMBOL",
                       "name": "procedure_declaration"
                     },
                     {
