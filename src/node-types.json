@@ -367,6 +367,10 @@
           "named": true
         },
         {
+          "type": "struct_or_union",
+          "named": true
+        },
+        {
           "type": "using_statement",
           "named": true
         },
@@ -835,7 +839,22 @@
   {
     "type": "boolean",
     "named": true,
-    "fields": {}
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "false",
+            "named": false
+          },
+          {
+            "type": "true",
+            "named": false
+          }
+        ]
+      }
+    }
   },
   {
     "type": "break_statement",
@@ -1820,6 +1839,22 @@
     }
   },
   {
+    "type": "null",
+    "named": true,
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "null",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {
@@ -2024,7 +2059,18 @@
   {
     "type": "polymorphic_type",
     "named": true,
-    "fields": {},
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "interface",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
@@ -3651,12 +3697,16 @@
     "named": false
   },
   {
+    "type": "interface",
+    "named": false
+  },
+  {
     "type": "no_inline",
     "named": false
   },
   {
     "type": "null",
-    "named": true
+    "named": false
   },
   {
     "type": "operator",

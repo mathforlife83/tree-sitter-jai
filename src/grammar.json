@@ -5662,6 +5662,22 @@
                   "value": "/"
                 },
                 {
+                  "type": "FIELD",
+                  "name": "keyword",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "interface"
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                },
+                {
                   "type": "SYMBOL",
                   "name": "identifier"
                 }
@@ -5805,6 +5821,10 @@
                               {
                                 "type": "SYMBOL",
                                 "name": "const_declaration"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "struct_or_union"
                               }
                             ]
                           },
@@ -6564,21 +6584,29 @@
       }
     },
     "boolean": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "true"
-        },
-        {
-          "type": "STRING",
-          "value": "false"
-        }
-      ]
+      "type": "FIELD",
+      "name": "keyword",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "true"
+          },
+          {
+            "type": "STRING",
+            "value": "false"
+          }
+        ]
+      }
     },
     "null": {
-      "type": "STRING",
-      "value": "null"
+      "type": "FIELD",
+      "name": "keyword",
+      "content": {
+        "type": "STRING",
+        "value": "null"
+      }
     },
     "uninitialized": {
       "type": "STRING",

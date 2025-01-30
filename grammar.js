@@ -939,7 +939,11 @@ module.exports = grammar({
         polymorphic_type: $ => seq(
             optional('$'),
             '$', $.types,
-            optional(seq('/', $.identifier))), // TODO: this also makes the parser bigger.
+            optional(seq(
+                '/',
+                field('keyword', optional('interface')),
+                $.identifier
+            ))),
 
         type_literal: $ => prec.right(seq(
             '#type',
@@ -972,6 +976,7 @@ module.exports = grammar({
                             seq(optional('#as'), $.using_statement),
                             $.variable_declaration,
                             $.const_declaration,
+                            $.struct_or_union,
                             // $.assignment_statement, // not sure about this one
                         ),
                         ';'
@@ -1085,8 +1090,8 @@ module.exports = grammar({
             ']',
         )),
 
-        boolean: _ => choice('true', 'false'),
-        null: _ => 'null',
+        boolean: _ => field('keyword', choice('true', 'false')),
+        null: _ => field('keyword', 'null'),
         uninitialized: _ => '---',
 
         address: $ => seq('*', $.expressions),
