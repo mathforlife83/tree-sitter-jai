@@ -16,6 +16,9 @@
 
  */
 
+// TODO: this fails to parse properly
+// open_file :: (queue: *Queue($T), file_path: string, keep_existing_content := true) -> File(T), result := Error.{} {}
+
 #import "Compiler";
 #import "Basic";
 

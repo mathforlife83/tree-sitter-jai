@@ -1309,6 +1309,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1527,6 +1537,37 @@
       "types": [
         {
           "type": "expressions",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "insert_parameters",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "break_statement",
+          "named": true
+        },
+        {
+          "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "remove_statement",
           "named": true
         }
       ]
@@ -2516,6 +2557,10 @@
           "named": true
         },
         {
+          "type": "parameterized_struct_type",
+          "named": true
+        },
+        {
           "type": "types",
           "named": true
         }
@@ -2578,6 +2623,10 @@
         {
           "type": "expressions",
           "named": true
+        },
+        {
+          "type": "insert_parameters",
+          "named": true
         }
       ]
     }
@@ -2591,8 +2640,8 @@
         "required": true,
         "types": [
           {
-            "type": "#run",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       },
@@ -3424,10 +3473,6 @@
   },
   {
     "type": "#insert",
-    "named": false
-  },
-  {
-    "type": "#run",
     "named": false
   },
   {
