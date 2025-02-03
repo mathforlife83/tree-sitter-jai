@@ -64,7 +64,10 @@ module.exports = grammar({
 
         [$.member_expression, $.types, $.member_type, $.struct_literal, $.array_literal],
 
-        [$.top_level_declarations, $.call_expression]
+        [$.top_level_declarations, $.call_expression],
+        [$.identifier_type, $.types, $.parameterized_struct_type],
+        [$.expressions, $.identifier_type, $.assignment_parameters, $.types],
+        [$.identifier_type, $.named_return, $.types],
     ],
 
     externals: $ => [
@@ -795,13 +798,13 @@ module.exports = grammar({
         // 
         //
 
-        // Procedure
-        procedure: $ => prec.right(2, seq(
-            $.named_parameters,
+        // Procedure and procedure type
+        procedure: $ => prec.right(PREC.CALL, seq(
+            // 'assignment_parameters' is only valid for procedure types, not for procedure
+            // declarations, but I don't feel like having 2 of these.
+            choice ($.assignment_parameters, $.named_parameters),
             optional(seq(
                 '->',
-                // This is a procedure that returns nothing: () -> ()
-                // This is a procedure that returns a procedure; () -> (())
                 field('result', $.procedure_returns)
             )),
             field('modifier', repeat(
@@ -810,10 +813,11 @@ module.exports = grammar({
                     optional(choice($.identifier, $.string))
                 ))
             )),
-            // optional($.block),
         )),
 
         procedure_returns: $ => prec.left(choice(
+            // This is a procedure that returns nothing: () -> ()
+            // This is a procedure that returns a procedure; () -> (())
             seq(
                 '(',
                 sep(
@@ -826,15 +830,21 @@ module.exports = grammar({
 
         returns: $ => prec.left(1, seq(
             choice(
+                // This is gross.
+                $.parameterized_struct_type,
                 $.named_return,
                 $.types,
-                $.parameterized_struct_type,
-                field('type', $.identifier)
+                $.identifier_type,
             ),
             optional(alias("#must", $.compiler_directive))
         )),
 
+        identifier_type: $ => field('type', $.identifier),
+
         named_return: $ => seq(
+            // This here should be a regular variable declaration (where "name := value" is valid too),
+            // but it seems to work without having the 'types' be optional. I don't want to change it
+            // because 'variable_declaration' is also a compound declaration, which would not work here.
             $.identifier,
             ':',
             $.types,
@@ -934,7 +944,7 @@ module.exports = grammar({
             $.array_type,
             $.type_of_expression,
             $.type_literal,
-            $.procedure_type,
+            $.procedure,
             $.parameterized_struct_type,
             $.polymorphic_type,
             $.member_type,
@@ -1012,21 +1022,6 @@ module.exports = grammar({
 
         // TODO : Differentiate between taking the address of a variable and pointer types
         pointer_type: $ => prec.left(PREC.CAST, seq('*', $.types)),
-
-        procedure_type: $ => prec.left(seq(
-            choice ($.assignment_parameters, $.named_parameters),
-            // $.assignment_parameters,
-            optional(seq(
-                '->',
-                field('result', $.procedure_returns)
-            )),
-            field('modifier', repeat(
-                prec.right(2, seq(
-                    $.compiler_directive,
-                    optional(choice($.identifier, $.string))
-                ))
-            )),
-        )),
 
         array_type: $ => prec.right(seq(
             '[',

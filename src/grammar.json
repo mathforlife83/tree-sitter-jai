@@ -4940,13 +4940,22 @@
     },
     "procedure": {
       "type": "PREC_RIGHT",
-      "value": 2,
+      "value": 19,
       "content": {
         "type": "SEQ",
         "members": [
           {
-            "type": "SYMBOL",
-            "name": "named_parameters"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "assignment_parameters"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "named_parameters"
+              }
+            ]
           },
           {
             "type": "CHOICE",
@@ -5120,6 +5129,10 @@
             "members": [
               {
                 "type": "SYMBOL",
+                "name": "parameterized_struct_type"
+              },
+              {
+                "type": "SYMBOL",
                 "name": "named_return"
               },
               {
@@ -5128,15 +5141,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "parameterized_struct_type"
-              },
-              {
-                "type": "FIELD",
-                "name": "type",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "identifier"
-                }
+                "name": "identifier_type"
               }
             ]
           },
@@ -5158,6 +5163,14 @@
             ]
           }
         ]
+      }
+    },
+    "identifier_type": {
+      "type": "FIELD",
+      "name": "type",
+      "content": {
+        "type": "SYMBOL",
+        "name": "identifier"
       }
     },
     "named_return": {
@@ -5781,7 +5794,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "procedure_type"
+            "name": "procedure"
           },
           {
             "type": "SYMBOL",
@@ -6242,94 +6255,6 @@
           {
             "type": "SYMBOL",
             "name": "types"
-          }
-        ]
-      }
-    },
-    "procedure_type": {
-      "type": "PREC_LEFT",
-      "value": 0,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "assignment_parameters"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "named_parameters"
-              }
-            ]
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": "->"
-                  },
-                  {
-                    "type": "FIELD",
-                    "name": "result",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "procedure_returns"
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          },
-          {
-            "type": "FIELD",
-            "name": "modifier",
-            "content": {
-              "type": "REPEAT",
-              "content": {
-                "type": "PREC_RIGHT",
-                "value": 2,
-                "content": {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "compiler_directive"
-                    },
-                    {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "identifier"
-                            },
-                            {
-                              "type": "SYMBOL",
-                              "name": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "BLANK"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
           }
         ]
       }
@@ -7857,6 +7782,22 @@
     [
       "top_level_declarations",
       "call_expression"
+    ],
+    [
+      "identifier_type",
+      "types",
+      "parameterized_struct_type"
+    ],
+    [
+      "expressions",
+      "identifier_type",
+      "assignment_parameters",
+      "types"
+    ],
+    [
+      "identifier_type",
+      "named_return",
+      "types"
     ]
   ],
   "precedences": [],

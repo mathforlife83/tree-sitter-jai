@@ -16,8 +16,7 @@
 
  */
 
-// TODO: this fails to parse properly
-// open_file :: (queue: *Queue($T), file_path: string, keep_existing_content := true) -> File(T), result := Error.{} {}
+test_proc0 :: () -> type, parameterized_struct_type(T), named_return := struct_literal.{} {}
 
 #import "Compiler";
 #import "Basic";

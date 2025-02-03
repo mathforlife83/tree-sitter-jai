@@ -1332,6 +1332,22 @@
     }
   },
   {
+    "type": "identifier_type",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "if_case_statement",
     "named": true,
     "fields": {
@@ -2183,6 +2199,10 @@
       "required": true,
       "types": [
         {
+          "type": "assignment_parameters",
+          "named": true
+        },
+        {
           "type": "named_parameters",
           "named": true
         }
@@ -2413,54 +2433,6 @@
     }
   },
   {
-    "type": "procedure_type",
-    "named": true,
-    "fields": {
-      "modifier": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "compiler_directive",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          }
-        ]
-      },
-      "result": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "procedure_returns",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "assignment_parameters",
-          "named": true
-        },
-        {
-          "type": "named_parameters",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "push_context_statement",
     "named": true,
     "fields": {
@@ -2542,24 +2514,17 @@
   {
     "type": "returns",
     "named": true,
-    "fields": {
-      "type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "compiler_directive",
+          "named": true
+        },
+        {
+          "type": "identifier_type",
           "named": true
         },
         {
@@ -3214,7 +3179,7 @@
           "named": true
         },
         {
-          "type": "procedure_type",
+          "type": "procedure",
           "named": true
         },
         {
