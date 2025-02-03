@@ -438,12 +438,12 @@ module.exports = grammar({
         ),
 
         insert_statement: $ => seq(
-            field('directive', '#insert'),
+            alias(field('directive', '#insert'), $.compiler_directive),
             $.statement,
         ),
 
         code_expression: $ => prec.left(seq(
-            field('directive', '#code'),
+            alias(field('directive', '#code'), $.compiler_directive),
             choice($.expressions, $.block),
         )),
 
@@ -454,7 +454,8 @@ module.exports = grammar({
         )),
 
         assert_statement: $ => seq(
-            '#assert', $.expressions, optional(field('message', $.string))
+            alias(field('directive', '#assert'), $.compiler_directive),
+            $.expressions, optional(field('message', $.string))
         ),
     
         asm_statement: $ => prec.right(seq(
