@@ -1699,21 +1699,10 @@
   {
     "type": "member_expression",
     "named": true,
-    "fields": {
-      "dereference": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "*",
-            "named": false
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "call_expression",
@@ -1737,6 +1726,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "postfix_dereference",
           "named": true
         },
         {
@@ -2160,6 +2153,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "postfix_dereference",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "procedure",

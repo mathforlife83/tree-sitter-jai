@@ -3014,7 +3014,7 @@
       }
     },
     "if_condition": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 0,
       "content": {
         "type": "SYMBOL",
@@ -4448,7 +4448,7 @@
       }
     },
     "member_expression": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 31,
       "content": {
         "type": "SEQ",
@@ -4521,17 +4521,21 @@
                   "name": "call_expression"
                 },
                 {
-                  "type": "FIELD",
-                  "name": "dereference",
-                  "content": {
-                    "type": "STRING",
-                    "value": "*"
-                  }
+                  "type": "SYMBOL",
+                  "name": "postfix_dereference"
                 }
               ]
             }
           }
         ]
+      }
+    },
+    "postfix_dereference": {
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "STRING",
+        "value": "*"
       }
     },
     "index_expression": {

@@ -713,7 +713,7 @@ module.exports = grammar({
         // TODO: fix member issues
         //  member.*.other
         //  member.(type)
-        member_expression: $ => prec.right(PREC.MEMBER, seq(
+        member_expression: $ => prec.left(PREC.MEMBER, seq(
             optional(choice(
                 $.call_expression,
                 $.parenthesized_expression,
@@ -729,9 +729,11 @@ module.exports = grammar({
                 $.member_expression,
                 $.identifier,
                 $.call_expression,
-                field('dereference', '*'),
+                $.postfix_dereference,
             )),
         )),
+
+        postfix_dereference: _ => prec.left('*'),
 
         index_expression: $ => prec(PREC.MEMBER, seq(
             $.expressions,
