@@ -68,6 +68,8 @@ module.exports = grammar({
         [$.identifier_type, $.types, $.parameterized_struct_type],
         [$.expressions, $.identifier_type, $.assignment_parameters, $.types],
         [$.identifier_type, $.named_return, $.types],
+
+        [$.member_type_in_procedure_returns, $.identifier_type, $.types, $.member_type],
     ],
 
     externals: $ => [
@@ -837,8 +839,21 @@ module.exports = grammar({
                 $.named_return,
                 $.types,
                 $.identifier_type,
+                $.member_type_in_procedure_returns,
             ),
             optional(alias("#must", $.compiler_directive))
+        )),
+
+        // I hate writing tree-sitter parsers so bad rn...
+        member_type_in_procedure_returns: $ => prec.right(999, field('type',
+            seq(
+                choice(
+                    $.member_type_in_procedure_returns,
+                    $.identifier,
+                ),
+                '.',
+                $.identifier
+            )
         )),
 
         identifier_type: $ => field('type', $.identifier),
@@ -1025,7 +1040,7 @@ module.exports = grammar({
         // TODO : Differentiate between taking the address of a variable and pointer types
         pointer_type: $ => prec.left(PREC.CAST, seq('*', $.types)),
 
-        array_type: $ => prec.right(seq(
+        array_type: $ => prec.left(seq(
             '[',
             optional(seq(choice('..', $.expressions))),
             ']',
@@ -1051,13 +1066,13 @@ module.exports = grammar({
             $.uninitialized,
         ),
 
-        struct_literal: $ => prec(PREC.CALL, seq(
+        struct_literal: $ => prec.left(PREC.CALL, seq(
             optional(
-                choice(
+                prec.left(choice(
                     seq('(', field('type', $.types), ')'),
                     field('type', $.types),
                     field('type', $.identifier),
-                ),
+                )),
             ),
             optional(field('parameters', $.named_parameters)),
 
@@ -1078,7 +1093,7 @@ module.exports = grammar({
             '}',
         )),
 
-        array_literal: $ => prec(PREC.CALL, seq(
+        array_literal: $ => prec.left(PREC.CALL, seq(
             optional(
                 choice(
                     seq('(', field('type', $.types), ')'),

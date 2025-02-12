@@ -1759,6 +1759,30 @@
     }
   },
   {
+    "type": "member_type_in_procedure_returns",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "member_type_in_procedure_returns",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "modify_block",
     "named": true,
     "fields": {
@@ -2523,6 +2547,10 @@
         },
         {
           "type": "identifier_type",
+          "named": true
+        },
+        {
+          "type": "member_type_in_procedure_returns",
           "named": true
         },
         {

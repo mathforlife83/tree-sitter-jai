@@ -3014,7 +3014,7 @@
       }
     },
     "if_condition": {
-      "type": "PREC_LEFT",
+      "type": "PREC_RIGHT",
       "value": 0,
       "content": {
         "type": "SYMBOL",
@@ -5146,6 +5146,10 @@
               {
                 "type": "SYMBOL",
                 "name": "identifier_type"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "member_type_in_procedure_returns"
               }
             ]
           },
@@ -5167,6 +5171,40 @@
             ]
           }
         ]
+      }
+    },
+    "member_type_in_procedure_returns": {
+      "type": "PREC_RIGHT",
+      "value": 999,
+      "content": {
+        "type": "FIELD",
+        "name": "type",
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "member_type_in_procedure_returns"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": "."
+            },
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          ]
+        }
       }
     },
     "identifier_type": {
@@ -6264,7 +6302,7 @@
       }
     },
     "array_type": {
-      "type": "PREC_RIGHT",
+      "type": "PREC_LEFT",
       "value": 0,
       "content": {
         "type": "SEQ",
@@ -6377,7 +6415,7 @@
       ]
     },
     "struct_literal": {
-      "type": "PREC",
+      "type": "PREC_LEFT",
       "value": 19,
       "content": {
         "type": "SEQ",
@@ -6386,46 +6424,50 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "("
-                      },
-                      {
-                        "type": "FIELD",
-                        "name": "type",
-                        "content": {
-                          "type": "SYMBOL",
-                          "name": "types"
+                "type": "PREC_LEFT",
+                "value": 0,
+                "content": {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "("
+                        },
+                        {
+                          "type": "FIELD",
+                          "name": "type",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "types"
+                          }
+                        },
+                        {
+                          "type": "STRING",
+                          "value": ")"
                         }
-                      },
-                      {
-                        "type": "STRING",
-                        "value": ")"
+                      ]
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "type",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "types"
                       }
-                    ]
-                  },
-                  {
-                    "type": "FIELD",
-                    "name": "type",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "types"
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "type",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "identifier"
+                      }
                     }
-                  },
-                  {
-                    "type": "FIELD",
-                    "name": "type",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "identifier"
-                    }
-                  }
-                ]
+                  ]
+                }
               },
               {
                 "type": "BLANK"
@@ -6600,7 +6642,7 @@
       }
     },
     "array_literal": {
-      "type": "PREC",
+      "type": "PREC_LEFT",
       "value": 19,
       "content": {
         "type": "SEQ",
@@ -7802,6 +7844,12 @@
       "identifier_type",
       "named_return",
       "types"
+    ],
+    [
+      "member_type_in_procedure_returns",
+      "identifier_type",
+      "types",
+      "member_type"
     ]
   ],
   "precedences": [],

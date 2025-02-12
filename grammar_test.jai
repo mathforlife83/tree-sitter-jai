@@ -18,11 +18,19 @@
 
 test_proc0 :: () -> type, parameterized_struct_type(T), named_return := struct_literal.{} {}
 
+test_proc1 :: () -> m.t.t.t.t.t {
+}
+
+test_proc2 :: () -> a {
+
+}
+
+
 #import "Compiler";
 #import "Basic";
 
 HEREDOC_STRING0 :: #string END
-this is a string
+this is a strin
 
 \r \\
  \n \/
@@ -117,7 +125,7 @@ procedure_from_c :: (a1: s32, a2: s64, a3: int, a4: float) #foreign c_library {
 
 some_proc : (a: int) -> string #foreign library;
 
-test_proc1 :: () {
+main :: () {
 
     procedure_call(arg1, arg2);
 
@@ -282,5 +290,6 @@ test_proc1 :: () {
     while member.call_expression(args) {}
     for member.call_expression(args) {}
     if member.call_expression(args) {}
+
 
 } @notes_are_ignored @yes;
