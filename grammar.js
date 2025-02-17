@@ -464,7 +464,7 @@ module.exports = grammar({
         ),
     
         asm_statement: $ => prec.right(seq(
-            field('directive', '#asm'),
+            alias(field('directive', '#asm'), $.compiler_directive),
             field('modifier', optional(comma_sep1($.identifier))),
             '{',
             repeat(seq($.asm_line, ';')),
@@ -478,13 +478,15 @@ module.exports = grammar({
                 field('mnemoric', seq(
                     $.identifier, optional(seq('.', $.identifier))
                 )),
-                choice($.identifier, $.asm_register),
                 optional(seq(
-                    ',',
-                    choice(
-                        seq('[', $.expressions, ']'),
-                        $.expressions
-                    ),
+                    choice($.identifier, $.asm_register),
+                    optional(seq(
+                        ',',
+                        choice(
+                            seq('[', $.expressions, ']'),
+                            $.expressions
+                        ),
+                    ))
                 ))
             ),
             $.asm_register,
