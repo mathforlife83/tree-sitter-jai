@@ -1169,6 +1169,10 @@
                         {
                           "type": "STRING",
                           "value": "*[]"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "!"
                         }
                       ]
                     }
@@ -2294,12 +2298,17 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "FIELD",
-            "name": "directive",
+            "type": "ALIAS",
             "content": {
-              "type": "STRING",
-              "value": "#asm"
-            }
+              "type": "FIELD",
+              "name": "directive",
+              "content": {
+                "type": "STRING",
+                "value": "#asm"
+              }
+            },
+            "named": true,
+            "value": "compiler_directive"
           },
           {
             "type": "FIELD",
@@ -2422,24 +2431,20 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "identifier"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "asm_register"
-                }
-              ]
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
                   "type": "SEQ",
                   "members": [
                     {
-                      "type": "STRING",
-                      "value": ","
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "identifier"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "asm_register"
+                        }
+                      ]
                     },
                     {
                       "type": "CHOICE",
@@ -2449,21 +2454,38 @@
                           "members": [
                             {
                               "type": "STRING",
-                              "value": "["
+                              "value": ","
                             },
                             {
-                              "type": "SYMBOL",
-                              "name": "expressions"
-                            },
-                            {
-                              "type": "STRING",
-                              "value": "]"
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "SEQ",
+                                  "members": [
+                                    {
+                                      "type": "STRING",
+                                      "value": "["
+                                    },
+                                    {
+                                      "type": "SYMBOL",
+                                      "name": "expressions"
+                                    },
+                                    {
+                                      "type": "STRING",
+                                      "value": "]"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "expressions"
+                                }
+                              ]
                             }
                           ]
                         },
                         {
-                          "type": "SYMBOL",
-                          "name": "expressions"
+                          "type": "BLANK"
                         }
                       ]
                     }

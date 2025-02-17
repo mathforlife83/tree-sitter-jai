@@ -466,7 +466,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "asm_register",
@@ -518,8 +518,8 @@
         "required": true,
         "types": [
           {
-            "type": "#asm",
-            "named": false
+            "type": "compiler_directive",
+            "named": true
           }
         ]
       },
@@ -2254,6 +2254,10 @@
         "required": true,
         "types": [
           {
+            "type": "!",
+            "named": false
+          },
+          {
             "type": "!=",
             "named": false
           },
@@ -3450,10 +3454,6 @@
   },
   {
     "type": "#as",
-    "named": false
-  },
-  {
-    "type": "#asm",
     "named": false
   },
   {
