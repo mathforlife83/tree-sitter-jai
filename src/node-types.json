@@ -2501,6 +2501,14 @@
       "required": true,
       "types": [
         {
+          "type": "assignment_parameters",
+          "named": true
+        },
+        {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "expressions",
           "named": true
         }

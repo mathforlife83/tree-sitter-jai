@@ -429,7 +429,11 @@ module.exports = grammar({
             field('name', $.identifier),
         ),
 
-        quick_procedure: $ => seq($.identifier, '=>', $.expressions),
+        quick_procedure: $ => seq(
+            choice($.identifier, $.assignment_parameters),
+            '=>',
+            choice($.expressions, $.block),
+        ),
 
 
         //

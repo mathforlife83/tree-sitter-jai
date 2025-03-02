@@ -291,5 +291,15 @@ main :: () {
     for member.call_expression(args) {}
     if member.call_expression(args) {}
 
+    // quick procedures
+
+    proc0 := x => proc_call();
+    proc1 := (x,y) => proc_call();
+    proc2 := (x,y) => {
+        // block
+        hello();
+        return 0;
+    };
+
 
 } @notes_are_ignored @yes;
