@@ -594,14 +594,6 @@
         "required": false,
         "types": [
           {
-            "type": "#code",
-            "named": false
-          },
-          {
-            "type": "block",
-            "named": true
-          },
-          {
             "type": "expressions",
             "named": true
           },
@@ -3466,10 +3458,6 @@
   },
   {
     "type": "#char",
-    "named": false
-  },
-  {
-    "type": "#code",
     "named": false
   },
   {

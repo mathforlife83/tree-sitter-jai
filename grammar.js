@@ -935,7 +935,6 @@ module.exports = grammar({
                         $.identifier,
                         $.procedure,
                         $.types,
-                        seq('#code', $.block)
                     )),
                 )), ','),
                 // optional(','),

@@ -5626,19 +5626,6 @@
                                   {
                                     "type": "SYMBOL",
                                     "name": "types"
-                                  },
-                                  {
-                                    "type": "SEQ",
-                                    "members": [
-                                      {
-                                        "type": "STRING",
-                                        "value": "#code"
-                                      },
-                                      {
-                                        "type": "SYMBOL",
-                                        "name": "block"
-                                      }
-                                    ]
                                   }
                                 ]
                               }
@@ -5726,19 +5713,6 @@
                                           {
                                             "type": "SYMBOL",
                                             "name": "types"
-                                          },
-                                          {
-                                            "type": "SEQ",
-                                            "members": [
-                                              {
-                                                "type": "STRING",
-                                                "value": "#code"
-                                              },
-                                              {
-                                                "type": "SYMBOL",
-                                                "name": "block"
-                                              }
-                                            ]
                                           }
                                         ]
                                       }
