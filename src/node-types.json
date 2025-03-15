@@ -274,6 +274,10 @@
         "named": true
       },
       {
+        "type": "struct_or_union",
+        "named": true
+      },
+      {
         "type": "using_statement",
         "named": true
       },

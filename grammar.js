@@ -172,6 +172,7 @@ module.exports = grammar({
 
             $.procedure_declaration,
             $.struct_declaration,
+            $.struct_or_union,
             $.enum_declaration,
 
             $.if_statement,
