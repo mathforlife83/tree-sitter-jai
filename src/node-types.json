@@ -1438,6 +1438,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "compiler_directive",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -3466,10 +3476,6 @@
   },
   {
     "type": "#char",
-    "named": false
-  },
-  {
-    "type": "#ifx",
     "named": false
   },
   {

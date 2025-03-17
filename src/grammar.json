@@ -4676,8 +4676,22 @@
                 "value": "ifx"
               },
               {
-                "type": "STRING",
-                "value": "#ifx"
+                "type": "ALIAS",
+                "content": {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "#"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "ifx"
+                    }
+                  ]
+                },
+                "named": true,
+                "value": "compiler_directive"
               }
             ]
           },

@@ -762,7 +762,7 @@ module.exports = grammar({
         // If expressions are limited until I figure out how to make it not lag the
         // shit out of the parser...
         if_expression: $ => prec.right(seq(
-            choice('ifx', '#ifx'),
+            choice('ifx', alias(seq('#', 'ifx'), $.compiler_directive)),
             field('condition', $.expressions),
             optional('then'),
             optional(field('consequence',
