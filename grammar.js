@@ -481,7 +481,7 @@ module.exports = grammar({
         asm_line: $ => choice(
             seq(
                 field('mnemoric', seq(
-                    $.identifier, optional(seq('.', $.identifier))
+                    $.identifier, optional(seq(choice('.', '?'), $.identifier))
                 )),
                 optional(seq(
                     choice($.identifier, $.asm_register),
