@@ -506,23 +506,32 @@ module.exports = grammar({
         ),
 
         using_statement: $ => choice(
-            // Existing form 1: 'using' followed by named_decl
-            seq(
-                'using',
-                $.named_decl // e.g., 'using x: int;'
-            ),
-            // Existing form 2: 'using' followed by _expression_statement
-            seq(
-                'using',
-                $._expression_statement // e.g., 'using { ... };'
-            ),
-            // New form: 'using,only(...) FBX;'
-            seq(
-                'using',
-                field('modifier', optional($.using_modifier)), // Changed to specific using_modifier
-                $.identifier, // This correctly matches 'FBX'
-                ';'
-            )
+        // Form 1: 'using' followed by named_decl
+        seq(
+            'using',
+            $.named_decl
+        ),
+
+        // Form 2: 'using' followed by _expression_statement
+        seq(
+            'using',
+            $._expression_statement
+        ),
+
+        // Form 3: 'using' with optional modifier clause and identifier
+        seq(
+            'using',
+            field('modifier', optional($.modifier_clause)),
+            $.identifier,
+            ';'
+        )
+        ),
+
+        modifier_clause: $ => seq(
+        ',only',
+        '(',
+        commaSep1($.identifier),
+        ')'
         ),
 
         // Add this new rule to handle the ,only(...) syntax
@@ -1268,4 +1277,8 @@ function sep1_prec(p, rule, s) {
 // Creates a rule to match one or more of the rules separated by a comma
 function comma_sep1(rule) {
     return sep1(rule, ',');
+}
+
+function commaSep1(rule) {
+  return seq(rule, repeat(seq(',', rule)));
 }
