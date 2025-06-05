@@ -520,6 +520,13 @@ module.exports = grammar({
         $.statement,
         )),
 
+        func_call: $ => seq(
+            $.identifier,
+            '(',
+            comma_sep($.expression),
+            ')'
+        ),
+
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
             comma_sep1(choice(
                 $.expressions,
