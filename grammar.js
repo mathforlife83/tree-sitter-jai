@@ -505,26 +505,24 @@ module.exports = grammar({
             ))
         ),
 
-        using_statement: $ => prec.left(PREC.CAST, seq(
-        field('keyword', 'using'),
-        field('modifier', optional(seq(
-            ',',
-            comma_sep1(
-            choice(
-                $.identifier,
-                $.func_call, // <-- NEW: allows only(...) and other modifier-like calls
-                seq('except', $.assignment_parameters)
+        using_statement: $ => choice(
+            // Existing form 1: 'using' followed by named_decl
+            seq(
+                'using',
+                $.named_decl // e.g., 'using x: int;'
+            ),
+            // Existing form 2: 'using' followed by _expression_statement
+            seq(
+                'using',
+                $._expression_statement // e.g., 'using { ... };'
+            ),
+            // New form: 'using,only(...) FBX;'
+            seq(
+                'using',
+                field('modifier', optional($.modifier_clause)), // The optional modifier part
+                $.identifier, // This correctly matches 'FBX'
+                ';' // Explicitly add the semicolon, as your example shows it.
             )
-            )
-        ))),
-        $.statement,
-        )),
-
-        func_call: $ => seq(
-            $.identifier,
-            '(',
-            comma_sep($.expression),
-            ')'
         ),
 
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
