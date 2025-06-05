@@ -519,10 +519,22 @@ module.exports = grammar({
             // New form: 'using,only(...) FBX;'
             seq(
                 'using',
-                field('modifier', optional($.modifier_clause)), // The optional modifier part
+                field('modifier', optional($.using_modifier)), // Changed to specific using_modifier
                 $.identifier, // This correctly matches 'FBX'
-                ';' // Explicitly add the semicolon, as your example shows it.
+                ';'
             )
+        ),
+
+        // Add this new rule to handle the ,only(...) syntax
+        using_modifier: $ => seq(
+            ',',
+            'only',
+            '(',
+            optional(seq(
+                $.identifier,
+                repeat(seq(',', $.identifier))
+            )),
+            ')'
         ),
 
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
