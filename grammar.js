@@ -506,14 +506,18 @@ module.exports = grammar({
         ),
 
         using_statement: $ => prec.left(PREC.CAST, seq(
-            field('keyword', 'using'),
-            field('modifier', optional(seq(',', comma_sep1(
-                choice(
-                    $.identifier,
-                    seq('except', $.assignment_parameters)
-                )
-            )))),
-            $.statement,
+        field('keyword', 'using'),
+        field('modifier', optional(seq(
+            ',',
+            comma_sep1(
+            choice(
+                $.identifier,
+                $.func_call, // <-- NEW: allows only(...) and other modifier-like calls
+                seq('except', $.assignment_parameters)
+            )
+            )
+        ))),
+        $.statement,
         )),
 
         assignment_statement: $ => prec.left(PREC.ASSIGNMENT, seq(
